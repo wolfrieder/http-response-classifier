@@ -321,3 +321,10 @@ cython_debug/
 
 /json_data
 /venv
+./idea
+/.idea/.name
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/other.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/thesis_project_v2.iml
