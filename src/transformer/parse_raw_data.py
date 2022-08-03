@@ -2,28 +2,20 @@ from timeit import default_timer as timer
 import numpy as np
 import pandas as pd
 # import modin.pandas as pd
-# from flatten_json import flatten
 # import dask.dataframe as dd
 # import pyarrow
 # import fastparquet
 import ray
+from src.common_functions import *
 
 
-def read_json_file(path):
-    return pd.read_json(path)
+# def write_to_parquet_file(dataframe, name):
+#     dataframe.to_parquet(f'data/interim/test/{name}.parquet.gzip', compression='gzip')
+#     return print('Finished')
 
 
-def read_parquet_file(name):
-    return pd.read_parquet(f'data/interim/test/{name}.parquet.gzip')
-
-
-def write_to_parquet_file(dataframe, name):
-    dataframe.to_parquet(f'data/interim/test/{name}.parquet.gzip', compression='gzip')
-    return print('Finished')
-
-
-def combine_datasets(names):
-    return pd.concat([read_parquet_file(i) for i in names], ignore_index=True)
+def combine_datasets(names, target_file):
+    return pd.concat([read_parquet_file(i, target_file) for i in names], ignore_index=True)
 
 
 @ray.remote
@@ -64,16 +56,16 @@ def split_data_into_labels(data):
     return pd.json_normalize(data.labels)
 
 
-def prepare_initial_dataset(path, http_message):
-    return read_json_file(path)[[f'{http_message}', 'labels']].dropna().reset_index(drop=True)
+def prepare_initial_dataset(path, target_file, http_message):
+    return read_json_file(path, target_file)[[f'{http_message}', 'labels']].dropna().reset_index(drop=True)
 
 
-def parse_dataset(path, http_message, file_name, n_chunks):
+def parse_dataset(path, target_file, http_message, file_name, n_chunks):
     print(f"Prepare initial dataset:"
           f"Path: {path}, HTTP Type: {http_message}, Chunksize: {n_chunks}"
           f"Filename: {file_name}")
 
-    response_data = prepare_initial_dataset(f'{path}', f'{http_message}')
+    response_data = prepare_initial_dataset(f'{path}', f'{target_file}', f'{http_message}')
     response_data_messages = split_data_into_headers(response_data[['response']])
 
     print(f"Parse HTTP {http_message} headers")
@@ -88,12 +80,12 @@ def parse_dataset(path, http_message, file_name, n_chunks):
 
     result = pd.concat([response_data_messages, final_response_labels, final_response_headers], axis=1) \
         .drop(['responseHeaders'], axis=1)
-    write_to_parquet_file(result, f'{file_name}')
+    write_to_parquet_file(result, f'{file_name}', 'interim/test')
     print("End")
 
 
 if __name__ == '__main__':
-    ray.shutdown()
+    # ray.shutdown()
     ray.init()
     pd.set_option('display.max_columns', 500)
 
@@ -105,12 +97,14 @@ if __name__ == '__main__':
 
     # print([process_rows2(i) for i in parsed_labels_test.head(10)['responseHeaders']])
 
-    test_parquet = read_parquet_file('test4')
-    print(test_parquet.info())
-    print(test_parquet.memory_usage())
-    print(test_parquet.nunique())
+    # test_parquet = read_parquet_file('test4', 'interim/test')
+    # print(test_parquet.info())
+    # print(test_parquet.memory_usage())
+    # print(test_parquet.nunique())
 
-    # print(combine_datasets(['test','test2','test3']).info())
+    print(read_json_file('http.0', 'tranco_16_05_22_10k_run_06/http'))
+
+    # print(combine_datasets(['test','test2','test3'], target_file).info())
 
     # ddf = dd.from_pandas(result_dfs, n_partitions=32)
     # dfs2 = db.from_sequence([dd.from_pandas(x, npartitions=1) for x in dfs])
@@ -124,114 +118,3 @@ if __name__ == '__main__':
     # print(response_data.isnull().sum())
     # Time: 0.001626124999802414
     # le = response_data[response_data['response'].isnull()]
-
-"""
-# Import matplotlib.pyplot
-import matplotlib.pyplot as plt
-
-# Calculate number of unique values for each label: num_unique_labels
-num_unique_labels = df[LABELS].apply(pd.Series.nunique, axis=0)
-
-# Plot number of unique values for each label
-num_unique_labels.plot(kind='bar')
-
-# Label the axes
-plt.xlabel('Labels')
-plt.ylabel('Number of unique values')
-
-# Display the plot
-plt.show()
-
-
-# Import LabelEncoder
-from sklearn.preprocessing import LabelEncoder
-
-# Fill missing values with 0
-df.LotFrontage = df.LotFrontage.fillna(0)
-
-# Create a boolean mask for categorical columns
-categorical_mask = (df.dtypes == object)
-
-# Get list of categorical column names
-categorical_columns = df.columns[categorical_mask].tolist()
-
-# Print the head of the categorical columns
-print(df[categorical_columns].head())
-
-# Create LabelEncoder object: le
-le = LabelEncoder()
-
-# Apply LabelEncoder to categorical columns
-df[categorical_columns] = df[categorical_columns].apply(lambda x: le.fit_transform(x))
-
-# Print the head of the LabelEncoded categorical columns
-print(df[categorical_columns].head())
-
-# Import OneHotEncoder
-from sklearn.preprocessing import OneHotEncoder
-
-# Create OneHotEncoder: ohe
-ohe = OneHotEncoder(categorical_features=categorical_mask, sparse=False)
-
-# Apply OneHotEncoder to categorical columns - output is no longer a dataframe: df_encoded
-df_encoded = ohe.fit_transform(df)
-
-# Print first 5 rows of the resulting dataset - again, this will no longer be a pandas dataframe
-print(df_encoded[:5, :])
-
-# Print the shape of the original DataFrame
-print(df.shape)
-
-# Print the shape of the transformed array
-print(df_encoded.shape)
-
-or just as one 
-# Import DictVectorizer
-from sklearn.feature_extraction import DictVectorizer
-
-# Convert df into a dictionary: df_dict
-df_dict = df.to_dict('records')
-
-# Create the DictVectorizer object: dv
-dv = DictVectorizer(sparse=False)
-
-# Apply dv on df: df_encoded
-df_encoded = dv.fit_transform(df_dict)
-
-# Print the resulting first five rows
-print(df_encoded[:5,:])
-
-# Print the vocabulary
-print(dv.vocabulary_)
-
-# Import necessary modules
-from sklearn_pandas import DataFrameMapper
-from sklearn_pandas import CategoricalImputer
-
-# Check number of nulls in each feature column
-nulls_per_column = X.isnull().sum()
-print(nulls_per_column)
-
-# Create a boolean mask for categorical columns
-categorical_feature_mask = X.dtypes == object
-
-# Get list of categorical column names
-categorical_columns = X.columns[categorical_feature_mask].tolist()
-
-# Get list of non-categorical column names
-non_categorical_columns = X.columns[~categorical_feature_mask].tolist()
-
-# Apply numeric imputer
-numeric_imputation_mapper = DataFrameMapper(
-                                            [([numeric_feature], Imputer(strategy="median")) for numeric_feature in non_categorical_columns],
-                                            input_df=True,
-                                            df_out=True
-                                           )
-
-# Apply categorical imputer
-categorical_imputation_mapper = DataFrameMapper(
-                                                [(category_feature, CategoricalImputer()) for category_feature in categorical_columns],
-                                                input_df=True,
-                                                df_out=True
-                                               )
-"""
