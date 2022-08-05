@@ -1,17 +1,9 @@
-from timeit import default_timer as timer
+import time
+
 import numpy as np
-import pandas as pd
-# import modin.pandas as pd
-# import dask.dataframe as dd
-# import pyarrow
-# import fastparquet
 import ray
+
 from src.common_functions import *
-
-
-# def write_to_parquet_file(dataframe, name):
-#     dataframe.to_parquet(f'data/interim/test/{name}.parquet.gzip', compression='gzip')
-#     return print('Finished')
 
 
 def combine_datasets(names, target_file):
@@ -20,9 +12,12 @@ def combine_datasets(names, target_file):
 
 @ray.remote
 def process_rows(row):
-    df_row = pd.json_normalize(row)
-    columns = np.vectorize(str.lower)(df_row.name.values)
-    result = pd.DataFrame(df_row.value.values.reshape(1, -1), columns=columns)
+    processed = [pd.DataFrame(element) for element in row]
+    df_row = pd.concat(processed, axis=1)
+    columns = np.vectorize(str.lower)(df_row.iloc[0].values)
+    values = np.vectorize(str.lower)(df_row.iloc[1].values)
+    result = pd.DataFrame(values.reshape(1, -1), columns=columns)
+    # TODO find better solution for duplicated header fields
     return result.loc[:, ~result.columns.duplicated()]
 
 
@@ -31,6 +26,11 @@ def process_label_rows(row):
     df_row = pd.DataFrame(row)
     columns = np.vectorize(str.lower)(df_row.blocklist.values)
     return pd.DataFrame(df_row.isLabeled.values.reshape(1, -1), columns=columns)
+
+
+@ray.remote
+def process_url_rows(row):
+    return pd.json_normalize(row)
 
 
 @ray.remote
@@ -45,42 +45,38 @@ def parse_response_headers(chunklist, n_chunks):
     return pd.concat(chunked_list2, ignore_index=True)
 
 
-def split_data_into_headers(data):
-    result = pd.json_normalize(data.response)
-    result.drop(['documentId', 'documentLifecycle', 'frameId', 'timeStamp', 'parentDocumentId'], axis=1,
-                inplace=True)
-    return result
-
-
 def split_data_into_labels(data):
     return pd.json_normalize(data.labels)
 
 
-def prepare_initial_dataset(path, target_file, http_message):
-    return read_json_file(path, target_file)[[f'{http_message}', 'labels']].dropna().reset_index(drop=True)
+def prepare_initial_dataset(file_name, target_file):
+    data = read_json_file(file_name, target_file).dropna().reset_index(drop=True)
+    return data[data['responseHeaders'].map(len) != 0].reset_index(drop=True)
 
 
-def parse_dataset(path, target_file, http_message, file_name, n_chunks):
-    print(f"Prepare initial dataset:"
-          f"Path: {path}, HTTP Type: {http_message}, Chunksize: {n_chunks}"
-          f"Filename: {file_name}")
+def parse_dataset(origin_file_name, origin_dir_name, target_file_name, n_chunks):
+    print(f"Prepare initial dataset: "
+          f"Path: data/raw/{origin_dir_name}/{origin_file_name}.json, Chunksize: {n_chunks} "
+          f"Target Filename: {target_file_name}")
 
-    response_data = prepare_initial_dataset(f'{path}', f'{target_file}', f'{http_message}')
-    response_data_messages = split_data_into_headers(response_data[['response']])
+    response_data = prepare_initial_dataset(f'{origin_file_name}', f'{origin_dir_name}')
 
-    print(f"Parse HTTP {http_message} headers")
-    parsed_headers = ray.get([process_rows.remote(i) for i in response_data_messages['responseHeaders']])
+    print(f"Parse HTTP Header Fields")
+    parsed_headers = ray.get([process_rows.remote(i) for i in response_data[['responseHeaders']].responseHeaders])
     final_response_headers = parse_response_headers(parsed_headers, n_chunks)
 
-    print(f"Parse HTTP {http_message} Labels")
+    print(f"Parse HTTP Labels")
     parsed_labels = ray.get([process_label_rows.remote(row) for row in response_data[['labels']].labels])
-
-    print('FOURTH PHASE')
     final_response_labels = pd.concat(parsed_labels, ignore_index=True)
 
-    result = pd.concat([response_data_messages, final_response_labels, final_response_headers], axis=1) \
-        .drop(['responseHeaders'], axis=1)
-    write_to_parquet_file(result, f'{file_name}', 'interim/test')
+    print(f"Parse URLs")
+    parsed_urls = ray.get([process_url_rows.remote(row) for row in response_data[['url']].url])
+    final_response_urls = pd.concat(parsed_urls, ignore_index=True)
+
+    print(f'Combine Results and Write to data/interim/test as {target_file_name}')
+    result = pd.concat([final_response_labels, final_response_urls, final_response_headers], axis=1)
+    result = result.loc[:, ~result.columns.duplicated()]
+    write_to_parquet_file(result, f'{target_file_name}', 'interim/test')
     print("End")
 
 
@@ -89,32 +85,13 @@ if __name__ == '__main__':
     ray.init()
     pd.set_option('display.max_columns', 500)
 
-    # parse_dataset('json_data/test2-http.0.json', 'response', 'test7', 2000)
-    # test = prepare_initial_dataset('json_data/05_10_22_10k_crawl_1-http.0.json', 'response')
-    # test_response = split_data_into_headers(test[['response']])
-    # parsed_headers = ray.get([process_rows.remote(i) for i in test_response['responseHeaders']])
-    # Time: 736.9540843749999 (12.4min), 536.0855764169996 (9min), 143.34907520900015 (2.4min)
+    start = time.perf_counter()
+    # parse_dataset('http.0', 'tranco_16_05_22_10k_run_06/http', 'test7', 3000)
 
-    # print([process_rows2(i) for i in parsed_labels_test.head(10)['responseHeaders']])
+    dataset = read_parquet_file('test7', 'interim/test')
 
-    # test_parquet = read_parquet_file('test4', 'interim/test')
-    # print(test_parquet.info())
-    # print(test_parquet.memory_usage())
-    # print(test_parquet.nunique())
+    stop = time.perf_counter()
+    print('end time:', stop - start)
 
-    print(read_json_file('http.0', 'tranco_16_05_22_10k_run_06/http'))
-
-    # print(combine_datasets(['test','test2','test3'], target_file).info())
-
-    # ddf = dd.from_pandas(result_dfs, n_partitions=32)
-    # dfs2 = db.from_sequence([dd.from_pandas(x, npartitions=1) for x in dfs])
-    # print(dd.concat(dfs).compute())
-    # print(pd.concat(dfs))
-
-    # test = ray.get(
-    #    [process_label_rows.remote(pd.json_normalize(response_data_labels.values[np.arange(len(response_data_labels)),][i]))
-    #     for i in np.arange(len(response_data_labels))])
-
-    # print(response_data.isnull().sum())
-    # Time: 0.001626124999802414
-    # le = response_data[response_data['response'].isnull()]
+    # TODO: check, maybe alternative solution
+    # buggy = pd.DataFrame(filter(lambda x: len(x) != 0, header['responseHeaders']))
