@@ -1,4 +1,5 @@
 import pandas as pd
+import os.path
 
 
 def read_json_file(name: str, target_file_name: str) -> pd.DataFrame:
@@ -42,7 +43,7 @@ def read_parquet_file(name: str, target_file_name: str) -> pd.DataFrame:
 
 
 def write_to_parquet_file(
-    dataframe: pd.DataFrame, name: str, target_file_name: str
+    dataframe: pd.DataFrame, file_name: str, target_dir_name: str
 ) -> None:
     """
     Takes a pandas DataFrame and writes it to a parquet file.
@@ -51,11 +52,10 @@ def write_to_parquet_file(
     ----------
     dataframe: DataFrame object
         The pandas DataFrame to write to parquet.
-    name: String
-        The name of the file to write.
-    target_file_name: String
+    file_name: String
+        The file_name of the file to write.
+    target_dir_name: String
         Name of the file directory to write to (Path).
-        Note: data/ is already defined.
 
     Returns
     -------
@@ -63,6 +63,21 @@ def write_to_parquet_file(
 
     """
     dataframe.to_parquet(
-        f"data/{target_file_name}/{name}.parquet.gzip", compression="gzip"
+        f"{target_dir_name}/{file_name}.parquet.gzip", compression="gzip"
     )
     return print("Finished")
+
+
+def check_if_dir_exists(path: str) -> None:
+    """
+    This function checks if the given path for a directory exists.
+
+    Parameters
+    ----------
+    path: String
+        The path of the directory.
+    """
+    if os.path.isdir(path):
+        pass
+    else:
+        raise FileNotFoundError(f"Directory {path} does not exist.")

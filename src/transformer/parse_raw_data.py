@@ -5,7 +5,7 @@ import pandas as pd
 import ray
 
 from src.common_functions import read_json_file, read_parquet_file, \
-    write_to_parquet_file
+    write_to_parquet_file, check_if_dir_exists
 
 
 def combine_datasets(names: list[str], target_file: str) -> None:
@@ -140,11 +140,13 @@ def prepare_initial_dataset(file_name: str, target_file: str) -> pd.DataFrame:
 
 
 def parse_dataset(origin_file_name: str, origin_dir_name: str,
-                  target_file_name: str, n_chunks: int) -> None:
+                  target_file_name: str, target_dir_name: str,
+                  n_chunks: int) -> None:
     """
 
     Parameters
     ----------
+    target_dir_name
     origin_file_name
     origin_dir_name
     target_file_name
@@ -157,8 +159,9 @@ def parse_dataset(origin_file_name: str, origin_dir_name: str,
         f"Target Filename: {target_file_name}",
     )
 
-    response_data = prepare_initial_dataset(f"{origin_file_name}",
-                                            f"{origin_dir_name}")
+    check_if_dir_exists(target_dir_name)
+
+    response_data = prepare_initial_dataset(origin_file_name, origin_dir_name)
 
     print("Parse HTTP Header Fields")
     parsed_headers = ray.get(
@@ -181,13 +184,13 @@ def parse_dataset(origin_file_name: str, origin_dir_name: str,
     )
     final_response_urls = pd.concat(parsed_urls, ignore_index=True)
 
-    print("Combine Results and Write to data/interim/test as {target_file_name}")
+    print("Combine Results and Write to data/interim/test as {target_dir_name}")
     result = pd.concat(
         [final_response_labels, final_response_urls, final_response_headers],
         axis=1
     )
     result = result.loc[:, ~result.columns.duplicated()]
-    write_to_parquet_file(result, f"{target_file_name}", "interim/test")
+    write_to_parquet_file(result, target_file_name, target_dir_name)
     print("End")
 
 
@@ -197,7 +200,8 @@ if __name__ == "__main__":
     pd.set_option("display.max_columns", 500)
 
     start = time.perf_counter()
-    # parse_dataset('http.0', 'tranco_16_05_22_10k_run_06/http', 'part_1', 3000)
+    parse_dataset('http.1', 'tranco_16_05_22_10k_run_06/http', 'part_1',
+                  'data/interim/tranco_16_05_22_10k_run_06', 3000)
     # combine_datasets(['data1', 'data2'], "interim/tranco_16_05_22_10k_run_06")
     stop = time.perf_counter()
     print("end time:", stop - start)
