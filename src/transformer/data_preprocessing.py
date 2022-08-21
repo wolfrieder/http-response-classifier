@@ -38,14 +38,16 @@ def create_json_of_category_dtypes(filename: str) -> None:
 
 # @ray.remote
 def fuzzy_string_matching_for_column(col_name, col_values):
-    list_of_ratios = [calculate_ratios(col_name, col_name_2)
-                              for col_name_2 in col_values]
-    final_list_of_ratios = pd.concat(list_of_ratios, ignore_index = True)
+    list_of_ratios = [
+        calculate_ratios(col_name, col_name_2) for col_name_2 in col_values
+    ]
+    final_list_of_ratios = pd.concat(list_of_ratios, ignore_index=True)
     final_list_of_ratios = final_list_of_ratios[
-        (final_list_of_ratios["ratio"] >= 80) |
-        (final_list_of_ratios["token_sort_ratio"] >= 80) |
-        (final_list_of_ratios["partial_ratio"] >= 90) |
-        (final_list_of_ratios["token_set_ratio"] >= 90)]
+        (final_list_of_ratios["ratio"] >= 80)
+        | (final_list_of_ratios["token_sort_ratio"] >= 80)
+        | (final_list_of_ratios["partial_ratio"] >= 90)
+        | (final_list_of_ratios["token_set_ratio"] >= 90)
+    ]
     if final_list_of_ratios.empty:
         return None
     return final_list_of_ratios
@@ -59,21 +61,28 @@ def calculate_ratios(col_name, col_name_2):
     token_set_ratio = fuzz.token_set_ratio(col_name, col_name_2)
     w_ratio = fuzz.WRatio(col_name, col_name_2)
 
-    ratio_results_dict = pd.DataFrame(data = {
-        "ratio": ratio,
-        "partial_ratio": partial_ratio,
-        "token_sort_ratio": token_sort_ratio,
-        "token_set_ratio": token_set_ratio,
-        "w_ratio": w_ratio,
-        "header_fields": f"{col_name}=={col_name_2}",
-    }, index = [0])
+    ratio_results_dict = pd.DataFrame(
+        data={
+            "ratio": ratio,
+            "partial_ratio": partial_ratio,
+            "token_sort_ratio": token_sort_ratio,
+            "token_set_ratio": token_set_ratio,
+            "w_ratio": w_ratio,
+            "header_fields": f"{col_name}=={col_name_2}",
+        },
+        index=[0],
+    )
     return ratio_results_dict
 
 
 def new_fuzzy_string_matching_for_column(col_name, col_values):
-    result = pd.DataFrame(process.extract(col_name, col_values, processor=None, score_cutoff=80, limit=100),
-                     columns=["fuzzy_match", "w_ratio", "index"])
-    result['col_name'] = col_name
+    result = pd.DataFrame(
+        process.extract(
+            col_name, col_values, processor=None, score_cutoff=80, limit=100
+        ),
+        columns=["fuzzy_match", "w_ratio", "index"],
+    )
+    result["col_name"] = col_name
     return result
 
 
