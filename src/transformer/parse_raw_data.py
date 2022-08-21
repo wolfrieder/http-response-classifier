@@ -200,7 +200,7 @@ if __name__ == "__main__":
     pd.set_option("display.max_columns", 500)
 
     start = time.perf_counter()
-    parse_dataset('http.1', 'tranco_16_05_22_10k_run_06/http', 'part_1',
+    parse_dataset('http.2', 'tranco_16_05_22_10k_run_06/http', 'part_2',
                   'data/interim/tranco_16_05_22_10k_run_06', 3000)
     # combine_datasets(['data1', 'data2'], "interim/tranco_16_05_22_10k_run_06")
     stop = time.perf_counter()
