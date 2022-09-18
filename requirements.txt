@@ -12,3 +12,5 @@ python-levenshtein==0.12.2
 rapidfuzz==2.4.3
 scipy==1.7.3
 imbalanced-learn==0.9.1
+yaml==0.2.5
+pyyaml==6.0

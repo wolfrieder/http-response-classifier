@@ -1,0 +1,8 @@
+browsers:
+  chrome: 'chrome'
+  firefox: 'firefox'
+  brave: 'brave'
+
+dir_name:
+  date_one: '08_12_2022'
+  date_two: 'tranco_16_05_22_10k_run_06'
