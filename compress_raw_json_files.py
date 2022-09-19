@@ -1,12 +1,18 @@
 import gzip
+import json
 import os
 import sys
-import json
 
 # Command: python3 compress_raw_json_files.py chrome 08_12_2022
 browser = sys.argv[1]
 directory = sys.argv[2]
 dir_path = f"data/raw/{browser}/{directory}"
+
+try:
+    os.makedirs(dir_path, exist_ok=True)
+    print(f"Directory {dir_path} created successfully.")
+except OSError as error:
+    print(f"Directory {dir_path} can not be created.")
 
 entries = [
     entry

@@ -1,0 +1,20 @@
+stages:
+  import:
+    foreach:
+#      - http.0
+#      - http.1
+#      - http.2
+#      - http.3
+       - http.4
+#      - http.5
+    do:
+      cmd: >- 
+        python3 src/transformer/parse_raw_data.py
+        ${browsers.chrome} 
+        ${dir_name.date_one}
+        ${item}
+      deps:
+        - src/transformer/parse_raw_data.py
+        - data/raw/${browsers.chrome}/${dir_name.date_one}/${item}.json.gzip
+      outs:
+        - data/interim/${browsers.chrome}/${dir_name.date_one}/${item}.parquet.gzip

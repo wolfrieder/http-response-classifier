@@ -1,0 +1,80 @@
+schema: '2.0'
+stages:
+  import@http.4:
+    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.4
+    deps:
+    - path: data/raw/chrome/08_12_2022/http.4.json.gzip
+      md5: bb74db03fc500ba48394ea3954dc7325
+      size: 26815245
+    - path: src/transformer/parse_raw_data.py
+      md5: 84eedc81e587c9d92f505a025b98a090
+      size: 6786
+    outs:
+    - path: data/interim/chrome/08_12_2022/http.4.parquet.gzip
+      md5: 50b360385e8188eaf6379d9a112c7eca
+      size: 20878456
+  import@http.3:
+    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.3
+    deps:
+    - path: data/raw/chrome/08_12_2022/http.3.json.gzip
+      md5: e28abc03704332a4a2b2bd902bbfdf22
+      size: 27015460
+    - path: src/transformer/parse_raw_data.py
+      md5: 84eedc81e587c9d92f505a025b98a090
+      size: 6786
+    outs:
+    - path: data/interim/chrome/08_12_2022/http.3.parquet.gzip
+      md5: daac7fef94c85e9ee66d66447fc5d27e
+      size: 21165187
+  import@http.5:
+    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.5
+    deps:
+    - path: data/raw/chrome/08_12_2022/http.5.json.gzip
+      md5: b556f436a3c5e7b8fbeeadfbabb29ec3
+      size: 1899132
+    - path: src/transformer/parse_raw_data.py
+      md5: 84eedc81e587c9d92f505a025b98a090
+      size: 6786
+    outs:
+    - path: data/interim/chrome/08_12_2022/http.5.parquet.gzip
+      md5: 6a93e610a262c44011eee66323bfee8e
+      size: 1951475
+  import@http.1:
+    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.1
+    deps:
+    - path: data/raw/chrome/08_12_2022/http.1.json.gzip
+      md5: 1e7fbf15e27d3df6480ae305efc2e51f
+      size: 27234138
+    - path: src/transformer/parse_raw_data.py
+      md5: 84eedc81e587c9d92f505a025b98a090
+      size: 6786
+    outs:
+    - path: data/interim/chrome/08_12_2022/http.1.parquet.gzip
+      md5: ab14ac54421a7e023e77673f1bb5a82a
+      size: 21404794
+  import@http.0:
+    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.0
+    deps:
+    - path: data/raw/chrome/08_12_2022/http.0.json.gzip
+      md5: 288cf106b55f4b2453d729d6579a4fe1
+      size: 26647207
+    - path: src/transformer/parse_raw_data.py
+      md5: 84eedc81e587c9d92f505a025b98a090
+      size: 6786
+    outs:
+    - path: data/interim/chrome/08_12_2022/http.0.parquet.gzip
+      md5: 0aff55e93f5a2e46a9c80713c9d2b590
+      size: 21793045
+  import@http.2:
+    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.2
+    deps:
+    - path: data/raw/chrome/08_12_2022/http.2.json.gzip
+      md5: c63013acd68a186927f95670293d9085
+      size: 26611931
+    - path: src/transformer/parse_raw_data.py
+      md5: 84eedc81e587c9d92f505a025b98a090
+      size: 6786
+    outs:
+    - path: data/interim/chrome/08_12_2022/http.2.parquet.gzip
+      md5: 7934e259de969eff25c35ba4a226207f
+      size: 20574240
