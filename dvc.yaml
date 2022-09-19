@@ -8,9 +8,9 @@ stages:
       - http.4
       - http.5
     do:
-      cmd: >- 
+      cmd: >-
         python3 src/transformer/parse_raw_data.py
-        ${browsers.chrome} 
+        ${browsers.chrome}
         ${dir_name.date_one}
         ${item}
       deps:
@@ -18,3 +18,29 @@ stages:
         - data/raw/${browsers.chrome}/${dir_name.date_one}/${item}.json.gzip
       outs:
         - data/interim/${browsers.chrome}/${dir_name.date_one}/${item}.parquet.gzip
+
+  pre_processing:
+    cmd: >-
+      python3 src/transformer/data_preprocessing.py
+      ${browsers.chrome} 
+      ${dir_name.date_one}
+      http.1
+    deps:
+      - src/transformer/data_preprocessing.py
+      - data/interim/${browsers.chrome}/${dir_name.date_one}/http.1.parquet.gzip
+    outs:
+      - data/interim/${browsers.chrome}/${dir_name.date_one}/http.1_processed.parquet.gzip
+
+  train_test_split:
+    cmd: >-
+      python3 src/transformer/train_test_split.py
+      ${browsers.chrome} 
+      ${dir_name.date_one}
+      http.1
+      1
+    deps:
+      - src/transformer/train_test_split.py
+      - data/interim/${browsers.chrome}/${dir_name.date_one}/http.1_processed.parquet.gzip
+    outs:
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_1.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_1.parquet.gzip

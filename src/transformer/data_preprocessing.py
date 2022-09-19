@@ -1,3 +1,5 @@
+import sys
+
 import ray
 import modin.pandas as md
 import json
@@ -55,11 +57,11 @@ def overwrite_dtypes_of_dataset(
     pd.DataFrame
 
     """
-    with open("../../data/processed/dict_categories2.json", "r") as categories:
+    with open("../../data/processed/dict_category_dtypes.json", "r") as categories:
         dict_categories = json.loads(categories.read())
-    # dict_categories = {
-    #     key: value for (key, value) in dict_categories.items() if key in columns
-    # }
+    dict_categories = {
+        key: value for (key, value) in dict_categories.items() if key in columns
+    }
     return data.astype(dict_categories)
 
 
@@ -85,11 +87,15 @@ def create_target_column(data: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     # ray.init()
+    browser = sys.argv[1]
+    directory = sys.argv[2]
+    dir_path = f"{browser}/{directory}"
+
     dataset = pd.read_parquet(
-        "../../data/interim/tranco_16_05_22_10k_run_06/part_0.parquet.gzip",
+        f"data/interim/{dir_path}/{sys.argv[3]}.parquet.gzip",
     )
     dataset = create_target_column(dataset)
-    dataset = overwrite_dtypes_of_dataset(dataset, dataset.columns.values)
+    # dataset = overwrite_dtypes_of_dataset(dataset, dataset.columns.values)
     dataset.to_parquet(
-        f"../../data/interim/processed_test.parquet.gzip", compression="gzip"
+        f"data/interim/{dir_path}/{sys.argv[3]}_processed.parquet.gzip", compression="gzip"
     )

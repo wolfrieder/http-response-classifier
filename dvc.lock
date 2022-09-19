@@ -78,3 +78,32 @@ stages:
     - path: data/interim/chrome/08_12_2022/http.2.parquet.gzip
       md5: 7934e259de969eff25c35ba4a226207f
       size: 20574240
+  pre_processing:
+    cmd: python3 src/transformer/data_preprocessing.py chrome  08_12_2022 http.1
+    deps:
+    - path: data/interim/chrome/08_12_2022/http.1.parquet.gzip
+      md5: ab14ac54421a7e023e77673f1bb5a82a
+      size: 21404794
+    - path: src/transformer/data_preprocessing.py
+      md5: f80ca071b29aceb636b6c8d2e6d6690a
+      size: 2308
+    outs:
+    - path: data/interim/chrome/08_12_2022/http.1_processed.parquet.gzip
+      md5: c2304265c6cba14e9a996958baf37b1a
+      size: 21397747
+  train_test_split:
+    cmd: python3 src/transformer/train_test_split.py chrome  08_12_2022 http.1 1
+    deps:
+    - path: data/interim/chrome/08_12_2022/http.1_processed.parquet.gzip
+      md5: c2304265c6cba14e9a996958baf37b1a
+      size: 21397747
+    - path: src/transformer/train_test_split.py
+      md5: c58736aaa252b2b7f6e7b15346111fe1
+      size: 2429
+    outs:
+    - path: data/processed/chrome/08_12_2022/test_set_1.parquet.gzip
+      md5: 8febbfe8c226953c6bde1e5041765548
+      size: 5122962
+    - path: data/processed/chrome/08_12_2022/train_set_1.parquet.gzip
+      md5: e8ca2517dd2095b02971155ec698b565
+      size: 12547838
