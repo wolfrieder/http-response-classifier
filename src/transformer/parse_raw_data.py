@@ -1,11 +1,81 @@
+import os
 import time
 
 import numpy as np
 import pandas as pd
 import ray
 
-from src.common_functions import read_json_file, read_parquet_file, \
-    write_to_parquet_file, check_if_dir_exists
+import sys
+
+# from src.common_functions import read_json_file, read_parquet_file, \
+#     write_to_parquet_file, check_if_dir_exists
+
+
+def read_json_file(name: str, target_file_name: str) -> pd.DataFrame:
+    """
+    Read a JSON file and return a pandas DataFrame.
+
+    Parameters
+    ----------
+    name: String
+        Name of the file to read from.
+    target_file_name: String
+        Name of the file directory to read from (Path).
+        Note: data/raw/ is already defined.
+
+    Returns
+    -------
+    object, type of objs
+
+    """
+    return pd.read_json(f"../../../data/raw/{target_file_name}/{name}.json.gzip",
+                        compression='gzip')
+
+
+def read_parquet_file(name: str, target_file_name: str) -> pd.DataFrame:
+    """
+    Read a parquet file and return a pandas DataFrame.
+
+    Parameters
+    ----------
+    name: String
+        Name of the file to read from.
+    target_file_name: String
+        Name of the file directory to read from (Path).
+        Note: data/ is already defined.
+
+    Returns
+    -------
+    object, type of objs
+
+    """
+    return pd.read_parquet(f"data/{target_file_name}/{name}.parquet.gzip")
+
+
+def write_to_parquet_file(
+    dataframe: pd.DataFrame, file_name: str, target_dir_name: str
+) -> None:
+    """
+    Takes a pandas DataFrame and writes it to a parquet file.
+
+    Parameters
+    ----------
+    dataframe: DataFrame object
+        The pandas DataFrame to write to parquet.
+    file_name: String
+        The file_name of the file to write.
+    target_dir_name: String
+        Name of the file directory to write to (Path).
+
+    Returns
+    -------
+    None
+
+    """
+    dataframe.to_parquet(
+        f"../../../data/{target_dir_name}/{file_name}.parquet.gzip", compression="gzip"
+    )
+    return print("Finished")
 
 
 def combine_datasets(names: list[str], target_file: str) -> None:
@@ -154,12 +224,12 @@ def parse_dataset(origin_file_name: str, origin_dir_name: str,
     """
     print(
         f"Prepare initial dataset: "
-        f"Path: data/raw/{origin_dir_name}/{origin_file_name}.json, "
+        f"Path: data/raw/{origin_dir_name}/{origin_file_name}.json.gzip, "
         f"Chunk-size: {n_chunks} ",
         f"Target Filename: {target_file_name}",
     )
 
-    check_if_dir_exists(target_dir_name)
+    # check_if_dir_exists(target_dir_name)
 
     response_data = prepare_initial_dataset(origin_file_name, origin_dir_name)
 
@@ -184,7 +254,7 @@ def parse_dataset(origin_file_name: str, origin_dir_name: str,
     )
     final_response_urls = pd.concat(parsed_urls, ignore_index=True)
 
-    print("Combine Results and Write to data/interim/test as {target_dir_name}")
+    print(f"Combine Results and Write to data/interim as data/{target_dir_name}")
     result = pd.concat(
         [final_response_labels, final_response_urls, final_response_headers],
         axis=1
@@ -195,13 +265,24 @@ def parse_dataset(origin_file_name: str, origin_dir_name: str,
 
 
 if __name__ == "__main__":
-    # ray.shutdown()
+    ray.shutdown()
     ray.init()
     pd.set_option("display.max_columns", 500)
 
     start = time.perf_counter()
-    parse_dataset('http.2', 'tranco_16_05_22_10k_run_06/http', 'part_2',
-                  'data/interim/tranco_16_05_22_10k_run_06', 3000)
+    browser = sys.argv[1]
+    directory = sys.argv[2]
+    dir_path = f"{browser}/{directory}"
+
+    try:
+        os.makedirs(f"../../../data/interim/{dir_path}", exist_ok=True)
+        print(f"Directory {dir_path} created successfully.")
+    except OSError as error:
+        print(f"Directory {dir_path} can not be created.")
+
+    parse_dataset(sys.argv[3], dir_path, sys.argv[3],
+                  f'interim/{browser}/{directory}', 3000)
+
     # combine_datasets(['data1', 'data2'], "interim/tranco_16_05_22_10k_run_06")
     stop = time.perf_counter()
     print("end time:", stop - start)

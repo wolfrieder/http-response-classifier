@@ -1,0 +1,4 @@
+outs:
+- md5: b2b1e977a170960a59c6d27799e50c3b
+  size: 26157251
+  path: http.0.json.gzip

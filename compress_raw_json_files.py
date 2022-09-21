@@ -8,6 +8,7 @@ browser = sys.argv[1]
 directory = sys.argv[2]
 dir_path = f"data/raw/{browser}/{directory}"
 
+# sometimes it only works when the script creates the directory
 try:
     os.makedirs(dir_path, exist_ok=True)
     print(f"Directory {dir_path} created successfully.")

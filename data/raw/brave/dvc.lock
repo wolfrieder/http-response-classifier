@@ -1,0 +1,54 @@
+schema: '2.0'
+stages:
+  import@http.3:
+    cmd: python3 ../../../src/transformer/parse_raw_data.py brave 08_12_2022 http.3
+    deps:
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 44ff3830a220493a7735397215744baa
+      size: 7051
+    - path: 08_12_2022/http.3.json.gzip
+      md5: 9c6971bf68728a0e571913047e6fc890
+      size: 2719766
+    outs:
+    - path: ../../../data/interim/brave/08_12_2022/http.3.parquet.gzip
+      md5: c4f57da071c7680cb874ca467584d921
+      size: 2948829
+  import@http.2:
+    cmd: python3 ../../../src/transformer/parse_raw_data.py brave 08_12_2022 http.2
+    deps:
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 44ff3830a220493a7735397215744baa
+      size: 7051
+    - path: 08_12_2022/http.2.json.gzip
+      md5: 7223f74d179acf846c67d02d59c2c32f
+      size: 23073736
+    outs:
+    - path: ../../../data/interim/brave/08_12_2022/http.2.parquet.gzip
+      md5: 7eecabb345295409f23a8dea53926ee3
+      size: 21019709
+  import@http.0:
+    cmd: python3 ../../../src/transformer/parse_raw_data.py brave 08_12_2022 http.0
+    deps:
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 44ff3830a220493a7735397215744baa
+      size: 7051
+    - path: 08_12_2022/http.0.json.gzip
+      md5: 6b05870d5e8ccbd7a3d90ba640c425d1
+      size: 23297383
+    outs:
+    - path: ../../../data/interim/brave/08_12_2022/http.0.parquet.gzip
+      md5: eb63047929ef6ba83363785afeafa9b6
+      size: 22151615
+  import@http.1:
+    cmd: python3 ../../../src/transformer/parse_raw_data.py brave 08_12_2022 http.1
+    deps:
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 44ff3830a220493a7735397215744baa
+      size: 7051
+    - path: 08_12_2022/http.1.json.gzip
+      md5: 27b6e5d5944d865dc5e7af413aacb3e2
+      size: 22650277
+    outs:
+    - path: ../../../data/interim/brave/08_12_2022/http.1.parquet.gzip
+      md5: 4b2be8deb6f386cd40985153377e0b0f
+      size: 20996976

@@ -1,0 +1,21 @@
+vars:
+  - ../../../params.yaml
+
+stages:
+  import:
+    foreach:
+      - http.0
+      - http.1
+      - http.2
+      - http.3
+    do:
+      cmd: >-
+        python3 ../../../src/transformer/parse_raw_data.py
+        ${browsers.brave}
+        ${dir_name.date_one}
+        ${item}
+      deps:
+        - ../../../src/transformer/parse_raw_data.py
+        - ${dir_name.date_one}/${item}.json.gzip
+      outs:
+        - ../../../data/interim/${browsers.brave}/${dir_name.date_one}/${item}.parquet.gzip
