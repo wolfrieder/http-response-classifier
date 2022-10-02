@@ -19,7 +19,7 @@ def create_json_of_category_dtypes(filename: str) -> dict:
 
     """
     dataset = md.read_parquet(
-        f"../../data/" f"interim/tranco_16_05_22_10k_run_06/{filename}.parquet.gzip"
+        f"../../data/interim/chrome/08_12_2022/{filename}.parquet.gzip"
     )
     # TODO: remove test limit
     dataset = dataset.iloc[:, 8:100]
@@ -89,7 +89,7 @@ def find_int64_columns(element):
     ]:
         return None
     try:
-        # print(element)
+        print(element)
         dataset[element] = dataset[element].astype("Int64")
         return {element: "Int64"}
     except ValueError:
@@ -97,18 +97,31 @@ def find_int64_columns(element):
 
 
 if __name__ == "__main__":
-    # ray.init()
+    ray.shutdown()
+    ray.init()
     # dict_categories = create_json_of_category_dtypes("part_0")
     # with open("../../data/processed/dict_categories.json", "w") as f:
     #     json.dump(dict_categories, f, indent=10)
-    # ray.shutdown()
     dataset = pd.read_parquet(
         "../../data/interim/tranco_16_05_22_10k_run_06/part_0.parquet.gzip",
     )
 
+    print(dataset)
+
     pandarallel.initialize(progress_bar=True)
+    print("Start")
     # TODO error? but works in jupyter
-    int64_dtypes = dataset.iloc[:, 8:].parallel_apply(
+    int64_dtypes = dataset.iloc[:, 8:].apply(
         lambda x: find_int64_columns(x.name)
     )
     # update_category_json(int64_dtypes)
+
+    print("DONE")
+
+# braze = data.iloc[:,8:].parallel_apply(lambda x: test(x.name))
+# #%%
+# braze = list(filter(lambda x: type(x) is dict, braze[0].tolist()))
+# #%%
+# braze = {k: v for d in braze for k, v in d.items()}
+# #%%
+# dict_categories_.update(braze)

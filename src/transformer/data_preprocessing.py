@@ -96,6 +96,6 @@ if __name__ == "__main__":
     )
     dataset = create_target_column(dataset)
     # dataset = overwrite_dtypes_of_dataset(dataset, dataset.columns.values)
-    dataset.to_parquet(
-        f"data/interim/{dir_path}/{sys.argv[3]}_processed.parquet.gzip", compression="gzip"
-    )
+    # dataset.to_parquet(
+    #     f"data/interim/{dir_path}/{sys.argv[3]}_processed.parquet.gzip", compression="gzip"
+    # )
