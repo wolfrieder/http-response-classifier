@@ -40,31 +40,31 @@ stages:
       md5: 6a93e610a262c44011eee66323bfee8e
       size: 1951475
   import@http.1:
-    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.1
+    cmd: python3 ../../../src/transformer/parse_raw_data.py chrome 08_12_2022 http.1
     deps:
-    - path: data/raw/chrome/08_12_2022/http.1.json.gzip
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 75547ba995ff03e8c388c89f1e4667f0
+      size: 7427
+    - path: 08_12_2022/http.1.json.gzip
       md5: 1e7fbf15e27d3df6480ae305efc2e51f
       size: 27234138
-    - path: src/transformer/parse_raw_data.py
-      md5: 84eedc81e587c9d92f505a025b98a090
-      size: 6786
     outs:
-    - path: data/interim/chrome/08_12_2022/http.1.parquet.gzip
-      md5: ab14ac54421a7e023e77673f1bb5a82a
-      size: 21404794
+    - path: ../../../data/interim/chrome/08_12_2022/http.1.parquet.gzip
+      md5: c2304265c6cba14e9a996958baf37b1a
+      size: 21397747
   import@http.0:
-    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.0
+    cmd: python3 ../../../src/transformer/parse_raw_data.py chrome 08_12_2022 http.0
     deps:
-    - path: data/raw/chrome/08_12_2022/http.0.json.gzip
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 75547ba995ff03e8c388c89f1e4667f0
+      size: 7427
+    - path: 08_12_2022/http.0.json.gzip
       md5: 288cf106b55f4b2453d729d6579a4fe1
       size: 26647207
-    - path: src/transformer/parse_raw_data.py
-      md5: 84eedc81e587c9d92f505a025b98a090
-      size: 6786
     outs:
-    - path: data/interim/chrome/08_12_2022/http.0.parquet.gzip
-      md5: 0aff55e93f5a2e46a9c80713c9d2b590
-      size: 21793045
+    - path: ../../../data/interim/chrome/08_12_2022/http.0.parquet.gzip
+      md5: eb1e552883c08a50d604bce9936ff956
+      size: 21787443
   import@http.2:
     cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.2
     deps:
@@ -92,18 +92,22 @@ stages:
       md5: c2304265c6cba14e9a996958baf37b1a
       size: 21397747
   train_test_split:
-    cmd: python3 src/transformer/train_test_split.py chrome  08_12_2022 http.1 1
+    cmd: python3 ../../../src/transformer/train_test_split.py chrome 08_12_2022 http.0
+      0 http.1 1
     deps:
-    - path: data/interim/chrome/08_12_2022/http.1_processed.parquet.gzip
+    - path: ../../../data/interim/chrome/08_12_2022/http.0.parquet.gzip
+      md5: eb1e552883c08a50d604bce9936ff956
+      size: 21787443
+    - path: ../../../data/interim/chrome/08_12_2022/http.1.parquet.gzip
       md5: c2304265c6cba14e9a996958baf37b1a
       size: 21397747
-    - path: src/transformer/train_test_split.py
-      md5: c58736aaa252b2b7f6e7b15346111fe1
-      size: 2429
+    - path: ../../../src/transformer/train_test_split.py
+      md5: b9605cc54ad90b59ba191dcfb965ecdf
+      size: 4137
     outs:
-    - path: data/processed/chrome/08_12_2022/test_set_1.parquet.gzip
-      md5: 8febbfe8c226953c6bde1e5041765548
-      size: 5122962
-    - path: data/processed/chrome/08_12_2022/train_set_1.parquet.gzip
-      md5: e8ca2517dd2095b02971155ec698b565
-      size: 12547838
+    - path: ../../../data/processed/chrome/08_12_2022/test_set_01.parquet.gzip
+      md5: 7daf0d9995c536de005564138751906b
+      size: 14938283
+    - path: ../../../data/processed/chrome/08_12_2022/train_set_01.parquet.gzip
+      md5: 48a5b7338fd358d386e7a6e5b043d0a5
+      size: 46473012

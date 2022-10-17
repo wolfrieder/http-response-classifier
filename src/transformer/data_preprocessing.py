@@ -42,49 +42,6 @@ def fuzzy_string_matching_wrapper(data: pd.DataFrame) -> pd.DataFrame:
     return pd.concat(match, ignore_index=True)
 
 
-def overwrite_dtypes_of_dataset(
-    data: pd.DataFrame, columns: np.ndarray
-) -> pd.DataFrame:
-    """
-
-    Parameters
-    ----------
-    data
-    columns
-
-    Returns
-    -------
-    pd.DataFrame
-
-    """
-    with open("../../data/processed/dict_category_dtypes.json", "r") as categories:
-        dict_categories = json.loads(categories.read())
-    dict_categories = {
-        key: value for (key, value) in dict_categories.items() if key in columns
-    }
-    return data.astype(dict_categories)
-
-
-def create_target_column(data: pd.DataFrame) -> pd.DataFrame:
-    """
-
-    Parameters
-    ----------
-    data
-
-    Returns
-    -------
-    pd.DataFrame
-
-    """
-    data["tracker"] = np.where(
-        np.logical_or(data.easylist == 1, data.easyprivacy == 1), 1, 0
-    )
-    data["tracker"] = data["tracker"].astype(np.int32)
-    data.drop(["easylist", "easyprivacy"], axis=1, inplace=True)
-    return data
-
-
 if __name__ == "__main__":
     # ray.init()
     browser = sys.argv[1]
@@ -94,7 +51,6 @@ if __name__ == "__main__":
     dataset = pd.read_parquet(
         f"data/interim/{dir_path}/{sys.argv[3]}.parquet.gzip",
     )
-    dataset = create_target_column(dataset)
     # dataset = overwrite_dtypes_of_dataset(dataset, dataset.columns.values)
     # dataset.to_parquet(
     #     f"data/interim/{dir_path}/{sys.argv[3]}_processed.parquet.gzip", compression="gzip"

@@ -209,6 +209,26 @@ def prepare_initial_dataset(file_name: str, target_file: str) -> pd.DataFrame:
     return data[data["responseHeaders"].map(len) != 0].reset_index(drop=True)
 
 
+def create_target_column(data: pd.DataFrame) -> pd.DataFrame:
+    """
+
+    Parameters
+    ----------
+    data
+
+    Returns
+    -------
+    pd.DataFrame
+
+    """
+    data["tracker"] = np.where(
+        np.logical_or(data.easylist == 1, data.easyprivacy == 1), 1, 0
+    )
+    data["tracker"] = data["tracker"].astype(np.int32)
+    data.drop(["easylist", "easyprivacy"], axis=1, inplace=True)
+    return data
+
+
 def parse_dataset(origin_file_name: str, origin_dir_name: str,
                   target_file_name: str, target_dir_name: str,
                   n_chunks: int) -> None:
@@ -260,6 +280,7 @@ def parse_dataset(origin_file_name: str, origin_dir_name: str,
         axis=1
     )
     result = result.loc[:, ~result.columns.duplicated()]
+    result = create_target_column(result)
     write_to_parquet_file(result, target_file_name, target_dir_name)
     print("End")
 
@@ -267,7 +288,7 @@ def parse_dataset(origin_file_name: str, origin_dir_name: str,
 if __name__ == "__main__":
     ray.shutdown()
     ray.init()
-    pd.set_option("display.max_columns", 500)
+    # pd.set_option("display.max_columns", 500)
 
     start = time.perf_counter()
     browser = sys.argv[1]
@@ -283,7 +304,6 @@ if __name__ == "__main__":
     parse_dataset(sys.argv[3], dir_path, sys.argv[3],
                   f'interim/{browser}/{directory}', 3000)
 
-    # combine_datasets(['data1', 'data2'], "interim/tranco_16_05_22_10k_run_06")
     stop = time.perf_counter()
     print("end time:", stop - start)
 
