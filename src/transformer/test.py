@@ -296,14 +296,6 @@ if __name__ == "__main__":
 
         bar(0.8)
 
-        bar.text('Combine columns')
-        summary_table2 = create_summary_table(data)
-
-        concise_information_wrapper(data, summary_table2)
-        concise_information_wrapper(data_test, summary_table2)
-
-        bar(0.9)
-
         bar.text('Drop columns')
 
         data.drop(remove_headers_with_one_na_ratio, axis=1, inplace=True)
@@ -315,6 +307,14 @@ if __name__ == "__main__":
         del remove_headers_with_one_na_ratio
         del number_of_elements
         del summary_table
+
+        bar(0.85)
+
+        bar.text('Combine columns')
+        summary_table2 = create_summary_table(data)
+
+        concise_information_wrapper(data, summary_table2)
+        concise_information_wrapper(data_test, summary_table2)
 
         bar(0.95)
 
