@@ -5,3 +5,8 @@ browsers:
 
 dir_name:
   date_one: '08_12_2022'
+
+ml_flow:
+  MLFLOW_TRACKING_URI: https://dagshub.com/wolfrieder/thesis_project_v2.mlflow
+  MLFLOW_TRACKING_USERNAME: wolfrieder
+  MLFLOW_TRACKING_PASSWORD: 2262e9d1cbe59f0bbd8d6de1e85e69276b626b2b

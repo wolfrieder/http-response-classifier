@@ -3,6 +3,42 @@ import numpy as np
 from sklearn import preprocessing
 from scipy.stats import kstest, shapiro, probplot
 import xgboost
+from collections import Counter
+
+
+# https://towardsdatascience.com/dealing-with-features-that-have-high-cardinality-1c9212d7ff1b
+def cumulatively_categorise(column, threshold=0.75, return_categories_list=True):
+    # Find the threshold value using the percentage and number of instances in the column
+    threshold_value = int(threshold * len(column))
+    # Initialise an empty list for our new minimised categories
+    categories_list = []
+    # Initialise a variable to calculate the sum of frequencies
+    s = 0
+    # Create a counter dictionary of the form unique_value: frequency
+    counts = Counter(column)
+
+    # Loop through the category name and its corresponding frequency after
+    # sorting the categories by descending order of frequency
+    for i, j in counts.most_common():
+        # Add the frequency to the global sum
+        s += dict(counts)[i]
+        # Append the category name to the list
+        categories_list.append(i)
+        # Check if the global sum has reached the threshold value, if so break the loop
+        if s >= threshold_value:
+            break
+    # Append the category Other to the list
+    categories_list.append("Other")
+
+    # Replace all instances not in our new categories by Other
+    new_column = column.apply(lambda x: x if x in categories_list else "Other")
+
+    # Return transformed column and unique values if return_categories=True
+    if return_categories_list:
+        return new_column, categories_list
+    # Return only the transformed column if return_categories=False
+    else:
+        return new_column
 
 
 def variance_per_column_2(column):
@@ -24,10 +60,48 @@ def label_as_last_column(dataset):
     index_col = dataset.columns.get_loc("tracker")
     new_col_order = (
         temp_cols[0:index_col]
-        + temp_cols[index_col + 1:]
-        + temp_cols[index_col: index_col + 1]
+        + temp_cols[index_col + 1 :]
+        + temp_cols[index_col : index_col + 1]
     )
     return new_col_order
+
+
+def impute_value(element, classification):
+    check = (
+        summary_table.loc[summary_table.header_name == element, "ratio_tracker"].values[
+            0
+        ]
+        if classification == 1
+        else summary_table.loc[
+            summary_table.header_name == element, "ratio_non_tracker"
+        ].values[0]
+    )
+    if element in ["content-length", "age"]:
+        value = int(
+            train_data[train_data["tracker"] == classification][element].median()
+        )
+        if check < 0.4:
+            value = -1
+        imputed_values_dict[classification].append({element: value})
+        train_data.loc[
+            train_data["tracker"] == classification, element
+        ] = train_data.loc[train_data["tracker"] == classification, element].fillna(
+            value
+        )
+
+    if element in list_of_categorical_cols:
+        value = (
+            train_data[train_data["tracker"] == classification][element].mode().iloc[0]
+        )
+        if check < 0.4:
+            value = "Missing"
+            train_data[element].cat.add_categories("Missing", inplace=True)
+        imputed_values_dict[classification].append({element: value})
+        train_data.loc[
+            train_data["tracker"] == classification, element
+        ] = train_data.loc[train_data["tracker"] == classification, element].fillna(
+            value
+        )
 
 
 if __name__ == "__main__":
@@ -42,6 +116,14 @@ if __name__ == "__main__":
     train_data = train_data.iloc[:, 4:]
     test_data = test_data.iloc[:, 4:]
 
+    for df in [train_data, test_data]:
+        df["comb_col_non_tracker"] = df["comb_col_non_tracker"].astype(
+            "uint8"
+        )
+        df["comb_col_tracker"] = df["comb_col_tracker"].astype("uint8")
+        df["header_count"] = df["header_count"].astype("uint8")
+        df["tracker"] = df["tracker"].astype("uint8")
+
     number_of_elements_reduced = np.array(
         [variance_per_column_2(column) for column in train_data.iloc[:, :-4].columns]
     )
@@ -51,31 +133,181 @@ if __name__ == "__main__":
     summary_table["trackers"] = summary_table["trackers"].astype("Int32")
     summary_table["non_trackers"] = summary_table["non_trackers"].astype("float32")
 
+    number_of_trackers = len(train_data[train_data['tracker'] == 1])
+    number_of_non_trackers = len(train_data[train_data['tracker'] == 0])
+    summary_table['ratio_tracker'] = summary_table['trackers'] / number_of_trackers
+    summary_table['ratio_non_tracker'] = summary_table['non_trackers'] / number_of_non_trackers
+    summary_table['tracker_na_ratio'] = train_data[train_data['tracker'] == 1].iloc[:, :-4].isnull().mean().values
+    summary_table['non_tracker_na_ratio'] = train_data[train_data['tracker'] == 0].iloc[:, :-4].isnull().mean().values
+
     na_ratio_greater_than_85 = summary_table[
         summary_table["tracker_na_ratio"] >= 0.85
     ].header_name.values.tolist()
 
     for elem in na_ratio_greater_than_85:
-        train_data[f'{elem}_binary'] = np.where(train_data[elem].isnull(), 0, 1)
-        test_data[f'{elem}_binary'] = np.where(test_data[elem].isnull(), 0, 1)
+        train_data[f"{elem}_binary"] = np.where(train_data[elem].isnull(), 0, 1)
+        test_data[f"{elem}_binary"] = np.where(test_data[elem].isnull(), 0, 1)
 
-    train_data.drop(na_ratio_greater_than_85, axis=1, inplace=True)
-    test_data.drop(na_ratio_greater_than_85, axis=1, inplace=True)
+    for df in [train_data, test_data]:
+        df.drop(na_ratio_greater_than_85, axis=1, inplace=True)
+        df.drop(["last-modified", "date"], axis=1, inplace=True)
 
-    train_data.drop(['last-modified', 'date'], axis=1, inplace=True)
-    test_data.drop(['last-modified', 'date'], axis=1, inplace=True)
+    list_of_integer_cols = list(
+        train_data.select_dtypes("Int64").columns.values.tolist()
+    )
+    # list_of_float_cols = list(
+    #     train_data.select_dtypes("Float64").columns.values.tolist()
+    # )
+
+    binary_cols = list(filter(lambda x: "_binary" in x, list_of_integer_cols))
+    for elem in binary_cols:
+        train_data[elem] = train_data[elem].astype("uint8")
+        test_data[elem] = train_data[elem].astype("uint8")
+
+    # Data preprocessing, following lines should be moved
+    train_data.replace(" ", np.nan, inplace=True)
+    test_data.replace(" ", np.nan, inplace=True)
+
+    train_data.replace("", np.nan, inplace=True)
+    test_data.replace("", np.nan, inplace=True)
+
+    # etag
+    for df in [train_data, test_data]:
+        df.etag = df.etag.astype("object")
+        df.etag.replace(to_replace=r"^w\/", value="", regex=True, inplace=True)
+        df.etag = df.etag.astype("category")
+        df["etag_length"] = df.etag.apply(len)
+        df['etag_length'].fillna(-1, inplace=True)
+        df.etag_length = df.etag_length.astype('int16')
+
+    # access-control-allow-origin
+    transformed_column, new_category_list = cumulatively_categorise(
+        train_data["access-control-allow-origin"], return_categories_list=True
+    )
+    train_data["access-control-allow-origin_cumulative"] = transformed_column
+    train_data["access-control-allow-origin_cumulative"] = train_data[
+        "access-control-allow-origin_cumulative"
+    ].astype("category")
+    train_data.drop("access-control-allow-origin", axis=1, inplace=True)
+
+    transformed_column_test, new_category_list_test = cumulatively_categorise(
+        test_data['access-control-allow-origin'], return_categories_list=True
+    )
+    test_data["access-control-allow-origin_cumulative"] = transformed_column_test
+    test_data["access-control-allow-origin_cumulative"] = test_data[
+        "access-control-allow-origin_cumulative"
+    ].astype("category")
+    test_data.drop("access-control-allow-origin", axis=1, inplace=True)
+
+    # age
+    train_data["age"] = train_data["age"].astype("object")
+    train_data.age.replace(to_replace=r"^0.*\d", value=0, regex=True, inplace=True)
+    train_data.age.replace(to_replace=r'^60;', value=60, regex=True, inplace=True)
+    train_data.age.replace("null", np.nan, inplace=True)
+    train_data.age = train_data.age.astype("float64")
+
+    test_data['age'] = test_data['age'].astype('object')
+    test_data.age.replace(to_replace=r'^0.*\d', value=0, regex=True, inplace=True)
+    test_data.age.replace(to_replace=r'^60;', value=60, regex=True, inplace=True)
+    test_data.age.replace("null", np.nan, inplace=True)
+    test_data.age = test_data.age.astype("float64")
+
+    # server
+    train_data.server = train_data.server.astype("object")
+    server_values = [
+        "nginx",
+        "apache",
+        "ecacc",
+        "ecs",
+        "oracle",
+        "mt3",
+        "microsoft",
+        "jetty",
+        "ats",
+        "openresty",
+    ]
+    for elem in server_values:
+        train_data.server.replace(
+            to_replace=rf"^{elem}.*", value=f"{elem}", regex=True, inplace=True
+        )
+        test_data.server.replace(
+            to_replace=rf"^{elem}.*", value=f"{elem}", regex=True, inplace=True
+        )
+
+    transformed_column_server, new_category_list_server = cumulatively_categorise(
+        train_data.server, threshold=0.9, return_categories_list=True
+    )
+    train_data.server = transformed_column_server
+    train_data.server = train_data.server.astype("category")
+
+    transformed_column_server_test, new_category_list_server_test = \
+        cumulatively_categorise(test_data.server, threshold=0.9, return_categories_list=True)
+
+    test_data.server = transformed_column_server
+    test_data.server = test_data.server.astype("category")
+
+    # Imputation
+    impute_col_list_t = summary_table[
+        summary_table["ratio_tracker"] > 0.4
+    ].header_name.values.tolist()
+    impute_col_list_nt = summary_table[
+        summary_table["ratio_non_tracker"] > 0.4
+    ].header_name.values.tolist()
+
+    list_of_categorical_cols = list(
+        train_data.select_dtypes("category").columns.values.tolist()
+    )
+
+    current_header = train_data.columns.tolist()
+    impute_col_list_t = list(filter(lambda x: x in current_header, impute_col_list_t))
+    impute_col_list_nt = list(filter(lambda x: x in current_header, impute_col_list_nt))
+
+    imputed_values_dict = {0: [], 1: []}
+
+    for header in impute_col_list_t:
+        impute_value(header, 0)
+
+    for header in impute_col_list_t:
+        impute_value(header, 1)
+
+    for header in impute_col_list_nt:
+        impute_value(header, 1)
+
+    for header in impute_col_list_nt:
+        impute_value(header, 0)
+
+    for elem in imputed_values_dict[0]:
+        (key, value), = elem.items()
+        if key in list_of_categorical_cols:
+            if value not in test_data[key].cat.categories:
+                test_data[key].cat.add_categories('Missing', inplace=True)
+        test_data.loc[test_data['tracker'] == 0, key] = test_data.loc[test_data['tracker'] == 0, key].fillna(value)
+
+    for elem in imputed_values_dict[1]:
+        (key, value), = elem.items()
+        if key in list_of_categorical_cols:
+            if value not in test_data[key].cat.categories:
+                test_data[key].cat.add_categories('Missing', inplace=True)
+        test_data.loc[test_data['tracker'] == 1, key] = test_data.loc[test_data['tracker'] == 1, key].fillna(value)
+
+    train_data['access-control-allow-origin_cumulative'].cat.add_categories('Missing', inplace=True)
+    test_data['access-control-allow-origin_cumulative'].cat.add_categories('Missing', inplace=True)
+    train_data['access-control-allow-origin_cumulative'].fillna('Missing', inplace=True)
+    test_data['access-control-allow-origin_cumulative'].fillna('Missing', inplace=True)
+
+    for elem in ['pragma', 'p3p', 'x-xss-protection', 'x-content-type-options', 'strict-transport-security',
+                 'access-control-allow-credentials', 'timing-allow-origin']:
+        train_data[f"{elem}_binary"] = np.where(train_data[elem].isnull(), 0, 1)
+        test_data[f"{elem}_binary"] = np.where(test_data[elem].isnull(), 0, 1)
+
+    train_data.drop(['pragma', 'p3p', 'x-xss-protection', 'x-content-type-options', 'strict-transport-security',
+                     'access-control-allow-credentials', 'timing-allow-origin'], axis=1, inplace=True)
+    test_data.drop(['pragma', 'p3p', 'x-xss-protection', 'x-content-type-options', 'strict-transport-security',
+                    'access-control-allow-credentials', 'timing-allow-origin'], axis=1, inplace=True)
+
+    # change dtype to uint8
 
     # put tracker column at the end
     reordered_cols = label_as_last_column(train_data)
     train_data = train_data[reordered_cols]
     test_data = test_data[reordered_cols]
-
-    X_train, y_train = train_data.iloc[:, :-1], train_data[["tracker"]]
-    X_test, y_test = test_data.iloc[:, :-1], test_data[["tracker"]]
-
-    list_of_categorical_cols = list(
-        X_train.iloc[:, :-3].select_dtypes("category").columns.values.tolist()
-    )
-    list_of_integer_cols = list(
-        X_train.iloc[:, :-3].select_dtypes("Int64").columns.values.tolist()
-    )
