@@ -1,2 +1,6 @@
 /train_set_01.parquet.gzip
 /test_set_01.parquet.gzip
+/test_set_01_processed.parquet.gzip
+/test_set_01_featurized.parquet.gzip
+/train_set_01_processed.parquet.gzip
+/train_set_01_featurized.parquet.gzip

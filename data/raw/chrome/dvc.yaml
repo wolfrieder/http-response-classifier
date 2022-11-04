@@ -56,12 +56,13 @@ stages:
       python3 ../../../src/transformer/data_preprocessing.py
       ${browsers.chrome}
       ${dir_name.date_one}
-      http.1
     deps:
       - ../../../src/transformer/data_preprocessing.py
-      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/http.1.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01.parquet.gzip
     outs:
-      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/http.1_processed.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
 
 #  code not final
   feature_engineering:
@@ -69,9 +70,10 @@ stages:
       python3 ../../../src/transformer/data_preprocessing.py
       ${browsers.chrome}
       ${dir_name.date_one}
-      http.1
     deps:
       - ../../../src/transformer/data_preprocessing.py
-      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/http.1.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
     outs:
-      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/http.1_processed.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
