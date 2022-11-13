@@ -72,7 +72,7 @@ stages:
       ${dir_name.date_one}
     deps:
       - ../../../src/transformer/feature_engineeering.py
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
     outs:
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
@@ -88,5 +88,5 @@ stages:
       - ../../../src/models/train_model.py
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
-    outs:
-      - ../../../models/${browsers.chrome}/${dir_name.date_one}/model.sav
+#    outs:
+#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/model.sav
