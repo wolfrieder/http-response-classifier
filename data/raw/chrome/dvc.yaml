@@ -88,5 +88,5 @@ stages:
       - ../../../src/models/train_model.py
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
-#    outs:
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/model.sav
+    outs:
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/random_forest_binary.sav
