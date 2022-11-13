@@ -30,6 +30,7 @@ import category_encoders as ce
 import mlflow
 import os
 import logging
+import pickle
 
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
@@ -37,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
-    with open("../../params.yaml", "rb") as f:
+    with open("../../../params.yaml", "rb") as f:
         params = yaml.load(f, yaml.FullLoader)
 
     mlflow.set_tracking_uri(params["ml_flow"]["MLFLOW_TRACKING_URI"])
@@ -53,10 +54,10 @@ if __name__ == "__main__":
     # mlflow.xgboost.autolog()
 
     train_data = pd.read_parquet(
-        "../../data/processed/chrome/08_12_2022/train_set_01_featurized.parquet.gzip"
+        "../../../data/processed/chrome/08_12_2022/train_set_01_featurized.parquet.gzip"
     )
     test_data = pd.read_parquet(
-        "../../data/processed/chrome/08_12_2022/test_set_01_featurized.parquet.gzip"
+        "../../../data/processed/chrome/08_12_2022/test_set_01_featurized.parquet.gzip"
     )
 
     with mlflow.start_run():
@@ -90,7 +91,7 @@ if __name__ == "__main__":
         preprocessor = ColumnTransformer(
             transformers=[
                 ("num", numeric_transformer, ["content-length"]),
-                ("cat", ce.HashingEncoder(), selector(dtype_include="category")),
+                ("cat", ce.WOEEncoder(), selector(dtype_include="category")),
             ]
         )
 
@@ -123,3 +124,6 @@ if __name__ == "__main__":
         precision = metrics.precision_score(y_test, y_pred)
         print("Precision score : {0:0.4f}".format(precision))
         mlflow.end_run()
+
+    filename = "random_forest_v2_binary.sav"
+    pickle.dump(clf['classifier'], open(f'../../../models/chrome/08_12_2022/{filename}', 'wb'))

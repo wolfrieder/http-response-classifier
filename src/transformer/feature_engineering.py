@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+
 # from scipy.stats import kstest, shapiro, probplot
 from collections import Counter
 import warnings
@@ -59,8 +60,8 @@ def label_as_last_column(dataset):
     index_col = dataset.columns.get_loc("tracker")
     new_col_order = (
         temp_cols[0:index_col]
-        + temp_cols[index_col + 1:]
-        + temp_cols[index_col: index_col + 1]
+        + temp_cols[index_col + 1 :]
+        + temp_cols[index_col : index_col + 1]
     )
     return new_col_order
 
@@ -103,15 +104,15 @@ def impute_value(element, classification):
         )
 
 
-warnings.simplefilter(action='ignore', category=FutureWarning)
-warnings.simplefilter(action='ignore', category=pd.errors.PerformanceWarning)
+warnings.simplefilter(action="ignore", category=FutureWarning)
+warnings.simplefilter(action="ignore", category=pd.errors.PerformanceWarning)
 
 if __name__ == "__main__":
     train_data = pd.read_parquet(
-        "../../data/processed/chrome/08_12_2022/train_set_01_processed.parquet.gzip"
+        "../../../data/processed/chrome/08_12_2022/train_set_01_processed.parquet.gzip"
     )
     test_data = pd.read_parquet(
-        "../../data/processed/chrome/08_12_2022/test_set_01_processed.parquet.gzip"
+        "../../../data/processed/chrome/08_12_2022/test_set_01_processed.parquet.gzip"
     )
 
     # exclude metadata columns
@@ -119,15 +120,13 @@ if __name__ == "__main__":
     test_data = test_data.iloc[:, 4:]
 
     for df in [train_data, test_data]:
-        df["comb_col_non_tracker"] = df["comb_col_non_tracker"].astype(
-            "uint8"
-        )
+        df["comb_col_non_tracker"] = df["comb_col_non_tracker"].astype("uint8")
         df["comb_col_tracker"] = df["comb_col_tracker"].astype("uint8")
-        df["header_count"] = df["header_count"].astype("uint8")
+        # df["header_count"] = df["header_count"].astype("uint8")
         df["tracker"] = df["tracker"].astype("uint8")
 
     number_of_elements_reduced = np.array(
-        [variance_per_column_2(column) for column in train_data.iloc[:, :-4].columns]
+        [variance_per_column_2(column) for column in train_data.iloc[:, :-3].columns]
     )
     summary_table = pd.DataFrame(
         number_of_elements_reduced, columns=["header_name", "trackers", "non_trackers"]
@@ -135,12 +134,18 @@ if __name__ == "__main__":
     summary_table["trackers"] = summary_table["trackers"].astype("Int32")
     summary_table["non_trackers"] = summary_table["non_trackers"].astype("float32")
 
-    number_of_trackers = len(train_data[train_data['tracker'] == 1])
-    number_of_non_trackers = len(train_data[train_data['tracker'] == 0])
-    summary_table['ratio_tracker'] = summary_table['trackers'] / number_of_trackers
-    summary_table['ratio_non_tracker'] = summary_table['non_trackers'] / number_of_non_trackers
-    summary_table['tracker_na_ratio'] = train_data[train_data['tracker'] == 1].iloc[:, :-4].isnull().mean().values
-    summary_table['non_tracker_na_ratio'] = train_data[train_data['tracker'] == 0].iloc[:, :-4].isnull().mean().values
+    number_of_trackers = len(train_data[train_data["tracker"] == 1])
+    number_of_non_trackers = len(train_data[train_data["tracker"] == 0])
+    summary_table["ratio_tracker"] = summary_table["trackers"] / number_of_trackers
+    summary_table["ratio_non_tracker"] = (
+        summary_table["non_trackers"] / number_of_non_trackers
+    )
+    summary_table["tracker_na_ratio"] = (
+        train_data[train_data["tracker"] == 1].iloc[:, :-3].isnull().mean().values
+    )
+    summary_table["non_tracker_na_ratio"] = (
+        train_data[train_data["tracker"] == 0].iloc[:, :-3].isnull().mean().values
+    )
 
     na_ratio_greater_than_85 = summary_table[
         summary_table["tracker_na_ratio"] >= 0.85
@@ -177,11 +182,11 @@ if __name__ == "__main__":
     for df in [train_data, test_data]:
         df.etag = df.etag.astype("object")
         df.etag.replace(to_replace=r"^w\/", value="", regex=True, inplace=True)
-        df.etag.replace(to_replace=r'\"', value="", regex=True, inplace=True)
+        df.etag.replace(to_replace=r"\"", value="", regex=True, inplace=True)
         df.etag = df.etag.astype("category")
         df["etag_length"] = df.etag.apply(len)
-        df['etag_length'].fillna(-1, inplace=True)
-        df.etag_length = df.etag_length.astype('int16')
+        df["etag_length"].fillna(-1, inplace=True)
+        df.etag_length = df.etag_length.astype("int16")
 
     # access-control-allow-origin
     for df in [train_data, test_data]:
@@ -198,9 +203,10 @@ if __name__ == "__main__":
     for df in [train_data, test_data]:
         df.age = df.age.astype("object")
         df.age.replace(to_replace=r"^0.*\d", value=0, regex=True, inplace=True)
-        df.age.replace(to_replace=r'^60;', value=60, regex=True, inplace=True)
+        df.age.replace(to_replace=r"^60;", value=60, regex=True, inplace=True)
         df.age.replace("null", np.nan, inplace=True)
         df.age = df.age.astype("float64")
+        df.drop(df[df.age < -2].index, inplace=True)
 
     # server
     server_values = [
@@ -256,21 +262,30 @@ if __name__ == "__main__":
 
     for label in [0, 1]:
         for elem in imputed_values_dict[label]:
-            (key, value), = elem.items()
+            ((key, value),) = elem.items()
             if key in list_of_categorical_cols:
                 if value not in test_data[key].cat.categories:
-                    test_data[key].cat.add_categories('Missing', inplace=True)
-            test_data.loc[test_data['tracker'] == label, key] = test_data.loc[test_data['tracker'] == label,
-                                                                              key].fillna(
-                value)
+                    test_data[key].cat.add_categories("Missing", inplace=True)
+            test_data.loc[test_data["tracker"] == label, key] = test_data.loc[
+                test_data["tracker"] == label, key
+            ].fillna(value)
 
     for df in [train_data, test_data]:
-        df['access-control-allow-origin_cumulative'].cat.add_categories('Missing', inplace=True)
-        df['access-control-allow-origin_cumulative'].fillna('Missing', inplace=True)
+        df["access-control-allow-origin_cumulative"].cat.add_categories(
+            "Missing", inplace=True
+        )
+        df["access-control-allow-origin_cumulative"].fillna("Missing", inplace=True)
 
     for df in [train_data, test_data]:
-        for elem in ['pragma', 'p3p', 'x-xss-protection', 'x-content-type-options', 'strict-transport-security',
-                     'access-control-allow-credentials', 'timing-allow-origin']:
+        for elem in [
+            "pragma",
+            "p3p",
+            "x-xss-protection",
+            "x-content-type-options",
+            "strict-transport-security",
+            "access-control-allow-credentials",
+            "timing-allow-origin",
+        ]:
             df[f"{elem}_binary"] = np.where(df[elem].isnull(), 0, 1)
             df[f"{elem}_binary"] = df[f"{elem}_binary"].astype("uint8")
             df.drop(elem, axis=1, inplace=True)
@@ -279,3 +294,13 @@ if __name__ == "__main__":
     reordered_cols = label_as_last_column(train_data)
     train_data = train_data[reordered_cols]
     test_data = test_data[reordered_cols]
+
+    train_data.to_parquet(
+        f"../../../data/processed/chrome/08_12_2022/train_set_01_featurized.parquet.gzip",
+        compression="gzip",
+    )
+
+    test_data.to_parquet(
+        f"../../../data/processed/chrome/08_12_2022/test_set_01_featurized.parquet.gzip",
+        compression="gzip",
+    )
