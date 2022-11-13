@@ -1,14 +1,7 @@
 import os
 import sys
 
-# import pandas as pd
-import ray
-
-# import modin.pandas as pd
 import pandas as pd
-
-# import yaml
-# from pandarallel import pandarallel
 import swifter
 from rapidfuzz import process
 import numpy as np
@@ -192,16 +185,19 @@ if __name__ == "__main__":
             "../../data/processed/chrome/08_12_2022/train_set_01.parquet.gzip"
         )
 
-        data_test = pd.read_parquet(
-            "../../data/processed/chrome/08_12_2022/test_set_01.parquet.gzip"
-        )
+        # data_test = pd.read_parquet(
+        #     "../../data/processed/chrome/08_12_2022/test_set_01.parquet.gzip"
+        # )
+
+        data_test = pd.read_parquet('../../data/interim/firefox/08_12_2022/http.0.parquet.gzip')
         bar(0.05)
 
-        bar.text('Count number of headers per message')
-        data["header_count"] = data.iloc[:, 6:-1].notnull().sum(axis=1)
-        bar(0.1)
-        data_test["header_count"] = data_test.iloc[:, 6:-1].notnull().sum(axis=1)
-        bar(0.15)
+        # not really important and takes a lot of time to compute
+        # bar.text('Count number of headers per message')
+        # data["header_count"] = data.iloc[:, 6:-1].notnull().sum(axis=1)
+        # bar(0.1)
+        # data_test["header_count"] = data_test.iloc[:, 6:-1].notnull().sum(axis=1)
+        # bar(0.15)
 
         bar.text('Remove empty columns')
         empty_columns = [col for col in data if data[col].isnull().all() == True]
@@ -211,10 +207,10 @@ if __name__ == "__main__":
 
         # Is that even necessary? Check papers; also in context of HTTP traffic.
         # bar.text("Remove duplicated observations")
-        # data = data[~data.iloc[:, 6:-2].duplicated(keep="first")].reset_index(drop=True)
+        # data = data[~data.iloc[:, 6:-1].duplicated(keep="first")].reset_index(drop=True)
 
         bar.text('Fuzzy match')
-        data_column_values = data.columns.values[6:-2].tolist()
+        data_column_values = data.columns.values[6:-1].tolist()
         match = [
             new_fuzzy_string_matching_for_column(j, data_column_values[i + 1:])
             for i, j in enumerate(data_column_values)
@@ -332,13 +328,13 @@ if __name__ == "__main__":
 
         bar.text('Write data to parquet.gzip')
 
-        data.to_parquet(
-            "../../data/processed/chrome/08_12_2022/train_set_01_processed.parquet.gzip",
-            compression="gzip",
-        )
-
-        data_test.to_parquet(
-            "../../data/processed/chrome/08_12_2022/test_set_01_processed.parquet.gzip",
-            compression="gzip",
-        )
+        # data.to_parquet(
+        #     "../../data/processed/chrome/08_12_2022/train_set_01_processed.parquet.gzip",
+        #     compression="gzip",
+        # )
+        #
+        # data_test.to_parquet(
+        #     "../../data/processed/chrome/08_12_2022/test_set_01_processed.parquet.gzip",
+        #     compression="gzip",
+        # )
         bar(1)

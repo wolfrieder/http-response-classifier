@@ -63,17 +63,30 @@ stages:
     outs:
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
-
-#  code not final
+#
+##  code not final
   feature_engineering:
     cmd: >-
-      python3 ../../../src/transformer/data_preprocessing.py
+      python3 ../../../src/transformer/feature_engineeering.py
       ${browsers.chrome}
       ${dir_name.date_one}
     deps:
-      - ../../../src/transformer/data_preprocessing.py
+      - ../../../src/transformer/feature_engineeering.py
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01.parquet.gzip
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
     outs:
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
+
+  model_training:
+    cmd: >-
+      python3 ../../../src/models/train_model.py
+      ${browsers.chrome}
+      ${dir_name.date_one}
+      model_type
+    deps:
+      - ../../../src/models/train_model.py
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
+    outs:
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/model.sav

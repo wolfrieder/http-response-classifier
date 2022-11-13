@@ -19,3 +19,4 @@ xgboost==1.5.1
 category_encoders==2.5.1.post0
 mlflow==1.30.0
 lightgbm==3.3.2
+catboost==1.0.4

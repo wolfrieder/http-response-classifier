@@ -1,44 +1,44 @@
 schema: '2.0'
 stages:
   import@http.4:
-    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.4
+    cmd: python3 ../../../src/transformer/parse_raw_data.py chrome 08_12_2022 http.4
     deps:
-    - path: data/raw/chrome/08_12_2022/http.4.json.gzip
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 75547ba995ff03e8c388c89f1e4667f0
+      size: 7427
+    - path: 08_12_2022/http.4.json.gzip
       md5: bb74db03fc500ba48394ea3954dc7325
       size: 26815245
-    - path: src/transformer/parse_raw_data.py
-      md5: 84eedc81e587c9d92f505a025b98a090
-      size: 6786
     outs:
-    - path: data/interim/chrome/08_12_2022/http.4.parquet.gzip
-      md5: 50b360385e8188eaf6379d9a112c7eca
-      size: 20878456
+    - path: ../../../data/interim/chrome/08_12_2022/http.4.parquet.gzip
+      md5: b59d4d0eddca6fb58f39f9a15fc93d77
+      size: 20871459
   import@http.3:
-    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.3
+    cmd: python3 ../../../src/transformer/parse_raw_data.py chrome 08_12_2022 http.3
     deps:
-    - path: data/raw/chrome/08_12_2022/http.3.json.gzip
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 75547ba995ff03e8c388c89f1e4667f0
+      size: 7427
+    - path: 08_12_2022/http.3.json.gzip
       md5: e28abc03704332a4a2b2bd902bbfdf22
       size: 27015460
-    - path: src/transformer/parse_raw_data.py
-      md5: 84eedc81e587c9d92f505a025b98a090
-      size: 6786
     outs:
-    - path: data/interim/chrome/08_12_2022/http.3.parquet.gzip
-      md5: daac7fef94c85e9ee66d66447fc5d27e
-      size: 21165187
+    - path: ../../../data/interim/chrome/08_12_2022/http.3.parquet.gzip
+      md5: 009b2205aa19b13639d0b177e48107f3
+      size: 21157864
   import@http.5:
-    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.5
+    cmd: python3 ../../../src/transformer/parse_raw_data.py chrome 08_12_2022 http.5
     deps:
-    - path: data/raw/chrome/08_12_2022/http.5.json.gzip
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 75547ba995ff03e8c388c89f1e4667f0
+      size: 7427
+    - path: 08_12_2022/http.5.json.gzip
       md5: b556f436a3c5e7b8fbeeadfbabb29ec3
       size: 1899132
-    - path: src/transformer/parse_raw_data.py
-      md5: 84eedc81e587c9d92f505a025b98a090
-      size: 6786
     outs:
-    - path: data/interim/chrome/08_12_2022/http.5.parquet.gzip
-      md5: 6a93e610a262c44011eee66323bfee8e
-      size: 1951475
+    - path: ../../../data/interim/chrome/08_12_2022/http.5.parquet.gzip
+      md5: f75b1be29cec97fd6e576925a493fa84
+      size: 1950586
   import@http.1:
     cmd: python3 ../../../src/transformer/parse_raw_data.py chrome 08_12_2022 http.1
     deps:
@@ -66,18 +66,18 @@ stages:
       md5: eb1e552883c08a50d604bce9936ff956
       size: 21787443
   import@http.2:
-    cmd: python3 src/transformer/parse_raw_data.py chrome  08_12_2022 http.2
+    cmd: python3 ../../../src/transformer/parse_raw_data.py chrome 08_12_2022 http.2
     deps:
-    - path: data/raw/chrome/08_12_2022/http.2.json.gzip
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 75547ba995ff03e8c388c89f1e4667f0
+      size: 7427
+    - path: 08_12_2022/http.2.json.gzip
       md5: c63013acd68a186927f95670293d9085
       size: 26611931
-    - path: src/transformer/parse_raw_data.py
-      md5: 84eedc81e587c9d92f505a025b98a090
-      size: 6786
     outs:
-    - path: data/interim/chrome/08_12_2022/http.2.parquet.gzip
-      md5: 7934e259de969eff25c35ba4a226207f
-      size: 20574240
+    - path: ../../../data/interim/chrome/08_12_2022/http.2.parquet.gzip
+      md5: 597425d5bf76b16bcab437a0a4fed79e
+      size: 20567194
   pre_processing:
     cmd: python3 src/transformer/data_preprocessing.py chrome  08_12_2022 http.1
     deps:
@@ -102,8 +102,8 @@ stages:
       md5: c2304265c6cba14e9a996958baf37b1a
       size: 21397747
     - path: ../../../src/transformer/train_test_split.py
-      md5: b9605cc54ad90b59ba191dcfb965ecdf
-      size: 4137
+      md5: f062e56b723627ff40381a53ec98a961
+      size: 4090
     outs:
     - path: ../../../data/processed/chrome/08_12_2022/test_set_01.parquet.gzip
       md5: 7daf0d9995c536de005564138751906b

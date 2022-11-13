@@ -47,6 +47,7 @@ if __name__ == "__main__":
     train_data = pd.read_parquet(
         "../../data/processed/chrome/08_12_2022/train_set_01.parquet.gzip"
     )
+    train_data = train_data.sample(30000, random_state=10)
     X_train, y_train = train_data.iloc[:, :-1], train_data["tracker"].to_numpy()
     del train_data
 
