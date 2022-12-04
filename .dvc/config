@@ -1,5 +1,0 @@
-[core]
-    remote = origin
-    autostage = true
-['remote "origin"']
-    url = https://dagshub.com/wolfrieder/thesis_project_v2.dvc
