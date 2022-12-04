@@ -1,0 +1,102 @@
+schema: '2.0'
+stages:
+  import@http.0:
+    cmd: python3 ../../../src/transformer/parse_raw_data.py chrome 08_12_2022 http.0
+    deps:
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 75547ba995ff03e8c388c89f1e4667f0
+      size: 7427
+    - path: 08_12_2022/http.0.json.gzip
+      md5: 288cf106b55f4b2453d729d6579a4fe1
+      size: 26647207
+    outs:
+    - path: ../../../data/interim/chrome/08_12_2022/http.0.parquet.gzip
+      md5: eb1e552883c08a50d604bce9936ff956
+      size: 21787443
+  import@http.1:
+    cmd: python3 ../../../src/transformer/parse_raw_data.py chrome 08_12_2022 http.1
+    deps:
+    - path: ../../../src/transformer/parse_raw_data.py
+      md5: 75547ba995ff03e8c388c89f1e4667f0
+      size: 7427
+    - path: 08_12_2022/http.1.json.gzip
+      md5: 1e7fbf15e27d3df6480ae305efc2e51f
+      size: 27234138
+    outs:
+    - path: ../../../data/interim/chrome/08_12_2022/http.1.parquet.gzip
+      md5: c2304265c6cba14e9a996958baf37b1a
+      size: 21397747
+  train_test_split:
+    cmd: python3 ../../../src/transformer/train_test_split.py chrome 08_12_2022 http.0
+      0 http.1 1
+    deps:
+    - path: ../../../data/interim/chrome/08_12_2022/http.0.parquet.gzip
+      md5: eb1e552883c08a50d604bce9936ff956
+      size: 21787443
+    - path: ../../../data/interim/chrome/08_12_2022/http.1.parquet.gzip
+      md5: c2304265c6cba14e9a996958baf37b1a
+      size: 21397747
+    - path: ../../../src/transformer/train_test_split.py
+      md5: f062e56b723627ff40381a53ec98a961
+      size: 4090
+    outs:
+    - path: ../../../data/processed/chrome/08_12_2022/test_set_01.parquet.gzip
+      md5: 7daf0d9995c536de005564138751906b
+      size: 14938283
+    - path: ../../../data/processed/chrome/08_12_2022/train_set_01.parquet.gzip
+      md5: 48a5b7338fd358d386e7a6e5b043d0a5
+      size: 46473012
+  pre_processing:
+    cmd: python3 ../../../src/transformer/data_preprocessing.py chrome 08_12_2022
+    deps:
+    - path: ../../../data/processed/chrome/08_12_2022/test_set_01.parquet.gzip
+      md5: 7daf0d9995c536de005564138751906b
+      size: 14938283
+    - path: ../../../data/processed/chrome/08_12_2022/train_set_01.parquet.gzip
+      md5: 48a5b7338fd358d386e7a6e5b043d0a5
+      size: 46473012
+    - path: ../../../src/transformer/data_preprocessing.py
+      md5: 288de1909e593c4233ab5cd475e7375b
+      size: 11299
+    outs:
+    - path: ../../../data/processed/chrome/08_12_2022/test_set_01_processed.parquet.gzip
+      md5: ea52ff519424d6b71341be7435204278
+      size: 6456351
+    - path: ../../../data/processed/chrome/08_12_2022/train_set_01_processed.parquet.gzip
+      md5: 96a9e95a1579e0a3d097bec0bda68e9a
+      size: 22233934
+  feature_engineering:
+    cmd: python3 ../../../src/features/feature_engineering.py chrome 08_12_2022
+    deps:
+    - path: ../../../data/processed/chrome/08_12_2022/test_set_01_processed.parquet.gzip
+      md5: ea52ff519424d6b71341be7435204278
+      size: 6456351
+    - path: ../../../data/processed/chrome/08_12_2022/train_set_01_processed.parquet.gzip
+      md5: 96a9e95a1579e0a3d097bec0bda68e9a
+      size: 22233934
+    - path: ../../../src/features/feature_engineering.py
+      md5: 2bf039c2d88e83e8f732ad6ecb7da253
+      size: 11588
+    outs:
+    - path: ../../../data/processed/chrome/08_12_2022/test_set_01_featurized.parquet.gzip
+      md5: 66d5192a58b950c5ac70e177a3c8e5d1
+      size: 1820283
+    - path: ../../../data/processed/chrome/08_12_2022/train_set_01_featurized.parquet.gzip
+      md5: e3d2b2abd491f8aea395a6721cabaf85
+      size: 7074980
+  model_training:
+    cmd: python3 ../../../src/models/train_model.py chrome 08_12_2022
+    deps:
+    - path: ../../../data/processed/chrome/08_12_2022/test_set_01_featurized.parquet.gzip
+      md5: 66d5192a58b950c5ac70e177a3c8e5d1
+      size: 1820283
+    - path: ../../../data/processed/chrome/08_12_2022/train_set_01_featurized.parquet.gzip
+      md5: e3d2b2abd491f8aea395a6721cabaf85
+      size: 7074980
+    - path: ../../../src/models/train_model.py
+      md5: 371cef5fe1dbc54be9669f6129235ff9
+      size: 5149
+    outs:
+    - path: ../../../models/chrome/08_12_2022/random_forest_v2_binary.sav
+      md5: bb5aaf60db7855817454c8d3cbcb0c95
+      size: 666088
