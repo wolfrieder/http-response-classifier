@@ -6,10 +6,10 @@ stages:
     foreach:
       - http.0
       - http.1
-      - http.2
-      - http.3
-      - http.4
-      - http.5
+#      - http.2
+#      - http.3
+#      - http.4
+#      - http.5
     do:
       cmd: >-
         python3 ../../../src/transformer/parse_raw_data.py
@@ -70,7 +70,7 @@ stages:
       ${browsers.chrome}
       ${dir_name.date_one}
     deps:
-      - ../../../src/transformer/feature_engineering.py
+      - ../../../src/features/feature_engineering.py
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
     outs:

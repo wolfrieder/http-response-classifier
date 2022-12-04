@@ -45,7 +45,7 @@ def select_similar_columns(fuzzy_match, column):
     return row
 
 
-def merge_similar_columns2(fuzzy_match, col_name):
+def merge_similar_columns(fuzzy_match, col_name):
     boolean_mask = data[fuzzy_match].notnull()
     new_values = data[boolean_mask][fuzzy_match].to_numpy()
     indices_fuzzy_matches = data.index[boolean_mask].tolist()
@@ -54,7 +54,7 @@ def merge_similar_columns2(fuzzy_match, col_name):
     np.put(current_values, indices_fuzzy_matches, new_values)
 
 
-def merge_similar_columns2_test(fuzzy_match, col_name):
+def merge_similar_columns_test(fuzzy_match, col_name):
     boolean_mask = data_test[fuzzy_match].notnull()
     new_values = data_test[boolean_mask][fuzzy_match].to_numpy()
     indices_fuzzy_matches = data_test.index[boolean_mask].tolist()
@@ -182,7 +182,7 @@ if __name__ == "__main__":
     with alive_bar(100, force_tty=True, manual=True, title="Data Processing") as bar:
         bar.text('Read-in data')
         data = pd.read_parquet(
-            "../../../data/processed/chrome/08_12_2022/train_set_01.parquet.gzip"
+            "../../data/processed/chrome/08_12_2022/train_set_01.parquet.gzip"
         )
 
         data_test = pd.read_parquet(
@@ -190,6 +190,7 @@ if __name__ == "__main__":
         )
 
         # data_test = pd.read_parquet('../../data/interim/firefox/08_12_2022/http.0.parquet.gzip')
+        # data_test = pd.read_parquet('../../data/processed/brave/08_12_2022/test_set_0123.parquet.gzip')
         bar(0.05)
 
         # not really important and takes a lot of time to compute
@@ -241,11 +242,11 @@ if __name__ == "__main__":
         similar_values_test = pd.concat(similar_values, ignore_index=True)
         similar_values = pd.concat(similar_values, ignore_index=True)
         similar_values.apply(
-            lambda x: merge_similar_columns2(x["fuzzy_match"], x["col_name"]), axis=1
+            lambda x: merge_similar_columns(x["fuzzy_match"], x["col_name"]), axis=1
         )
 
         similar_values_test.apply(
-            lambda x: merge_similar_columns2_test(x["fuzzy_match"], x["col_name"]),
+            lambda x: merge_similar_columns_test(x["fuzzy_match"], x["col_name"]),
             axis=1,
         )
 
