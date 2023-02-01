@@ -31,6 +31,7 @@ import mlflow
 import os
 import logging
 import pickle
+from sklearn.naive_bayes import GaussianNB
 
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
@@ -47,7 +48,9 @@ def calculate_metrics(data, y_true):
     recall = metrics.recall_score(y_true, y_pred)
     mcc = metrics.matthews_corrcoef(y_true, y_pred)
 
-    print("Model accuracy score : {0:0.4f}".format(metrics.accuracy_score(y_test, y_pred)))
+    print(
+        "Model accuracy score : {0:0.4f}".format(metrics.accuracy_score(y_test, y_pred))
+    )
     print("Model log-loss score : {0:0.4f}".format(score))
     print("Model auc score : {0:0.4f}".format(auc_score))
     print("Balanced accuracy score : {0:0.4f}".format(bal_acc))
@@ -80,7 +83,8 @@ if __name__ == "__main__":
         "MLFLOW_TRACKING_PASSWORD"
     ]
 
-    mlflow.set_experiment("imputation_by_label_experiments")
+    mlflow.set_experiment('philips_experiments')
+    # mlflow.set_experiment("imputation_by_label_experiments")
     # mlflow.set_experiment("simple_imputation_experiments")
     # mlflow.set_experiment("all_binary_experiments")
 
@@ -99,15 +103,15 @@ if __name__ == "__main__":
     X_test, y_test = test_data.iloc[:, :-1], test_data[["tracker"]]
 
     # models
-    model = RandomForestClassifier(
-        n_estimators=100,
-        n_jobs=-1,
-        random_state=10,
-        criterion="log_loss",
-        max_features=None,
-    )
+    # model = RandomForestClassifier(
+    #     n_estimators=100,
+    #     n_jobs=-1,
+    #     random_state=10,
+    #     criterion="log_loss",
+    #     max_features=None,
+    # )
 
-    # model = KNeighborsClassifier(n_jobs=-1)
+    model = KNeighborsClassifier(n_jobs=-1)
     # model = DecisionTreeClassifier()
     # model = GradientBoostingClassifier()
     # model = HistGradientBoostingClassifier()
@@ -122,15 +126,17 @@ if __name__ == "__main__":
     with mlflow.start_run():
         # clf = lgb.LGBMClassifier(class_weight="balanced")
 
-        numeric_transformer = Pipeline(steps=[("scaler", FunctionTransformer(np.log1p))])
+        numeric_transformer = Pipeline(
+            steps=[("scaler", FunctionTransformer(np.log1p))]
+        )
         norm_transformer = Pipeline(steps=[("norm_scaler", Normalizer())])
         # minmax_transformer = Pipeline(steps=[("mmscaler", MinMaxScaler(feature_range=[-1, 1]))])
 
         preprocessor = ColumnTransformer(
             transformers=[
                 ("cat", ce.WOEEncoder(), selector(dtype_include="category")),
-                ("num", numeric_transformer, ['content-length']),
-                ('age', norm_transformer, ['age']),
+                ("num", numeric_transformer, ["content-length"]),
+                ("age", norm_transformer, ["age"]),
             ]
         )
 

@@ -146,7 +146,7 @@ def test_new_categories_update(element, dataset):
 
 def create_categories_list(dataset):
     dtype_list = {i: "category" for i in dataset.columns.values[:-1]}
-    current_columns = dataset.columns.values[6:-1].tolist()
+    current_columns = dataset.columns.values[4:-1].tolist()
     int64_columns = [
         test_new_categories_update(element, dataset) for element in current_columns
     ]
