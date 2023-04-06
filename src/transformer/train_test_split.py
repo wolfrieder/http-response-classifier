@@ -1,64 +1,9 @@
 import os
 import sys
 
-import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.model_selection import (
-    StratifiedShuffleSplit,
-    StratifiedKFold,
-    StratifiedGroupKFold,
-)
-from sklearn.model_selection import train_test_split
+from src.pipeline_functions.train_test_split_functions import stratified_shuffle_split
 from alive_progress import alive_bar
-
-
-def split_dataset(splitter, X, y):
-    for train, test in splitter.split(X, y):
-        X_train, X_test = X.iloc[train], X.iloc[test]
-        y_train, y_test = y.iloc[train], y.iloc[test]
-
-    return X_train, y_train, X_test, y_test
-
-
-def stratified_shuffle_split(X, y):
-    split = StratifiedShuffleSplit(n_splits=1, random_state=10, test_size=0.2)
-    return split_dataset(split, X, y)
-
-
-def stratified_kfold_split(X, y):
-    split = StratifiedKFold(n_splits=2, random_state=10, shuffle=True)
-    return split_dataset(split, X, y)
-
-
-def stratified_group_kfold_split(X, y):
-    split = StratifiedGroupKFold(n_splits=2, random_state=10, shuffle=True)
-    return split_dataset(split, X, y)
-
-
-def standard_split(X, y, test_size, random_state):
-    X_train, y_train, X_test, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state, stratify=["tracker"]
-    )
-    return X_train, y_train, X_test, y_test
-
-
-def plot_tracker_distribution(train_set, test_set):
-    plt.figure(figsize=(10, 15))
-
-    plt.subplot(121)
-    plt.pie(
-        train_set.value_counts(), labels=["non_tracker", "tracker"], autopct="%1.2f%%"
-    )
-    plt.title("Training Dataset")
-
-    plt.subplot(122)
-    plt.pie(
-        test_set.value_counts(), labels=["non_tracker", "tracker"], autopct="%1.2f%%"
-    )
-    plt.title("Test Dataset")
-
-    plt.tight_layout()
-    plt.show()
 
 
 if __name__ == "__main__":
@@ -75,7 +20,7 @@ if __name__ == "__main__":
 
         bar.text("Create directory if it doesn't exist")
         try:
-            os.makedirs(f"../../data/processed/{dir_path}", exist_ok=True)
+            os.makedirs(f"../../../data/processed/{dir_path}", exist_ok=True)
             print(f"Directory {dir_path} created successfully.")
         except OSError as error:
             print(f"Directory {dir_path} can not be created.")

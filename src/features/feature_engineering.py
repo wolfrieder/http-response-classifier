@@ -1,69 +1,9 @@
-import pandas as pd
 import numpy as np
-
 # from scipy.stats import kstest, shapiro, probplot
-from collections import Counter
+
+from src.pipeline_functions.feature_engineering_functions import *
+
 import warnings
-
-
-# https://towardsdatascience.com/dealing-with-features-that-have-high-cardinality-1c9212d7ff1b
-def cumulatively_categorise(column, threshold=0.75, return_categories_list=True):
-    # Find the threshold value using the percentage and number of instances in the column
-    threshold_value = int(threshold * len(column))
-    # Initialise an empty list for our new minimised categories
-    categories_list = []
-    # Initialise a variable to calculate the sum of frequencies
-    s = 0
-    # Create a counter dictionary of the form unique_value: frequency
-    counts = Counter(column)
-
-    # Loop through the category name and its corresponding frequency after
-    # sorting the categories by descending order of frequency
-    for i, j in counts.most_common():
-        # Add the frequency to the global sum
-        s += dict(counts)[i]
-        # Append the category name to the list
-        categories_list.append(i)
-        # Check if the global sum has reached the threshold value, if so break the loop
-        if s >= threshold_value:
-            break
-    # Append the category Other to the list
-    categories_list.append("Other")
-
-    # Replace all instances not in our new categories by Other
-    new_column = column.apply(lambda x: x if x in categories_list else "Other")
-
-    # Return transformed column and unique values if return_categories=True
-    if return_categories_list:
-        return new_column, categories_list
-    # Return only the transformed column if return_categories=False
-    else:
-        return new_column
-
-
-def variance_per_column(column):
-    tracker_ratio = train_data[train_data[column].notnull()].tracker.value_counts()
-    try:
-        trackers = tracker_ratio[1]
-    except KeyError:
-        trackers = 0
-    try:
-        non_trackers = tracker_ratio[0]
-    except KeyError:
-        non_trackers = 0
-    return [column, trackers, non_trackers]
-
-
-# https://sparkbyexamples.com/pandas/pandas-change-position-of-a-column/
-def label_as_last_column(dataset):
-    temp_cols = dataset.columns.tolist()
-    index_col = dataset.columns.get_loc("tracker")
-    new_col_order = (
-        temp_cols[0:index_col]
-        + temp_cols[index_col + 1 :]
-        + temp_cols[index_col : index_col + 1]
-    )
-    return new_col_order
 
 
 def impute_value(element, classification):

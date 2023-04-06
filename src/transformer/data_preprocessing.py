@@ -1,8 +1,5 @@
-import os
-import sys
 
 import pandas as pd
-import swifter
 from rapidfuzz import process
 import numpy as np
 from alive_progress import alive_bar
