@@ -30,7 +30,7 @@ if __name__ == "__main__":
     X_train.drop(['protocol', 'query'], axis=1, inplace=True)
     X_train = X_train.astype(columns_as_category)
 
-    [impute_value(value) for value in X_train.columns.values]
+    # [impute_value(value, X_train) for value in X_train.columns.values]
 
     # test = X_train.columns.get_indexer(list(X_train.iloc[:, 4:].select_dtypes('category').columns.values.tolist())).tolist()
     print('resampling')

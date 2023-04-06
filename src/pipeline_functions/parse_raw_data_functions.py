@@ -266,6 +266,7 @@ def create_target_column(data: pd.DataFrame) -> pd.DataFrame:
     data.drop(["easylist", "easyprivacy"], axis=1, inplace=True)
     return data
 
+
 def parse_dataset(
     origin_file_name: str,
     origin_dir_name: str,
@@ -274,14 +275,28 @@ def parse_dataset(
     n_chunks: int,
 ) -> None:
     """
+    Parse and process a dataset by performing various tasks, such as processing
+    HTTP header fields, labels, and URLs. The dataset is then combined, and the
+    target column is created. Finally, the resulting DataFrame is written to a
+    Parquet file.
 
     Parameters
     ----------
-    target_dir_name
-    origin_file_name
-    origin_dir_name
-    target_file_name
-    n_chunks
+    origin_file_name : str
+        The name of the original input file (without extension) containing the dataset.
+    origin_dir_name : str
+        The name of the directory where the original input file is located.
+    target_file_name : str
+        The name of the target output file (without extension) where the processed
+        DataFrame will be saved.
+    target_dir_name : str
+        The name of the directory where the target output file will be saved.
+    n_chunks : int
+        The number of chunks to use for parallel processing.
+
+    Examples
+    --------
+    >>> parse_dataset("input_data", "raw_data", "output_data", "interim_data", 10)
     """
     print(
         f"Prepare initial dataset: "

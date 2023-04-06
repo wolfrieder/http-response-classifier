@@ -70,7 +70,7 @@ if __name__ == "__main__":
         df["tracker"] = df["tracker"].astype("uint8")
 
     number_of_elements_reduced = np.array(
-        [variance_per_column(column) for column in train_data.iloc[:, :-3].columns]
+        [variance_per_column(column, train_data) for column in train_data.iloc[:, :-3].columns]
     )
     summary_table = pd.DataFrame(
         number_of_elements_reduced, columns=["header_name", "trackers", "non_trackers"]

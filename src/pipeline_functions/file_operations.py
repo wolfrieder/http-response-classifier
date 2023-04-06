@@ -113,5 +113,5 @@ def combine_datasets(names: list[str], target_file: str) -> None:
         (read_parquet_file(i, target_file) for i in names), ignore_index=True
     )
     output_path = os.path.join(target_file, "all_parts")
-    write_to_parquet_file(result, output_path)
+    write_to_parquet_file(result, output_path, 'TEST')
     return print("Finished")
