@@ -173,10 +173,12 @@ def compute_imputed_value(element: str, classification: int, check: float) -> Un
 
 def impute_value(element: str, classification: int) -> None:
     """
-    Impute missing values in the given element (column) based on the classification value.
+    Impute missing values in the given element (column) based on the
+    classification value.
 
-    This function computes the imputed value depending on the column type (numerical or categorical)
-    and the given classification. It then imputes the missing values in the specified column
+    This function computes the imputed value depending on the column type
+    (numerical or categorical) and the given classification. It then imputes the
+    missing values in the specified column
     for rows that match the classification.
 
     Parameters

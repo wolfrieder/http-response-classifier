@@ -1,7 +1,6 @@
 import warnings
 
 import yaml
-from sklearn.dummy import DummyClassifier
 import pandas as pd
 import numpy as np
 import xgboost as xgb
@@ -22,6 +21,8 @@ from sklearn.compose import ColumnTransformer, make_column_selector as selector
 from sklearn.pipeline import Pipeline
 from sklearn import metrics
 from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score
+from sklearn.naive_bayes import GaussianNB
+from sklearn.dummy import DummyClassifier
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import kstest, shapiro, probplot
@@ -30,7 +31,6 @@ import mlflow
 import os
 import logging
 import pickle
-from sklearn.naive_bayes import GaussianNB
 
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)

@@ -1,5 +1,9 @@
 # Machine Learning-Driven Web Privacy Analysis Using HTTP(S) Response Headers
 
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/wolfrieder/thesis_project_v2/graphs/commit-activity)
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![DeepSource](https://deepsource.io/gh/wolfrieder/thesis_project_v2.svg/?label=active+issues&show_trend=true&token=bI2KtH2zJhdmo15pPCscudQ9)](https://deepsource.io/gh/wolfrieder/thesis_project_v2/?ref=repository-badge)
 ## Introduction
 
 This research project constitutes a significant component of my Master's thesis, 
