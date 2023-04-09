@@ -72,7 +72,7 @@ def calculate_metrics(data, y_true):
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     with open("../../../params.yaml", "rb") as f:
-        params = yaml.load(f, yaml.FullLoader)
+        params = yaml.safe_load(f)
 
     mlflow.set_tracking_uri(params["ml_flow"]["MLFLOW_TRACKING_URI"])
     os.environ["MLFLOW_TRACKING_USERNAME"] = params["ml_flow"][

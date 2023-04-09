@@ -47,7 +47,6 @@ def process_header_rows(row: list) -> pd.DataFrame:
     columns = np.vectorize(str.lower)(df_row.iloc[0].values)
     values = np.vectorize(str.lower)(df_row.iloc[1].values)
     result = pd.DataFrame(values.reshape(1, -1), columns=columns)
-    # TODO find better solution for duplicated header fields
     return result.loc[:, ~result.columns.duplicated()]
 
 

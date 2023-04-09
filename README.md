@@ -65,3 +65,11 @@ follow the step-by-step instructions outlined below:
 
 With these steps completed, you should now have a functional environment for executing the research project, as well as 
 the necessary tools for efficient model development and tracking.
+
+## Known Installation Problems
+
+If the LightGBM import throws this error message: 
+`AttributeError: module 'pandas.core.strings' has no attribute 'StringMethods'` 
+then you should update `dask` and `dependencies`. The problem is described 
+[here](https://github.com/microsoft/LightGBM/issues/5739) and is caused by the
+recent release of `pandas` version 2. 

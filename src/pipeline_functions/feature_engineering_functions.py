@@ -132,13 +132,15 @@ def label_as_last_column(dataset: pd.DataFrame) -> List[str]:
     index_col = dataset.columns.get_loc("tracker")
     new_col_order = (
         temp_cols[0:index_col]
-        + temp_cols[index_col + 1:]
-        + temp_cols[index_col: index_col + 1]
+        + temp_cols[index_col + 1 :]
+        + temp_cols[index_col : index_col + 1]
     )
     return new_col_order
 
 
-def compute_imputed_value(element: str, classification: int, check: float) -> Union[int, str]:
+def compute_imputed_value(
+    element: str, classification: int, check: float
+) -> Union[int, str]:
     """
     Compute the imputed value for a given element and classification.
 
@@ -157,11 +159,15 @@ def compute_imputed_value(element: str, classification: int, check: float) -> Un
         The computed imputed value, either an integer or a string.
     """
     if element in ["content-length", "age"]:
-        value = int(train_data[train_data["tracker"] == classification][element].median())
+        value = int(
+            train_data[train_data["tracker"] == classification][element].median()
+        )
         if check < 0.4:
             value = -1
     elif element in list_of_categorical_cols:
-        value = train_data[train_data["tracker"] == classification][element].mode().iloc[0]
+        value = (
+            train_data[train_data["tracker"] == classification][element].mode().iloc[0]
+        )
         if check < 0.4:
             value = "Missing"
             train_data[element].cat.add_categories("Missing", inplace=True)
@@ -189,14 +195,21 @@ def impute_value(element: str, classification: int) -> None:
         The classification value, either 0 or 1.
     """
     check = (
-        summary_table.loc[summary_table.header_name == element, "ratio_tracker"].values[0]
+        summary_table.loc[summary_table.header_name == element, "ratio_tracker"].values[
+            0
+        ]
         if classification == 1
-        else summary_table.loc[summary_table.header_name == element, "ratio_non_tracker"].values[0]
+        else summary_table.loc[
+            summary_table.header_name == element, "ratio_non_tracker"
+        ].values[0]
     )
 
     imputed_value = compute_imputed_value(element, classification, check)
 
     if imputed_value is not None:
         imputed_values_dict[classification].append({element: imputed_value})
-        train_data.loc[train_data["tracker"] == classification, element] = train_data.loc[
-            train_data["tracker"] == classification, element].fillna(imputed_value)
+        train_data.loc[
+            train_data["tracker"] == classification, element
+        ] = train_data.loc[train_data["tracker"] == classification, element].fillna(
+            imputed_value
+        )
