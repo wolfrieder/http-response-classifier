@@ -16,14 +16,22 @@ engineering, (iv) training and testing of machine learning models, (v) hyperpara
 optimization, and (vi) model deployment. Furthermore, this project incorporates 
 MLOps best practices in order to facilitate efficient model development and tracking.
 
+The data acquisition is not implemented in this repository but an existing solution,
+namely [T.EX - The Transparency EXtension](https://github.com/t-ex-tools/t.ex) 
+is used. In addition, the code of this project follows the data schema of `T.EX`
+and can be used on exported HTTP request and response data. Already crawled data
+by the author of T.EX can be found [here](https://zenodo.org/record/7123945#.Y8VDEXaZPtU) 
+-- these datasets were also used in the current version of this project. The list of
+crawled websites can be found in the `tranco_list_08_12_2022.txt` file. 
+
 ## Installation Guide
 
 To replicate the environment and set up the necessary tools for this project, 
 follow the step-by-step instructions outlined below:
 
 1. Ensure that Python 3.9.12 is installed on your system. If you do not have Python 3.9.12, download and install it
-   from the official [Python website](https://www.python.org/downloads/) or use
-   [asdf](https://asdf-vm.com). 
+   from the official [Python website](https://www.python.org/downloads/), 
+   [asdf](https://asdf-vm.com), or a another tool of your choice.
 
 2. Install the [Conda](https://docs.conda.io/en/latest/miniconda.html) package manager, which will be utilized for
    managing dependencies and creating a virtual environment.
@@ -71,5 +79,5 @@ the necessary tools for efficient model development and tracking.
 If the LightGBM import throws this error message: 
 `AttributeError: module 'pandas.core.strings' has no attribute 'StringMethods'` 
 then you should update `dask` and `dependencies`. The problem is described 
-[here](https://github.com/microsoft/LightGBM/issues/5739) and is caused by the
+[here](https://github.com/microsoft/LightGBM/issues/5739) and is related to the
 recent release of `pandas` version 2. 
