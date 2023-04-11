@@ -1,9 +1,8 @@
+import warnings
+
 import numpy as np
-# from scipy.stats import kstest, shapiro, probplot
 
 from src.pipeline_functions.feature_engineering_functions import *
-
-import warnings
 
 
 def impute_value(element, classification):
@@ -54,10 +53,6 @@ if __name__ == "__main__":
     test_data = pd.read_parquet(
         "../../data/processed/chrome/08_12_2022/test_set_01_processed.parquet.gzip"
     )
-
-    # test_data = pd.read_parquet(
-    #     "../../data/processed/brave/08_12_2022/test_set_all_processed.parquet.gzip"
-    # )
 
     # exclude metadata columns
     train_data = train_data.iloc[:, 4:]
