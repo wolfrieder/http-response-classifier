@@ -132,14 +132,18 @@ def label_as_last_column(dataset: pd.DataFrame) -> List[str]:
     index_col = dataset.columns.get_loc("tracker")
     new_col_order = (
         temp_cols[0:index_col]
-        + temp_cols[index_col + 1 :]
-        + temp_cols[index_col : index_col + 1]
+        + temp_cols[index_col + 1:]
+        + temp_cols[index_col: index_col + 1]
     )
     return new_col_order
 
 
 def compute_imputed_value(
-    element: str, classification: int, check: float
+    element: str,
+    classification: int,
+    check: float,
+    train_data: pd.DataFrame,
+    list_of_categorical_cols: List[str],
 ) -> Union[int, str]:
     """
     Compute the imputed value for a given element and classification.
@@ -152,6 +156,10 @@ def compute_imputed_value(
         The classification value, either 0 or 1.
     check : float
         The ratio threshold for imputation.
+    train_data: pd.DataFrame
+        The input DataFrame containing the data.
+    list_of_categorical_cols: str
+        A list of column names in the DataFrame that are categorical.
 
     Returns
     -------
@@ -177,7 +185,13 @@ def compute_imputed_value(
     return value
 
 
-def impute_value(element: str, classification: int) -> None:
+def impute_value(
+    element: str,
+    classification: int,
+    train_data: pd.DataFrame,
+    summary_table: pd.DataFrame,
+    imputed_values_dict: dict,
+) -> None:
     """
     Impute missing values in the given element (column) based on the
     classification value.
@@ -193,6 +207,12 @@ def impute_value(element: str, classification: int) -> None:
         The column name in the DataFrame.
     classification : int
         The classification value, either 0 or 1.
+    train_data: pd.DataFrame
+        The input DataFrame containing the data.
+    summary_table: pd.DataFrame
+        A DataFrame containing the summary statistics.
+    imputed_values_dict: dict
+        A dictionary containing the imputed values.
     """
     check = (
         summary_table.loc[summary_table.header_name == element, "ratio_tracker"].values[

@@ -3,31 +3,18 @@ import warnings
 import yaml
 import pandas as pd
 import numpy as np
-import xgboost as xgb
-import lightgbm as lgb
-from catboost import CatBoostClassifier
 
-# from sklearn.impute import KNNImputer
-from sklearn.ensemble import (
-    RandomForestClassifier,
-    GradientBoostingClassifier,
-    HistGradientBoostingClassifier,
-)
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import Normalizer, FunctionTransformer, RobustScaler
 from sklearn.compose import ColumnTransformer, make_column_selector as selector
 from sklearn.pipeline import Pipeline
 from sklearn import metrics
 from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score
 from sklearn.naive_bayes import GaussianNB
-from sklearn.dummy import DummyClassifier
 from sklearn.model_selection import StratifiedKFold
+from sklearn.base import BaseEstimator
 from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.stats import kstest, shapiro, probplot
 import category_encoders as ce
 import mlflow
 import os
@@ -62,6 +49,18 @@ def calculate_metrics(
     precision = metrics.precision_score(y_true, y_pred)
     recall = metrics.recall_score(y_true, y_pred)
     mcc = metrics.matthews_corrcoef(y_true, y_pred)
+
+    # TODO: Add more metrics here.
+    # print(metrics.classification_report(y_test, y_pred))
+    #
+    # disp_1 = metrics.ConfusionMatrixDisplay.from_predictions(y_test, y_pred)
+    # disp_2 = metrics.PrecisionRecallDisplay.from_estimator(
+    #     clf, X_test, y_test, name="Random Forest"
+    # )
+    # disp_3 = metrics.RocCurveDisplay.from_estimator(clf, X_test, y_test)
+    # mlflow.log_figure(disp_1.figure_, "cm.png")
+    # mlflow.log_figure(disp_2.figure_, "prec_recall.png")
+    # mlflow.log_figure(disp_3.figure_, "roc.png")
 
     return {
         "accuracy": metrics.accuracy_score(y_true, y_pred),
@@ -131,3 +130,36 @@ def mean_metrics(all_metrics: List[Dict[str, float]]) -> Dict[str, float]:
         metric: np.mean([fold_metrics[metric] for fold_metrics in all_metrics])
         for metric in all_metrics[0].keys()
     }
+
+def train_and_evaluate_models(models: Dict[str, BaseEstimator], X: pd.DataFrame, y: pd.Series, cv: StratifiedKFold) -> pd.DataFrame:
+    """
+    Train and evaluate different classification models.
+
+    Parameters
+    ----------
+    models : Dict[str, BaseEstimator]
+        A dictionary containing model names as keys and classifier instances as values.
+    X : pd.DataFrame
+        The feature matrix.
+    y : pd.Series
+        The target vector.
+    cv : StratifiedKFold
+        The cross-validator providing train/test indices for each fold.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the mean metrics for each model.
+    """
+    all_mean_metrics = {}
+
+    for model_name, model in models.items():
+        print(f"Training and evaluating {model_name}...")
+
+        clf = Pipeline(steps=[("preprocessor", preprocessor), ("classifier", model)])
+        all_metrics = perform_cross_validation(X, y, clf, cv)
+        mean_metrics = mean_metrics(all_metrics)
+
+        all_mean_metrics[model_name] = mean_metrics
+
+    return pd.DataFrame(all_mean_metrics).T
