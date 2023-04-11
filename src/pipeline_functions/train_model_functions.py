@@ -4,18 +4,14 @@ import yaml
 import pandas as pd
 import numpy as np
 
-from sklearn.preprocessing import Normalizer, FunctionTransformer, RobustScaler
-from sklearn.compose import ColumnTransformer, make_column_selector as selector
+from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn import metrics
-from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score
-from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import StratifiedKFold
 from sklearn.base import BaseEstimator
 from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 import seaborn as sns
-import category_encoders as ce
 import mlflow
 import os
 import logging
@@ -131,7 +127,14 @@ def mean_metrics(all_metrics: List[Dict[str, float]]) -> Dict[str, float]:
         for metric in all_metrics[0].keys()
     }
 
-def train_and_evaluate_models(models: Dict[str, BaseEstimator], X: pd.DataFrame, y: pd.Series, cv: StratifiedKFold) -> pd.DataFrame:
+
+def train_and_evaluate_models(
+    models: Dict[str, BaseEstimator],
+    X: pd.DataFrame,
+    y: pd.Series,
+    cv: StratifiedKFold,
+    preprocessor: ColumnTransformer,
+) -> pd.DataFrame:
     """
     Train and evaluate different classification models.
 
@@ -139,6 +142,8 @@ def train_and_evaluate_models(models: Dict[str, BaseEstimator], X: pd.DataFrame,
     ----------
     models : Dict[str, BaseEstimator]
         A dictionary containing model names as keys and classifier instances as values.
+    preprocessor : ColumnTransformer
+        The preprocessor to apply before training and evaluating the models.
     X : pd.DataFrame
         The feature matrix.
     y : pd.Series
