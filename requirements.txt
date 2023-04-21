@@ -15,9 +15,16 @@ imbalanced-learn==0.9.1
 pyyaml==6.0
 xgboost==1.5.1
 category_encoders==2.5.1.post0
-mlflow==1.30.0
+mlflow==1.2.0
 lightgbm==3.3.5
 catboost==1.0.4
 dvc==2.36.0
 black==22.6.0
 json-stream
+skl2onnx==1.14.0
+onnx-tf==1.10.0
+tensorflowjs==4.4.0
+protobuf==3.20.2
+yaml==0.2.5
+onnx==1.13.1
+setuptools==61.2.0
