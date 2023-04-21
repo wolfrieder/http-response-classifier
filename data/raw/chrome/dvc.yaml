@@ -4,11 +4,11 @@ vars:
 stages:
   merge:
     cmd: >-
-      python3 ./src/transformer/0-merge_jsons.py
+      python3 ../../../src/transformer/0-merge_jsons.py
       ${data.raw_dir}
       ${data.merged_dir}
     deps:
-      - ./src/transformer/0-merge_jsons.py
+      - ../../../src/transformer/0-merge_jsons.py
       - ${data.raw_dir}
     outs:
       - ${data.merged_dir}/merged_data.json.gz
@@ -16,32 +16,35 @@ stages:
 # TODO: adapt paths and files
   parse_to_parquet:
     cmd: >-
-      python3 ../../../src/transformer/parse_raw_data.py
+      python3 ../../../run_pipeline.py parse_raw_data.py
       ${browsers.chrome}
-      ${dir_name.date_one}
-      ${item}
+      ${dir_name.date_two}
+      merged_data
+#      python3 ../../../src/transformer/parse_raw_data.py
     deps:
+      - ../../../run_pipeline.py
       - ../../../src/transformer/parse_raw_data.py
-      - ${dir_name.date_one}/${item}.json.gzip
+      - ../../../src/pipeline_functions/parse_raw_data_functions.py
+      - ../../../data/merged/chrome/${dir_name.date_two}/merged_data.json.gz
     outs:
-      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/${item}.parquet.gzip
-
-  train_test_split:
-    cmd: >-
-      python3 ../../../src/transformer/train_test_split.py
-      ${browsers.chrome}
-      ${dir_name.date_one}
-      http.0
-      0
-      http.1
-      1
-    deps:
-      - ../../../src/transformer/train_test_split.py
-      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/http.0.parquet.gzip
-      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/http.1.parquet.gzip
-    outs:
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01.parquet.gzip
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01.parquet.gzip
+      - ../../../data/interim/${browsers.chrome}/${dir_name.date_two}/merged_data.parquet.gzip
+#
+#  train_test_split:
+#    cmd: >-
+#      python3 ../../../src/transformer/train_test_split.py
+#      ${browsers.chrome}
+#      ${dir_name.date_one}
+#      http.0
+#      0
+#      http.1
+#      1
+#    deps:
+#      - ../../../src/transformer/train_test_split.py
+#      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/http.0.parquet.gzip
+#      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/http.1.parquet.gzip
+#    outs:
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01.parquet.gzip
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01.parquet.gzip
 
 #  resampling:
 #    cmd: >-
@@ -55,40 +58,40 @@ stages:
 #    outs:
 #      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_resampled.parquet.gzip
 
-  pre_processing:
-    cmd: >-
-      python3 ../../../src/transformer/data_preprocessing.py
-      ${browsers.chrome}
-      ${dir_name.date_one}
-    deps:
-      - ../../../src/transformer/data_preprocessing.py
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01.parquet.gzip
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01.parquet.gzip
-    outs:
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
-
-  feature_engineering:
-    cmd: >-
-      python3 ../../../src/features/feature_engineering.py
-      ${browsers.chrome}
-      ${dir_name.date_one}
-    deps:
-      - ../../../src/features/feature_engineering.py
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
-    outs:
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
-
-  model_training:
-    cmd: >-
-      python3 ../../../src/models/train_model.py
-      ${browsers.chrome}
-      ${dir_name.date_one}
-    deps:
-      - ../../../src/models/train_model.py
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
-    outs:
-      - ../../../models/${browsers.chrome}/${dir_name.date_one}/random_forest_v2_binary.sav
+#  pre_processing:
+#    cmd: >-
+#      python3 ../../../src/transformer/data_preprocessing.py
+#      ${browsers.chrome}
+#      ${dir_name.date_one}
+#    deps:
+#      - ../../../src/transformer/data_preprocessing.py
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01.parquet.gzip
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01.parquet.gzip
+#    outs:
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
+#
+#  feature_engineering:
+#    cmd: >-
+#      python3 ../../../src/features/feature_engineering.py
+#      ${browsers.chrome}
+#      ${dir_name.date_one}
+#    deps:
+#      - ../../../src/features/feature_engineering.py
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
+#    outs:
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
+#
+#  model_training:
+#    cmd: >-
+#      python3 ../../../src/models/train_model.py
+#      ${browsers.chrome}
+#      ${dir_name.date_one}
+#    deps:
+#      - ../../../src/models/train_model.py
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
+#    outs:
+#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/random_forest_v2_binary.sav

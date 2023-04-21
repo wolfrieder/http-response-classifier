@@ -5,8 +5,13 @@ browsers:
 
 dir_name:
   date_one: '08_12_2022'
+  date_two: '03_29_2023'
 
 ml_flow:
   MLFLOW_TRACKING_URI: https://dagshub.com/wolfrieder/thesis_project_v2.mlflow
   MLFLOW_TRACKING_USERNAME: wolfrieder
   MLFLOW_TRACKING_PASSWORD: 2262e9d1cbe59f0bbd8d6de1e85e69276b626b2b
+
+data:
+  raw_dir: "../../../data/raw/chrome/03_29_2023"
+  merged_dir: "../../../data/merged/chrome/03_29_2023"

@@ -27,7 +27,7 @@ for file in entries:
     with open(f"{dir_path}/{file}", "r") as raw_data:
         raw_data_test = json.loads(raw_data.read())
 
-    with gzip.open(f"{dir_path}/{file}.gzip", "wt") as zipfile:
+    with gzip.open(f"{dir_path}/{file}.gz", "wt") as zipfile:
         json.dump(raw_data_test, zipfile)
 
     os.remove(f"{dir_path}/{file}")

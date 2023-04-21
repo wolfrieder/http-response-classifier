@@ -27,25 +27,27 @@ def generate_response_headers(r):
     transformed = []
 
     for header in headers:
-        transformed.append([header["name"], header["value"]])
-
+        try:
+            transformed.append([header["name"], header["value"]])
+        except KeyError:
+            # TODO: philip u know
+            print(header["name"])
     return transformed
 
 
 if __name__ == "__main__":
-
     # Inputs
     root = pathlib.Path().resolve()
-    path = sys.argv[1]
-    data_dir = join(root, path)
+    data_dir = sys.argv[1]
+
     jsons = [
         x for x in listdir(data_dir) if x.startswith("http-") and x.endswith(".json.gz")
     ]
 
     # Outputs
-    output_dir = join(root, sys.argv[2])
+    output_dir = sys.argv[2]
     makedirs(output_dir, exist_ok=True)
-    out = join(root, sys.argv[2], "merged_data.json.gz")
+    out = join(sys.argv[2], "merged_data.json.gz")
     output_file = gzip.open(out, "at", encoding="utf-8")
     output_file.write("[")
 
