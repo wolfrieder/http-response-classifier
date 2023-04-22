@@ -18,7 +18,7 @@ except OSError as error:
 entries = [
     entry
     for entry in os.listdir(dir_path)
-    if os.path.isfile(os.path.join(dir_path, entry)) & entry.startswith("http")
+    if os.path.isfile(os.path.join(dir_path, entry)) & entry.startswith("http") & entry.endswith(".json")
 ]
 
 for file in entries:

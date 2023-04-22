@@ -62,13 +62,13 @@ if __name__ == "__main__":
             requests = load(f)
             for r in requests.persistent():
                 if not first:
-                    output_file.write(",")
+                    output_file.write(", ")
 
                 first = False
 
                 t = {
                     "url": generate_url(r),
-                    "labels": json.dumps(r["labels"], cls=JSONStreamEncoder),
+                    "labels": r["labels"],
                     "response": {
                         "statusCode": r["response"]["statusCode"],
                         "fromCache": r["response"]["fromCache"],
@@ -76,7 +76,7 @@ if __name__ == "__main__":
                     "responseHeaders": generate_response_headers(r),
                 }
 
-                output_file.write(str(t))
+                output_file.write(json.dumps(t, cls=JSONStreamEncoder))
 
     output_file.write("]")
     output_file.close()

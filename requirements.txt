@@ -1,6 +1,6 @@
 numpy==1.21.5
-pandas==2.0.0
-ray==1.12.0
+pandas==2.0.0 # TODO: I had problems installing it.
+ray==1.12.0 # TODO: I had to install it manually. Why fixing version 1.12.0?
 matplotlib==3.7.1
 seaborn==0.12.2
 scikit-learn==1.2.2

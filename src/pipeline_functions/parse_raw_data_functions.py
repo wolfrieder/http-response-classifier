@@ -312,10 +312,10 @@ def parse_dataset(
     compression_alg = "gz" if "merged" in origin_file_name else "gzip"
 
     print(
-        f"Prepare initial dataset: "
-        f"Path: data/{target_data_dir}/{origin_dir_name}/{origin_file_name}.json.{compression_alg}, "
-        f"Chunk-size: {n_chunks} ",
-        f"Target Filename: {target_file_name}",
+        f"Prepare initial dataset:\n"
+        f"Path: data/{target_data_dir}/{origin_dir_name}/{origin_file_name}.json.{compression_alg}\n"
+        f"Chunk-size: {n_chunks}\n",
+        f"Target Filename: {target_file_name}\n",
     )
 
     # check_if_dir_exists(target_dir_name)
@@ -374,8 +374,13 @@ def read_json_file(
     object, type of objs
 
     """
+    path = f"../../../data/{target_data_dir}/{target_file_name}/{name}.json.{compression_alg}"
+    print (f"\nDEBUG: File exists? {os.path.isfile(path)}\n")
+
     return pd.read_json(
-        f"../../../data/{target_data_dir}/{target_file_name}/{name}.json.{compression_alg}"
+        path,
+        orient='records',
+        compression='gzip'
     )
 
 

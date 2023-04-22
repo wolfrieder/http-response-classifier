@@ -5,16 +5,17 @@ stages:
       ../../../data/merged/chrome/03_29_2023
     deps:
     - path: ../../../data/raw/chrome/03_29_2023
-      md5: a976bbc853eb57bcbef311a43f2413fc.dir
-      size: 204565496
+      md5: a6e94d708856d39ec485a348029f48ba.dir
+      size: 204555274
       nfiles: 13
     - path: ../../../src/transformer/0-merge_jsons.py
-      md5: b94a851d2ef065988950053980e0fe25
-      size: 2406
+      md5: 752728f32a61f15da93d2bdc48e93c15
+      size: 2402
     outs:
     - path: ../../../data/merged/chrome/03_29_2023/merged_data.json.gz
-      md5: 3d0f1c74ffb67eb4b245ea3573a2aa5b
-      size: 122841320
+      md5: fb9ce1d552ada370cf84287506015e2d
+      size: 123001577
+      isexec: true
   parse_to_parquet:
     cmd: python3 ../../../run_pipeline.py parse_raw_data.py chrome 03_29_2023 merged_data
     deps:
