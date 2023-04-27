@@ -281,9 +281,9 @@ def concat_arrays(
     np.ndarray
         A 2D NumPy array that is the concatenation of the input arrays.
     """
-    print(f"header_array shape: {header_array.shape}")
-    print(f"url_array shape: {url_array.shape}")
-    print(f"label_array shape: {label_array.shape}")
+    # print(f"header_array shape: {header_array.shape}")
+    # print(f"url_array shape: {url_array.shape}")
+    # print(f"label_array shape: {label_array.shape}")
 
     final_array = np.hstack((url_array, header_array))
     final_array = np.column_stack((final_array, label_array))

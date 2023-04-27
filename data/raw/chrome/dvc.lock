@@ -5,29 +5,32 @@ stages:
       ../../../data/merged/chrome/03_29_2023
     deps:
     - path: ../../../data/raw/chrome/03_29_2023
-      md5: a6e94d708856d39ec485a348029f48ba.dir
-      size: 204555274
-      nfiles: 13
+      md5: 06c43d38c3798e32fddfadc490c6ec69.dir
+      size: 204565508
+      nfiles: 14
     - path: ../../../src/transformer/0-merge_jsons.py
       md5: 752728f32a61f15da93d2bdc48e93c15
-      size: 2402
+      size: 2318
     outs:
     - path: ../../../data/merged/chrome/03_29_2023/merged_data.json.gz
-      md5: fb9ce1d552ada370cf84287506015e2d
-      size: 123001577
-      isexec: true
+      md5: 229e0c04bf5df28cccc7e14ee261cf42
+      size: 123000716
   parse_to_parquet:
     cmd: python3 ../../../run_pipeline.py parse_raw_data.py chrome 03_29_2023 merged_data
     deps:
     - path: ../../../data/merged/chrome/03_29_2023/merged_data.json.gz
-      md5: 3d0f1c74ffb67eb4b245ea3573a2aa5b
-      size: 122841320
+      md5: 229e0c04bf5df28cccc7e14ee261cf42
+      size: 123000716
     - path: ../../../run_pipeline.py
-      md5: d15e93c443e914ed9edfa11f44c4edd7
-      size: 539
+      md5: 23aeac32e53a7f4a5c960aa434270c42
+      size: 588
     - path: ../../../src/pipeline_functions/parse_raw_data_functions.py
-      md5: 187daf755e1543c2c4adef60136b49cd
-      size: 13983
+      md5: 7afb34fd6a80d085a3c749f83e5a78ce
+      size: 17457
     - path: ../../../src/transformer/parse_raw_data.py
-      md5: 73ef2c889307f4fb13da28c5d7f3704b
-      size: 1583
+      md5: 588098f28e82987b53c3d640c684c773
+      size: 1589
+    outs:
+    - path: ../../../data/interim/chrome/03_29_2023/merged_data.parquet.gzip
+      md5: bae9dd99a823b6789bde11e1b38f62ad
+      size: 87896858
