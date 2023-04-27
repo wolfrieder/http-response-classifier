@@ -7,8 +7,8 @@ from src.pipeline_functions.parse_raw_data_functions import *
 
 
 def run(browser, directory, file_name):
-    ray.shutdown()
-    ray.init()
+    # ray.shutdown()
+    # ray.init()
     # pd.set_option("display.max_columns", 500)
 
     start = time.perf_counter()
@@ -27,12 +27,11 @@ def run(browser, directory, file_name):
     # )
 
     parse_dataset(
-        file_name, dir_path, file_name, f"interim/{browser}/{directory}", 3000
+        file_name, dir_path, file_name, f"interim/{browser}/{directory}", 50000
     )
 
     stop = time.perf_counter()
     print("end time:", stop - start)
-
 
 
 # if __name__ == "__main__":

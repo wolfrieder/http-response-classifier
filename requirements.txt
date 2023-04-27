@@ -4,7 +4,6 @@ ray==1.12.0 # TODO: I had to install it manually. Why fixing version 1.12.0?
 matplotlib==3.7.1
 seaborn==0.12.2
 scikit-learn==1.2.2
-modin==0.14.1
 pandarallel==1.6.1
 scikit-plot==0.3.7
 thefuzz==0.19.0
@@ -28,3 +27,4 @@ protobuf==3.20.2
 yaml==0.2.5
 onnx==1.13.1
 setuptools==61.2.0
+pyarrow==8.0.0
