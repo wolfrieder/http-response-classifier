@@ -1,13 +1,13 @@
-from os import listdir, makedirs, SEEK_CUR
-from os.path import join
-from urllib.parse import urlparse
-from json_stream import load
-from json_stream.dump import JSONStreamEncoder, default
-
-import json
 import gzip
+import json
 import pathlib
 import sys
+from os import listdir, makedirs
+from os.path import join
+from urllib.parse import urlparse
+
+from json_stream import load
+from json_stream.dump import JSONStreamEncoder
 
 
 def generate_url(r):
@@ -16,7 +16,7 @@ def generate_url(r):
         "hostname": parsed_url.netloc,
         "pathname": parsed_url.path,
         "filetype": parsed_url.path.split("/").pop().split(".").pop(),
-        "filename": parsed_url.path.split("/").pop(),
+        "filename_one": parsed_url.path.split("/").pop(),
         "protocol": parsed_url.scheme,
         "query": parsed_url.query,
     }

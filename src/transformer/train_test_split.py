@@ -6,16 +6,14 @@ from src.pipeline_functions.train_test_split_functions import stratified_shuffle
 from alive_progress import alive_bar
 
 
-if __name__ == "__main__":
+def run(browser: str, date: str, filename_one: str, filename_second: str) -> None:
     with alive_bar(100, force_tty=True, manual=True, title="Train-Test-Split") as bar:
         bar.text('Read-in parameters')
-        browser = sys.argv[1]
-        directory = sys.argv[2]
-        dir_path = f"{browser}/{directory}"
+        dir_path = f"{browser}/{date}"
         bar(0.05)
 
         bar.text("Read-in data")
-        data = pd.read_parquet(f"../../../data/interim/{dir_path}/{sys.argv[3]}.parquet.gzip")
+        data = pd.read_parquet(f"../../../data/interim/{dir_path}/{filename_one}.parquet.gzip")
         bar(0.1)
 
         bar.text("Create directory if it doesn't exist")
@@ -28,9 +26,9 @@ if __name__ == "__main__":
         bar(0.15)
 
         bar.text("Read-in second dataset")
-        if len(sys.argv) > 4:
+        if len(filename_second) > 0:
             data_2 = pd.read_parquet(
-                f"../../../data/interim/{dir_path}/{sys.argv[5]}.parquet.gzip"
+                f"../../../data/interim/{dir_path}/{filename_second}.parquet.gzip"
             )
             bar(0.2)
             bar.text("Concat data")
@@ -71,12 +69,12 @@ if __name__ == "__main__":
         bar.text("Write datasets to parquet files")
 
         train_set.to_parquet(
-            f"../../../data/processed/{dir_path}/train_set_{sys.argv[4]}{sys.argv[6]}.parquet.gzip",
+            f"../../../data/processed/{dir_path}/train_set.parquet.gzip",
             compression="gzip",
         )
 
         test_set.to_parquet(
-            f"../../../data/processed/{dir_path}/test_set_{sys.argv[4]}{sys.argv[6]}.parquet.gzip",
+            f"../../../data/processed/{dir_path}/test_set.parquet.gzip",
             compression="gzip",
         )
         bar(1)

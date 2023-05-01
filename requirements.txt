@@ -1,18 +1,15 @@
-numpy==1.21.5
-pandas==2.0.0 # TODO: I had problems installing it.
-ray==1.12.0 # TODO: I had to install it manually. Why fixing version 1.12.0?
+numpy==1.24.3
+pandas==2.0.1 # TODO: I had problems installing it.
 matplotlib==3.7.1
 seaborn==0.12.2
 scikit-learn==1.2.2
-pandarallel==1.6.1
 scikit-plot==0.3.7
-thefuzz==0.19.0
 python-levenshtein==0.12.2
 rapidfuzz==2.14.0
-scipy==1.7.3
+scipy==1.10.1
 imbalanced-learn==0.9.1
 pyyaml==6.0
-xgboost==1.5.1
+xgboost==1.7.5
 category_encoders==2.5.1.post0
 mlflow==1.2.0
 lightgbm==3.3.5
@@ -27,4 +24,4 @@ protobuf==3.20.2
 yaml==0.2.5
 onnx==1.13.1
 setuptools==61.2.0
-pyarrow==8.0.0
+pyarrow==12.0.0.dev464

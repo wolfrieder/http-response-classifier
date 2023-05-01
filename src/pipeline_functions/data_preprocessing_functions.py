@@ -116,13 +116,12 @@ def find_cols_with_similar_values(
         A tuple containing the column names if more than 50% of their values are
         similar, otherwise None.
     """
-    value_fuzzy = set(dataset[fuzzy_match].dropna().values)
-    value_column = set(dataset[column].dropna().values)
+    value_fuzzy = set(dataset[fuzzy_match].dropna())
+    value_column = set(dataset[column].dropna())
 
     common_values = len(value_fuzzy.intersection(value_column))
-    len_value_fuzzy = len(value_fuzzy)
 
-    if common_values / len_value_fuzzy > 0.5:
+    if common_values / len(value_fuzzy) > 0.5:
         return fuzzy_match, column
     else:
         return None
@@ -156,9 +155,7 @@ def select_similar_columns(
     return row
 
 
-def merge_similar_columns(
-        fuzzy_match: str, col_name: str, df: pd.DataFrame
-) -> None:
+def merge_similar_columns(fuzzy_match: str, col_name: str, df: pd.DataFrame) -> None:
     """
     Merge the values of two columns in the given DataFrame by replacing null
     values in the second column with the corresponding values from the first
@@ -331,9 +328,7 @@ def find_cols_to_combine(
     return only_non_trackers, only_trackers
 
 
-def concise_information_wrapper(
-        dataset: pd.DataFrame, table: pd.DataFrame
-) -> None:
+def concise_information_wrapper(dataset: pd.DataFrame, table: pd.DataFrame) -> None:
     """
     Process dataset with concise information and update the dataset with
     combined columns.
@@ -353,3 +348,27 @@ def concise_information_wrapper(
 
     update_combined_columns(dataset, only_tracker_cols, 1, "comb_col_tracker")
     update_combined_columns(dataset, only_non_tracker_cols, 0, "comb_col_non_tracker")
+
+
+def label_as_last_column(dataset: pd.DataFrame) -> List[str]:
+    """
+    Rearrange the columns of a DataFrame to place the "tracker" column at the end.
+
+    Parameters
+    ----------
+    dataset : pd.DataFrame
+        The input DataFrame containing the "tracker" column.
+
+    Returns
+    -------
+    List[str]
+        A list of column names with the "tracker" column moved to the end.
+    """
+    temp_cols = dataset.columns.tolist()
+    index_col = dataset.columns.get_loc("tracker")
+    new_col_order = (
+        temp_cols[0:index_col]
+        + temp_cols[index_col + 1:]
+        + temp_cols[index_col: index_col + 1]
+    )
+    return new_col_order

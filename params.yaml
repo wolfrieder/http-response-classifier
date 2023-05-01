@@ -15,3 +15,23 @@ ml_flow:
 data:
   raw_dir: "../../../data/raw/chrome/03_29_2023"
   merged_dir: "../../../data/merged/chrome/03_29_2023"
+
+dir_paths:
+  cd: &cd '../../../'
+  cd_src: &cd_src '../../../src/'
+  cd_pipeline: &cd_p '../../../pipeline_functions/'
+
+python_script:
+  merger: *cd_src 'transformer/0-merge_jsons.py'
+  parse_raw_data: *cd_src 'transformer/parse_raw_data.py'
+  train_test_split: *cd_src 'transformer/train_test_split.py'
+  data_preprocessing: *cd_src 'transformer/data_preprocessing.py'
+  feature_engineering: *cd_src 'features/feature_engineering.py'
+  train_model: *cd_src 'models/train_model.py'
+
+pipeline_function_script:
+  parse_raw_data_f: *cd_p 'parse_raw_data_functions.py'
+  train_test_split_f: *cd_p 'train_test_split_functions.py'
+  data_preprocessing_f: *cd_p 'data_preprocessing_functions.py'
+  feature_engineering_f: *cd_p 'feature_engineering_functions.py'
+  train_model_f: *cd_p 'train_test_split_functions.py'
