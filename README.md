@@ -29,22 +29,14 @@ crawled websites can be found in the `tranco_list_08_12_2022.txt` file.
 To replicate the environment and set up the necessary tools for this project, 
 follow the step-by-step instructions outlined below:
 
-1. Ensure that Python 3.9.12 is installed on your system. If you do not have Python 3.9.12, download and install it
+1. Ensure that Python 3.10.11 is installed on your system. If you do not have Python 3.9.12, download and install it
    from the official [Python website](https://www.python.org/downloads/), 
-   [asdf](https://asdf-vm.com), or a another tool of your choice.
+   [asdf](https://asdf-vm.com), or a another tool of your choice. Python version 3.9.12 was also tested and works. 
 
 2. Install the [Conda](https://docs.conda.io/en/latest/miniconda.html) package manager, which will be utilized for
    managing dependencies and creating a virtual environment.
 
-3. Create a new Conda environment with Python 3.9.12:
-   ```
-   conda create -n my_env python=3.9.12
-   ```
-
-4. Activate the newly created Conda environment:
-   ```
-   conda activate my_env
-   ```
+3. Create a new virtual environment with Python 3.10.11.
 
 5. Clone the GitHub repository to your local machine:
    ```
