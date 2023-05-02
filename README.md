@@ -71,6 +71,12 @@ follow the step-by-step instructions outlined below:
    TEST
    ```
 
+10. Installation of PyArrow Nightly build:
+   ```
+   pip install --extra-index-url https://pypi.fury.io/arrow-nightlies/ \
+    --prefer-binary --pre pyarrow==12.0.0.dev464
+   ```
+   
 With these steps completed, you should now have a functional environment for executing the research project, as well as 
 the necessary tools for efficient model development and tracking.
 
