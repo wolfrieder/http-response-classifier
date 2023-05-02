@@ -3,11 +3,10 @@ import warnings
 import yaml
 import pandas as pd
 import numpy as np
-import xgboost as xgb
-import lightgbm as lgb
+# from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
 from catboost import CatBoostClassifier
 
-# from sklearn.impute import KNNImputer
 from sklearn.ensemble import (
     RandomForestClassifier,
     GradientBoostingClassifier,
@@ -18,6 +17,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import Normalizer, FunctionTransformer, RobustScaler
 from sklearn.compose import ColumnTransformer, make_column_selector as selector
+from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn import metrics
 from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score
@@ -36,39 +36,6 @@ logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 
 
-def calculate_metrics(data, y_true):
-    y_pred = clf.predict(data)
-    pred_probs = clf.predict_proba(data)
-    score = metrics.log_loss(y_true, pred_probs)
-    auc_score = metrics.roc_auc_score(y_true, y_pred)
-    f1_score = metrics.f1_score(y_true, y_pred)
-    bal_acc = metrics.balanced_accuracy_score(y_true, y_pred)
-    precision = metrics.precision_score(y_true, y_pred)
-    recall = metrics.recall_score(y_true, y_pred)
-    mcc = metrics.matthews_corrcoef(y_true, y_pred)
-
-    print(
-        "Model accuracy score : {0:0.4f}".format(metrics.accuracy_score(y_test, y_pred))
-    )
-    print("Model log-loss score : {0:0.4f}".format(score))
-    print("Model auc score : {0:0.4f}".format(auc_score))
-    print("Balanced accuracy score : {0:0.4f}".format(bal_acc))
-    print("F1 score : {0:0.4f}".format(f1_score))
-    print("Precision score : {0:0.4f}".format(precision))
-    print("Recall score : {0:0.4f}".format(recall))
-    print("Matthews correlation coefficient score : {0:0.4f}".format(mcc))
-    print(metrics.classification_report(y_test, y_pred))
-
-    disp_1 = metrics.ConfusionMatrixDisplay.from_predictions(y_test, y_pred)
-    disp_2 = metrics.PrecisionRecallDisplay.from_estimator(
-        clf, X_test, y_test, name="Random Forest"
-    )
-    disp_3 = metrics.RocCurveDisplay.from_estimator(clf, X_test, y_test)
-    mlflow.log_figure(disp_1.figure_, "cm.png")
-    mlflow.log_figure(disp_2.figure_, "prec_recall.png")
-    mlflow.log_figure(disp_3.figure_, "roc.png")
-
-
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     with open("../../../params.yaml", "rb") as f:
@@ -82,7 +49,6 @@ if __name__ == "__main__":
         "MLFLOW_TRACKING_PASSWORD"
     ]
 
-    mlflow.set_experiment('philips_experiments')
     # mlflow.set_experiment("imputation_by_label_experiments")
     # mlflow.set_experiment("simple_imputation_experiments")
     # mlflow.set_experiment("all_binary_experiments")
@@ -101,25 +67,19 @@ if __name__ == "__main__":
     X_train, y_train = train_data.iloc[:, :-1], train_data[["tracker"]]
     X_test, y_test = test_data.iloc[:, :-1], test_data[["tracker"]]
 
-    # models
-    # model = RandomForestClassifier(
-    #     n_estimators=100,
-    #     n_jobs=-1,
-    #     random_state=10,
-    #     criterion="log_loss",
-    #     max_features=None,
-    # )
-
-    model = KNeighborsClassifier(n_jobs=-1)
-    # model = DecisionTreeClassifier()
-    # model = GradientBoostingClassifier()
-    # model = HistGradientBoostingClassifier()
-    # model = xgb.XGBClassifier()
-    # model = lgb.LGBMClassifier(class_weight="balanced")
-    # model = CatBoostClassifier(thread_count=-1)
-    # model = MLPClassifier()
-    # model = LogisticRegression(n_jobs=-1, random_state=10)
-    # model = GaussianNB()
+    models = {
+        "Random Forest": RandomForestClassifier(n_estimators=100, n_jobs=-1, random_state=10, criterion="gini",
+                                                max_features=None),
+        # "KNN": KNeighborsClassifier(n_jobs=-1),
+        "Decision Tree": DecisionTreeClassifier(random_state=10),
+        "Gradient Boosting": GradientBoostingClassifier(random_state=10),
+        # "XGBoost": XGBClassifier(random_state=10, use_label_encoder=False, eval_metric="logloss"),
+        "LightGBM": LGBMClassifier(random_state=10, class_weight="balanced"),
+        "CatBoost": CatBoostClassifier(random_state=10, verbose=0),
+        "MLP": MLPClassifier(random_state=10),
+        "Logistic Regression": LogisticRegression(random_state=10),
+        "Gaussian NB": GaussianNB()
+    }
 
     # pipeline
     with mlflow.start_run():

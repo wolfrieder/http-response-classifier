@@ -4,13 +4,28 @@ import pathlib
 import sys
 from os import listdir, makedirs
 from os.path import join
+from typing import Dict, List, Any, Union
 from urllib.parse import urlparse
 
 from json_stream import load
 from json_stream.dump import JSONStreamEncoder
 
 
-def generate_url(r):
+def generate_url(r: Dict[str, Any]) -> Dict[str, Union[str, List[str]]]:
+    """
+    Extract and generate URL-related information from a given request dictionary.
+
+    Parameters
+    ----------
+    r : Dict[str, Any]
+        The input request dictionary containing the 'url' key.
+
+    Returns
+    -------
+    Dict[str, Union[str, List[str]]]
+        A dictionary containing URL-related information like hostname, pathname,
+        filetype, filename_one, protocol, and query.
+    """
     parsed_url = urlparse(r["url"])
     return {
         "hostname": parsed_url.netloc,
@@ -22,7 +37,20 @@ def generate_url(r):
     }
 
 
-def generate_response_headers(r):
+def generate_response_headers(r: Dict[str, Any]) -> List[List[str]]:
+    """
+    Extract and generate response headers from a given request dictionary.
+
+    Parameters
+    ----------
+    r : Dict[str, Any]
+        The input request dictionary containing the 'responseHeaders' key.
+
+    Returns
+    -------
+    List[List[str]]
+        A list of lists, where each inner list contains a header name and its value.
+    """
     headers = r["response"]["responseHeaders"]
     transformed = []
 

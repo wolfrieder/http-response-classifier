@@ -78,19 +78,28 @@ stages:
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_processed.parquet.gzip
 #      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
-#
-#  feature_engineering:
-#    cmd: >-
-#      python3 ../../../src/features/feature_engineering.py
-#      ${browsers.chrome}
-#      ${dir_name.date_one}
-#    deps:
-#      - ../../../src/features/feature_engineering.py
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
+
+  feature_engineering:
+    cmd: >-
+      python3 ../../../run_pipeline.py feature_engineering.py
+      ${browsers.chrome}
+      ${dir_name.date_one}
+      train_set_01_processed
+      ${browsers.chrome}
+      ${dir_name.date_two}
+      merged_data_processed
+      binary_encoding
+    deps:
+      - ../../../run_pipeline.py
+      - ../../../src/pipeline_functions/feature_engineering_functions.py
+      - ../../../src/features/feature_engineering.py
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
 #      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
-#    outs:
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_processed.parquet.gzip
+    outs:
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized_BE.parquet.gzip
 #      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_featurized_BE.parquet.gzip
 #
 #  model_training:
 #    cmd: >-

@@ -18,6 +18,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the project structure into the container
 COPY . /app
 
+# Install Jupyter
+RUN pip install jupyter
+
 # Install DVC
 RUN pip install dvc
 
@@ -26,7 +29,7 @@ RUN dvc init --no-scm --force
 
 # TODO: UPDATE PATHS
 # Download the local datasets
-COPY data/raw/.dvc /app/data/raw/.dvc
+COPY data/raw/chrome/08_12_2022/.dvc /app/data/raw/.dvc
 COPY data/merged/.dvc /app/data/merged/.dvc
 
 # Add DVC remote storage
@@ -43,11 +46,15 @@ VOLUME /app/output
 # Define the entrypoint to access the terminal within the Docker container
 ENTRYPOINT ["/bin/bash"]
 
+# Set port
+ENV PORT 8088
+EXPOSE $PORT
+
 # Run the pipeline
 #CMD ["dvc", "repro", "data/raw/chrome/dvc.yaml"]
 
 # When the pipeline finishes, copy the resulting CSV file to the output directory
 #CMD ["cp", "result.csv", "/app/output/result.csv"]
 
-#ENV PORT 8088
-#EXPOSE $PORT
+# Set up the Jupyter notebook entrypoint
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
