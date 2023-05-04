@@ -5,7 +5,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from alive_progress import alive_bar
 
-sys.path.append('../../')
+sys.path.append("../../")
 from src.pipeline_functions.parse_raw_data_functions import *
 
 
@@ -54,9 +54,11 @@ def parse_dataset(
     --------
     >>> parse_dataset("input_data", "raw_data", "output_data", "interim_data", 10)
     """
-    with alive_bar(100, force_tty=True, manual=True, title="Data Processing") as bar:
+    with alive_bar(
+        100, force_tty=True, manual=True, title="Initial parsing of data"
+    ) as bar:
 
-        bar.text('Read-in parameters')
+        bar.text("Read-in parameters")
         target_data_dir = "merged" if "merged" in origin_file_name else "raw"
         compression_alg = "gz" if "merged" in origin_file_name else "gzip"
 
@@ -69,14 +71,16 @@ def parse_dataset(
 
         bar(0.05)
 
-        bar.text('Read-in dataset')
+        bar.text("Read-in dataset")
         response_data = prepare_initial_dataset(
             origin_file_name, origin_dir_name, target_data_dir, compression_alg
         )
         bar(0.1)
 
         bar.text("Parse HTTP Header Fields")
-        parsed_headers = [process_header_rows(i) for i in response_data["responseHeaders"]]
+        parsed_headers = [
+            process_header_rows(i) for i in response_data["responseHeaders"]
+        ]
         column_names = list(set().union(*[set(d.keys()) for d in parsed_headers]))
         bar(0.2)
 
@@ -106,17 +110,17 @@ def parse_dataset(
         column_names = [*url_rows_column_names, *column_names, *label_column_name]
         bar(0.65)
 
-        bar.text('Parse data in chunks')
+        bar.text("Parse data in chunks")
         parsed_chunks = parse_chunks(
             final_response_headers, final_response_urls, final_response_labels, 50000
         )
         bar(0.8)
 
-        bar.text('Convert chunks to pyarrow tables')
+        bar.text("Convert chunks to pyarrow tables")
         b = [pa.Table.from_arrays(elem, names=column_names) for elem in parsed_chunks]
         bar(0.9)
 
-        bar.text('Combine list of data chunks to pyarrow table')
+        bar.text("Combine list of data chunks to pyarrow table")
         combined_dataset = pa.concat_tables(b, promote=True)
         bar(0.95)
 

@@ -13,14 +13,14 @@ stages:
       size: 3470
     outs:
     - path: ../../../data/merged/chrome/03_29_2023/merged_data.json.gz
-      md5: 4c28c20756ac450436ae6fc5d0fe7f7b
+      md5: d6c0a083cf39929e00b010920461a2d6
       size: 123121857
   parse_to_parquet:
     cmd: python3 ../../../run_pipeline.py parse_raw_data.py chrome 03_29_2023 merged_data
       processed
     deps:
     - path: ../../../data/merged/chrome/03_29_2023/merged_data.json.gz
-      md5: 4c28c20756ac450436ae6fc5d0fe7f7b
+      md5: d6c0a083cf39929e00b010920461a2d6
       size: 123121857
     - path: ../../../run_pipeline.py
       md5: 53d335cfa92e745c3faf3cb588808ffa
@@ -29,18 +29,18 @@ stages:
       md5: e9d989a14f5baaf0f9b99a33bb74051b
       size: 13411
     - path: ../../../src/transformer/parse_raw_data.py
-      md5: fad2fbf0585767ce112bbb55bbcb5f34
-      size: 4595
+      md5: ce32925519c88d9f018f55998c7f0b86
+      size: 4639
     outs:
     - path: ../../../data/processed/chrome/03_29_2023/merged_data.parquet.gzip
-      md5: 3ee8a3c67294705602a6f06c1bc1ce56
+      md5: f6c575839adfd8f4dbb003fee77e260a
       size: 87896892
   pre_processing:
     cmd: python3 ../../../run_pipeline.py data_preprocessing.py chrome 08_12_2022
       train_set_01 chrome 03_29_2023 merged_data other
     deps:
     - path: ../../../data/processed/chrome/03_29_2023/merged_data.parquet.gzip
-      md5: 3ee8a3c67294705602a6f06c1bc1ce56
+      md5: f6c575839adfd8f4dbb003fee77e260a
       size: 87896892
     - path: ../../../data/processed/chrome/08_12_2022/train_set_01.parquet.gzip
       md5: 48a5b7338fd358d386e7a6e5b043d0a5
@@ -84,7 +84,8 @@ stages:
     - path: ../../../data/processed/chrome/03_29_2023/merged_data_featurized_BE.parquet.gzip
       md5: 4a6189ff3d548d6b4e120965d32ebce5
       size: 3306131
-    - path: ../../../data/processed/chrome/08_12_2022/train_set_01_featurized_BE.parquet.gzip
+    - path: 
+        ../../../data/processed/chrome/08_12_2022/train_set_01_featurized_BE.parquet.gzip
       md5: c8316b8538fb4158956400484e1b6374
       size: 1684030
   model_training:
@@ -94,13 +95,14 @@ stages:
     - path: ../../../data/processed/chrome/03_29_2023/merged_data_featurized_BE.parquet.gzip
       md5: 4a6189ff3d548d6b4e120965d32ebce5
       size: 3306131
-    - path: ../../../data/processed/chrome/08_12_2022/train_set_01_featurized_BE.parquet.gzip
+    - path: 
+        ../../../data/processed/chrome/08_12_2022/train_set_01_featurized_BE.parquet.gzip
       md5: c8316b8538fb4158956400484e1b6374
       size: 1684030
     - path: ../../../src/models/train_model.py
-      md5: c097267dbb55ac11c9a805e33f719702
-      size: 4930
+      md5: 182623ab608d61de2c1a60c641c645c7
+      size: 4888
     outs:
     - path: ../../../models/result_metrics/chrome_old_new_BE.csv
-      md5: 3781947da011e3c21b37a7fff6f9a2bb
-      size: 3940
+      md5: 7945e5f6ebd95c27a9b0d543adbc9bcd
+      size: 4343

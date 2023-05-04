@@ -3,8 +3,7 @@ import sys
 
 import category_encoders as ce
 
-# from xgboost import XGBClassifier
-# from lightgbm import LGBMClassifier
+from xgboost import XGBClassifier
 from alive_progress import alive_bar
 from sklearn.ensemble import (
     RandomForestClassifier,
@@ -68,6 +67,10 @@ def train_models(
 
         bar.text("Define models")
         models = {
+            "Logistic Regression": LogisticRegression(random_state=10, n_jobs=-1),
+            "Gaussian NB": GaussianNB(),
+            "Bernoulli NB": BernoulliNB(),
+            "Decision Tree": DecisionTreeClassifier(random_state=10),
             "Random Forest": RandomForestClassifier(
                 n_estimators=100,
                 n_jobs=-1,
@@ -75,12 +78,9 @@ def train_models(
                 criterion="gini",
                 max_features=None,
             ),
-            "Ada Boost": AdaBoostClassifier(random_state=10),
             "Extra Trees Classifier": ExtraTreesClassifier(random_state=10, n_jobs=-1),
-            "Gaussian NB": GaussianNB(),
-            "Bernoulli NB": BernoulliNB(),
             # "MLP": MLPClassifier(random_state=10),
-            "Decision Tree": DecisionTreeClassifier(random_state=10),
+            "Ada Boost": AdaBoostClassifier(random_state=10),
             "Gradient Boosting": GradientBoostingClassifier(random_state=10),
             # "Hist Gradient Boosting": HistGradientBoostingClassifier(
             #     random_state=10, class_weight="balanced"
@@ -88,10 +88,9 @@ def train_models(
             "Hist Gradient Boosting": HistGradientBoostingClassifier(
                 random_state=10
             ),
-            # "XGBoost": XGBClassifier(random_state=10, use_label_encoder=False, eval_metric="logloss"),
+            "XGBoost": XGBClassifier(random_state=10, use_label_encoder=False, eval_metric="logloss", n_jobs=-1),
             # "LightGBM": LGBMClassifier(random_state=10, class_weight="balanced"),
             # "CatBoost": CatBoostClassifier(random_state=10, verbose=0),
-            "Logistic Regression": LogisticRegression(random_state=10, n_jobs=-1),
         }
         bar(0.3)
 
