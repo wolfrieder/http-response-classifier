@@ -56,8 +56,26 @@ def run_feature_engineering(
     )
 
 
-def run_train_model(browser, date, filename, data_second, file_second):
-    train_model.run(browser, date, filename, data_second, file_second)
+def run_train_model(
+        browser: str,
+        date: str,
+        filename: str,
+        browser_two: str,
+        data_second: str,
+        file_second: str,
+        strategy: str,
+        experiment_name: str
+) -> None:
+    train_model.run(
+        browser,
+        date,
+        filename,
+        browser_two,
+        data_second,
+        file_second,
+        strategy,
+        experiment_name
+    )
 
 
 if __name__ == "__main__":

@@ -4,11 +4,11 @@ vars:
 stages:
   merge:
     cmd: >-
-      python3 ../../../src/transformer/0-merge_jsons.py
+      python3 ../../../src/transformer/merge_jsons.py
       ${data.raw_dir}
       ${data.merged_dir}
     deps:
-      - ../../../src/transformer/0-merge_jsons.py
+      - ../../../src/transformer/merge_jsons.py
       - ${data.raw_dir}
     outs:
       - ${data.merged_dir}/merged_data.json.gz
@@ -100,15 +100,23 @@ stages:
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized_BE.parquet.gzip
 #      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_featurized_BE.parquet.gzip
-#
-#  model_training:
-#    cmd: >-
-#      python3 ../../../src/models/train_model.py
-#      ${browsers.chrome}
-#      ${dir_name.date_one}
-#    deps:
-#      - ../../../src/models/train_model.py
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized.parquet.gzip
+
+  model_training:
+    cmd: >-
+      python3 ../../../run_pipeline.py train_model.py
+      ${browsers.chrome}
+      ${dir_name.date_one}
+      train_set_01_featurized_BE
+      ${browsers.chrome}
+      ${dir_name.date_two}
+      merged_data_featurized_BE
+      binary
+      chrome_old_new_BE
+    deps:
+      - ../../../src/models/train_model.py
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized_BE.parquet.gzip
+      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_featurized_BE.parquet.gzip
 #      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized.parquet.gzip
-#    outs:
+    outs:
+      - ../../../models/result_metrics/chrome_old_new_BE.csv
 #      - ../../../models/${browsers.chrome}/${dir_name.date_one}/random_forest_v2_binary.sav

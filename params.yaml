@@ -22,7 +22,7 @@ dir_paths:
   cd_pipeline: &cd_p '../../../pipeline_functions/'
 
 #python_script:
-#  merger: *cd_src 'transformer/0-merge_jsons.py'
+#  merger: *cd_src 'transformer/merge_jsons.py'
 #  parse_raw_data: *cd_src 'transformer/parse_raw_data.py'
 #  train_test_split: *cd_src 'transformer/train_test_split.py'
 #  data_preprocessing: *cd_src 'transformer/data_preprocessing.py'

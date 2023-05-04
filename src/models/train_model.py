@@ -1,106 +1,137 @@
-import warnings
+import logging
+import sys
 
-import yaml
-import pandas as pd
-import numpy as np
+import category_encoders as ce
+
 # from xgboost import XGBClassifier
-from lightgbm import LGBMClassifier
-from catboost import CatBoostClassifier
-
+# from lightgbm import LGBMClassifier
+from alive_progress import alive_bar
 from sklearn.ensemble import (
     RandomForestClassifier,
     GradientBoostingClassifier,
     HistGradientBoostingClassifier,
+    AdaBoostClassifier,
+    ExtraTreesClassifier
 )
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neural_network import MLPClassifier
-from sklearn.preprocessing import Normalizer, FunctionTransformer, RobustScaler
-from sklearn.compose import ColumnTransformer, make_column_selector as selector
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
-from sklearn import metrics
-from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score
-from sklearn.naive_bayes import GaussianNB
-from sklearn.dummy import DummyClassifier
-import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy.stats import kstest, shapiro, probplot
-import category_encoders as ce
-import mlflow
-import os
-import logging
-import pickle
+from sklearn.model_selection import StratifiedKFold
+from sklearn.naive_bayes import GaussianNB, BernoulliNB
+from sklearn.preprocessing import Normalizer, FunctionTransformer, MinMaxScaler
+from sklearn.tree import DecisionTreeClassifier
+
+sys.path.append("../../")
+from src.pipeline_functions.train_model_functions import *
 
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 
 
-if __name__ == "__main__":
-    warnings.filterwarnings("ignore")
-    with open("../../../params.yaml", "rb") as f:
-        params = yaml.safe_load(f)
+def run(
+    browser_one: str,
+    date_one: str,
+    train_data_file_name: str,
+    browser_two: str,
+    date_two: str,
+    test_data_file_name: str,
+    strategy: str,
+    experiment_name: str,
+) -> None:
+    dir_path_one = f"{browser_one}/{date_one}"
+    dir_path_two = f"{browser_two}/{date_two}"
 
-    mlflow.set_tracking_uri(params["ml_flow"]["MLFLOW_TRACKING_URI"])
-    os.environ["MLFLOW_TRACKING_USERNAME"] = params["ml_flow"][
-        "MLFLOW_TRACKING_USERNAME"
-    ]
-    os.environ["MLFLOW_TRACKING_PASSWORD"] = params["ml_flow"][
-        "MLFLOW_TRACKING_PASSWORD"
-    ]
+    dir_path_one = f"../../../data/processed/{dir_path_one}/{train_data_file_name}"
+    dir_path_two = f"../../../data/processed/{dir_path_two}/{test_data_file_name}"
+    result_csv_filename = f"../../../models/result_metrics/{experiment_name}.csv"
 
-    # mlflow.set_experiment("imputation_by_label_experiments")
-    # mlflow.set_experiment("simple_imputation_experiments")
-    # mlflow.set_experiment("all_binary_experiments")
+    train_models(dir_path_one, dir_path_two, strategy, result_csv_filename)
 
-    mlflow.sklearn.autolog()
-    # mlflow.xgboost.autolog()
-    # mlflow.lightgbm.autolog()
 
-    train_data = pd.read_parquet(
-        "../../../data/processed/chrome/08_12_2022/train_set_01_featurized.parquet.gzip"
-    )
-    test_data = pd.read_parquet(
-        "../../../data/processed/chrome/08_12_2022/test_set_01_featurized.parquet.gzip"
-    )
+def train_models(
+    train_data_file_path: str,
+    test_data_file_path: str,
+    strategy: str,
+    result_csv_filename: str,
+) -> None:
+    with alive_bar(
+        100, force_tty=True, manual=True, title="Training and Validating Models"
+    ) as bar:
+        print(result_csv_filename)
+        bar.text("Read-in data")
+        train_data = pd.read_parquet(f"{train_data_file_path}.parquet.gzip")
+        test_data = pd.read_parquet(f"{test_data_file_path}.parquet.gzip")
+        bar(0.1)
 
-    X_train, y_train = train_data.iloc[:, :-1], train_data[["tracker"]]
-    X_test, y_test = test_data.iloc[:, :-1], test_data[["tracker"]]
+        bar.text("Split data into features and targets")
+        X_train, y_train = train_data.iloc[:, :-1], train_data[["tracker"]]
+        X_test, y_test = test_data.iloc[:, :-1], test_data[["tracker"]]
+        bar(0.2)
 
-    models = {
-        "Random Forest": RandomForestClassifier(n_estimators=100, n_jobs=-1, random_state=10, criterion="gini",
-                                                max_features=None),
-        # "KNN": KNeighborsClassifier(n_jobs=-1),
-        "Decision Tree": DecisionTreeClassifier(random_state=10),
-        "Gradient Boosting": GradientBoostingClassifier(random_state=10),
-        # "XGBoost": XGBClassifier(random_state=10, use_label_encoder=False, eval_metric="logloss"),
-        "LightGBM": LGBMClassifier(random_state=10, class_weight="balanced"),
-        "CatBoost": CatBoostClassifier(random_state=10, verbose=0),
-        "MLP": MLPClassifier(random_state=10),
-        "Logistic Regression": LogisticRegression(random_state=10),
-        "Gaussian NB": GaussianNB()
-    }
+        bar.text("Define models")
+        models = {
+            "Random Forest": RandomForestClassifier(
+                n_estimators=100,
+                n_jobs=-1,
+                random_state=10,
+                criterion="gini",
+                max_features=None,
+            ),
+            "Ada Boost": AdaBoostClassifier(random_state=10),
+            "Extra Trees Classifier": ExtraTreesClassifier(random_state=10, n_jobs=-1),
+            "Gaussian NB": GaussianNB(),
+            "Bernoulli NB": BernoulliNB(),
+            # "MLP": MLPClassifier(random_state=10),
+            "Decision Tree": DecisionTreeClassifier(random_state=10),
+            "Gradient Boosting": GradientBoostingClassifier(random_state=10),
+            # "Hist Gradient Boosting": HistGradientBoostingClassifier(
+            #     random_state=10, class_weight="balanced"
+            # ),
+            "Hist Gradient Boosting": HistGradientBoostingClassifier(
+                random_state=10
+            ),
+            # "XGBoost": XGBClassifier(random_state=10, use_label_encoder=False, eval_metric="logloss"),
+            # "LightGBM": LGBMClassifier(random_state=10, class_weight="balanced"),
+            # "CatBoost": CatBoostClassifier(random_state=10, verbose=0),
+            "Logistic Regression": LogisticRegression(random_state=10, n_jobs=-1),
+        }
+        bar(0.3)
 
-    # pipeline
-    with mlflow.start_run():
-        # clf = lgb.LGBMClassifier(class_weight="balanced")
+        bar.text("Define CV Method")
+        cv = StratifiedKFold(n_splits=5, random_state=10, shuffle=True)
+        bar(0.4)
 
-        numeric_transformer = Pipeline(
-            steps=[("scaler", FunctionTransformer(np.log1p))]
-        )
-        norm_transformer = Pipeline(steps=[("norm_scaler", Normalizer())])
-        # minmax_transformer = Pipeline(steps=[("mmscaler", MinMaxScaler(feature_range=[-1, 1]))])
+        bar.text("Train and evaluate models")
+        if strategy == "binary":
+            result_df = train_and_evaluate_models(
+                models, X_train, y_train["tracker"], X_test, y_test["tracker"], cv
+            )
+        else:
+            numeric_transformer = Pipeline(
+                steps=[("scaler", FunctionTransformer(np.log1p))]
+            )
+            norm_transformer = Pipeline(steps=[("norm_scaler", Normalizer())])
+            # minmax_transformer = Pipeline(
+            #     steps=[("mmscaler", MinMaxScaler(feature_range=[-1, 1]))]
+            # )
 
-        preprocessor = ColumnTransformer(
-            transformers=[
-                ("cat", ce.WOEEncoder(), selector(dtype_include="category")),
-                ("num", numeric_transformer, ["content-length"]),
-                ("age", norm_transformer, ["age"]),
-            ]
-        )
+            preprocessor = ColumnTransformer(
+                transformers=[
+                    ("cat", ce.WOEEncoder(), selector(dtype_include="category")),
+                    ("num", numeric_transformer, ["content-length"]),
+                    ("age", norm_transformer, ["age"]),
+                ]
+            )
 
-        clf = Pipeline(steps=[("preprocessor", preprocessor), ("classifier", model)])
+            result_df = train_and_evaluate_models(
+                models,
+                X_train,
+                y_train["tracker"],
+                X_test,
+                y_test["tracker"],
+                cv,
+                preprocessor,
+            )
+        bar(0.9)
 
-        clf.fit(X_train, y_train["tracker"])
-        calculate_metrics(X_test, y_test)
-    mlflow.end_run()
+        bar.text("Export results to CSV")
+        result_df.to_csv(f"{result_csv_filename}", index=True)
+        bar(1)

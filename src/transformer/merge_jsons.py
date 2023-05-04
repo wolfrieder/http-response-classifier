@@ -7,6 +7,7 @@ from os.path import join
 from typing import Dict, List, Any, Union
 from urllib.parse import urlparse
 
+from alive_progress import alive_bar
 from json_stream import load
 from json_stream.dump import JSONStreamEncoder
 
@@ -85,26 +86,29 @@ if __name__ == "__main__":
 
     first = True
 
+    print("\n The upper boundary of parsed items per file (71000) is only an estimate.")
     for index, file in enumerate(jsons):
-        with gzip.open(join(data_dir, file), "rt") as f:
-            requests = load(f)
-            for r in requests.persistent():
-                if not first:
-                    output_file.write(", ")
+        with alive_bar(71000, title=f"Parse {file}") as bar:
+            with gzip.open(join(data_dir, file), "rt") as f:
+                requests = load(f)
+                for r in requests.persistent():
+                    if not first:
+                        output_file.write(", ")
 
-                first = False
+                    first = False
 
-                t = {
-                    "url": generate_url(r),
-                    "labels": r["labels"],
-                    "response": {
-                        "statusCode": r["response"]["statusCode"],
-                        "fromCache": r["response"]["fromCache"],
-                    },
-                    "responseHeaders": generate_response_headers(r),
-                }
+                    t = {
+                        "url": generate_url(r),
+                        "labels": r["labels"],
+                        "response": {
+                            "statusCode": r["response"]["statusCode"],
+                            "fromCache": r["response"]["fromCache"],
+                        },
+                        "responseHeaders": generate_response_headers(r),
+                    }
 
-                output_file.write(json.dumps(t, cls=JSONStreamEncoder))
+                    output_file.write(json.dumps(t, cls=JSONStreamEncoder))
+                    bar()
 
     output_file.write("]")
     output_file.close()
