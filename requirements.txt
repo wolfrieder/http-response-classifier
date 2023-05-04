@@ -16,7 +16,6 @@ dvc==2.36.0
 black==22.6.0
 json-stream
 skl2onnx==1.14.0
-onnx-tf==1.10.0
 protobuf>=3.12.2
 onnx>=1
 setuptools==61.2.0

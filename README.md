@@ -38,32 +38,28 @@ follow the step-by-step instructions outlined below:
 
 3. Create a new virtual environment with Python 3.10.11.
 
-5. Clone the GitHub repository to your local machine:
+4. Clone the GitHub repository to your local machine:
    ```
    git clone https://github.com/wolfrieder/thesis_project_v2.git
    ```
 
-6. Navigate to the cloned repository's root directory:
+5. Navigate to the cloned repository's root directory:
    ```
    cd thesis_project_v2
    ```
 
-7. Install the necessary packages from the `requirements.txt` file:
+6. Install the necessary packages from the `requirements.txt` file:
    ```
    pip install -r requirements.txt
    ```
 
-8. Install and set up [DVC](https://dvc.org/doc/install) for version control of your data and models:
-   ```
-   dvc init
-   ```
-
-9. Install and set up [MLflow](https://mlflow.org/docs/latest/quickstart.html) for experiment tracking and model management:
+7. Install and set up [MLflow](https://mlflow.org/docs/latest/quickstart.html) for experiment tracking and model 
+management:
    ```
    TEST
    ```
 
-10. Installation of PyArrow Nightly build:
+8. Installation of PyArrow Nightly build:
    ```
    pip install --extra-index-url https://pypi.fury.io/arrow-nightlies/ \
     --prefer-binary --pre pyarrow==12.0.0.dev464
@@ -79,3 +75,12 @@ If the LightGBM import throws this error message:
 then you should update `dask` and `dependencies`. The problem is described 
 [here](https://github.com/microsoft/LightGBM/issues/5739) and is related to the
 recent release of `pandas` version 2. 
+
+If the PyArrow Nightly build is not installed, there will be an error message when 
+the datasets are exported to parquet files. This is a known issue and is described 
+in two GitHub issues: [Pandas 1](https://github.com/pandas-dev/pandas/issues/51752) and 
+[PyArrow 2](https://github.com/apache/arrow/issues/34449). The bug was already fixed in 
+PyArrow but is not yet released.
+
+The LightGBM installation might throw an error when installed on an Apple Silicon 
+Macbook with `pip`.
