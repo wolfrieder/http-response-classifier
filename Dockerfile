@@ -18,27 +18,18 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the project structure into the container
 COPY . /app
 
-# Install Jupyter
-RUN pip install jupyter
-
-# Install DVC
-RUN pip install dvc
-
-# Set up DVC
-RUN dvc init --no-scm --force
-
 # TODO: UPDATE PATHS
 # Download the local datasets
 COPY data/raw/chrome/08_12_2022/.dvc /app/data/raw/.dvc
 COPY data/merged/.dvc /app/data/merged/.dvc
 
 # Add DVC remote storage
-RUN dvc remote add -d local_storage /tmp/dvc-storage
-RUN dvc config cache.type reflink,symlink,hardlink,copy
+#RUN dvc remote add -d local_storage /tmp/dvc-storage
+#RUN dvc config cache.type reflink,symlink,hardlink,copy
 
 # Pull the data from local DVC storage
-RUN dvc pull data/raw/.dvc
-RUN dvc pull data/merged/.dvc
+#RUN dvc pull data/raw/.dvc
+#RUN dvc pull data/merged/.dvc
 
 # Set up the output directory
 VOLUME /app/output
