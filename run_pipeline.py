@@ -3,7 +3,7 @@ import sys
 sys.path.append("src")
 from src.transformer import parse_raw_data, data_preprocessing, train_test_split
 from src.features import feature_engineering
-from src.models import train_model
+from src.models import train_model, test_model
 
 
 def run_parse_raw_data(browser: str, date: str, filename: str, data_dir: str) -> None:
@@ -60,23 +60,29 @@ def run_train_model(
         browser: str,
         date: str,
         filename: str,
-        browser_two: str,
-        data_second: str,
-        file_second: str,
         strategy: str,
-        experiment_name: str,
-        models_trained: str
+        experiment_name: str
 ) -> None:
     train_model.run(
         browser,
         date,
         filename,
-        browser_two,
-        data_second,
-        file_second,
         strategy,
-        experiment_name,
-        models_trained
+        experiment_name
+    )
+
+
+def run_test_model(
+        browser: str,
+        date: str,
+        filename: str,
+        experiment_name: str
+) -> None:
+    test_model.run(
+        browser,
+        date,
+        filename,
+        experiment_name
     )
 
 
@@ -96,5 +102,7 @@ if __name__ == "__main__":
         run_feature_engineering(*args)
     elif script_to_run == "train_model.py":
         run_train_model(*args)
+    elif script_to_run == "test_model.py":
+        run_test_model(*args)
     else:
         print(f"Unknown script: {script_to_run}")

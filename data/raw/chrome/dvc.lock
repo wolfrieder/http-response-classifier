@@ -23,8 +23,8 @@ stages:
       md5: d6c0a083cf39929e00b010920461a2d6
       size: 123121857
     - path: ../../../run_pipeline.py
-      md5: 53d335cfa92e745c3faf3cb588808ffa
-      size: 2312
+      md5: eb67bdd44f17a948c912d3cf3ffaa16e
+      size: 2481
     - path: ../../../src/pipeline_functions/parse_raw_data_functions.py
       md5: e9d989a14f5baaf0f9b99a33bb74051b
       size: 13411
@@ -33,21 +33,21 @@ stages:
       size: 4639
     outs:
     - path: ../../../data/processed/chrome/03_29_2023/merged_data.parquet.gzip
-      md5: f6c575839adfd8f4dbb003fee77e260a
+      md5: c850c4f6e341cbdf37374c003c1bd45b
       size: 87896892
   pre_processing:
     cmd: python3 ../../../run_pipeline.py data_preprocessing.py chrome 08_12_2022
       train_set_01 chrome 03_29_2023 merged_data other
     deps:
     - path: ../../../data/processed/chrome/03_29_2023/merged_data.parquet.gzip
-      md5: f6c575839adfd8f4dbb003fee77e260a
+      md5: c850c4f6e341cbdf37374c003c1bd45b
       size: 87896892
     - path: ../../../data/processed/chrome/08_12_2022/train_set_01.parquet.gzip
       md5: 48a5b7338fd358d386e7a6e5b043d0a5
       size: 46473012
     - path: ../../../run_pipeline.py
-      md5: 53d335cfa92e745c3faf3cb588808ffa
-      size: 2312
+      md5: eb67bdd44f17a948c912d3cf3ffaa16e
+      size: 2481
     - path: ../../../src/pipeline_functions/data_preprocessing_functions.py
       md5: 2e7f9dbaf84d2e10cfbf50a9d8c350f9
       size: 11224
@@ -72,8 +72,8 @@ stages:
       md5: b988e61c535363daf7bd2df722c0daf1
       size: 14539903
     - path: ../../../run_pipeline.py
-      md5: 53d335cfa92e745c3faf3cb588808ffa
-      size: 2312
+      md5: eb67bdd44f17a948c912d3cf3ffaa16e
+      size: 2481
     - path: ../../../src/features/feature_engineering.py
       md5: cd6df598944776141380014875727dc5
       size: 12272
@@ -90,19 +90,57 @@ stages:
       size: 1684030
   model_training:
     cmd: python3 ../../../run_pipeline.py train_model.py chrome 08_12_2022 train_set_01_featurized_BE
-      chrome 03_29_2023 merged_data_featurized_BE binary chrome_old_new_BE
+      binary chrome_old_BE
     deps:
-    - path: ../../../data/processed/chrome/03_29_2023/merged_data_featurized_BE.parquet.gzip
-      md5: 4a6189ff3d548d6b4e120965d32ebce5
-      size: 3306131
     - path: 
         ../../../data/processed/chrome/08_12_2022/train_set_01_featurized_BE.parquet.gzip
       md5: c8316b8538fb4158956400484e1b6374
       size: 1684030
     - path: ../../../src/models/train_model.py
-      md5: 64bf8d0f3cdc0e9b865b05df9cebf476
-      size: 4804
+      md5: a53f231fff67746dfb20b62e718ef53a
+      size: 4474
     outs:
-    - path: ../../../models/result_metrics/chrome_old_new_BE.csv
-      md5: 3fbccc1a48a243d93833af96f23bcf1b
-      size: 1062
+    - path: ../../../models/chrome/08_12_2022/Hist_GB_BE.sav.gz
+      md5: 5597c5f873e1d5cb64852a0bf43196f8
+      size: 145555
+    - path: ../../../models/chrome/08_12_2022/LightGBM_BE.sav.gz
+      md5: eff81aafa6b6b164b6bcebcaf3ae20d9
+      size: 132652
+    - path: ../../../models/chrome/08_12_2022/Logistic_Regression_BE.sav.gz
+      md5: e51e6bd2403a6610890a6052bfefae42
+      size: 3174
+    - path: ../../../models/chrome/08_12_2022/Random_Forest_BE.sav.gz
+      md5: 9126bbd0c69bc2f556819226b730d50b
+      size: 17212748
+    - path: ../../../models/result_metrics/chrome_old_BE.csv
+      md5: f68d9efcaa8aeffb2a51f5cd00eb8094
+      size: 978
+  model_evaluation:
+    cmd: python3 ../../../run_pipeline.py test_model.py chrome 03_29_2023 merged_data_featurized_BE
+      chrome_new_BE
+    deps:
+    - path: ../../../data/processed/chrome/03_29_2023/merged_data_featurized_BE.parquet.gzip
+      md5: 4a6189ff3d548d6b4e120965d32ebce5
+      size: 3306131
+    - path: ../../../models/chrome/08_12_2022/Hist_GB_BE.sav.gz
+      md5: 5597c5f873e1d5cb64852a0bf43196f8
+      size: 145555
+    - path: ../../../models/chrome/08_12_2022/LightGBM_BE.sav.gz
+      md5: eff81aafa6b6b164b6bcebcaf3ae20d9
+      size: 132652
+    - path: ../../../models/chrome/08_12_2022/Logistic_Regression_BE.sav.gz
+      md5: e51e6bd2403a6610890a6052bfefae42
+      size: 3174
+    - path: ../../../models/chrome/08_12_2022/Random_Forest_BE.sav.gz
+      md5: 9126bbd0c69bc2f556819226b730d50b
+      size: 17212748
+    - path: ../../../src/models/test_model.py
+      md5: 8e6e0d77c9bb116528a8c6f7e8ea991e
+      size: 1788
+    outs:
+    - path: ../../../models/result_metrics/chrome_new_BE.csv
+      md5: 3fb8043bfa95ae69fabdadb9124ac41d
+      size: 615
+    - path: ../../../models/result_metrics/chrome_new_BE_CI.csv
+      md5: a227d42afbcc590b4e949075cde4a5b6
+      size: 3

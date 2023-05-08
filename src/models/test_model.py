@@ -15,17 +15,17 @@ def run(
     dir_path_two = f"{browser_two}/{date_two}"
 
     dir_path_two = f"../../../data/processed/{dir_path_two}/{test_data_file_name}"
-    result_csv_filename = f"../../../models/result_metrics/{experiment_name}.csv"
+    result_csv_filename = f"../../../models/result_metrics/{experiment_name}"
 
-    test_models(dir_path_two, result_csv_filename)
+    test_models_run(dir_path_two, result_csv_filename)
 
 
-def test_models(
+def test_models_run(
     test_data_file_path: str,
     result_csv_filename: str,
 ) -> None:
     with alive_bar(
-        100, force_tty=True, manual=True, title="Training and Validating Models"
+        100, force_tty=True, manual=True, title="Validating Models"
     ) as bar:
         print(result_csv_filename)
         bar.text("Read-in data")
@@ -38,25 +38,25 @@ def test_models(
 
         bar.text("Define models")
         models = [
-            "Logistic Regression"
-            "Gaussian NB"
-            "Bernoulli NB"
-            "Decision Tree"
-            "Random Forest"
-            "Extra Trees Classifier"
-            "Ada Boost"
-            "Gradient Boosting"
-            "LightGBM"
-            "Hist Gradient Boosting"
-            "XGBoost"
-            "MLP"
+            "Logistic_Regression",
+            "Gaussian_NB",
+            "Bernoulli_NB",
+            "Decision_Tree",
+            "Random_Forest",
+            "Extra_Trees_Classifier",
+            "Ada_Boost",
+            "Gradient_Boosting",
+            "LightGBM",
+            "Hist_GB",
+            "XGBoost",
         ]
         bar(0.3)
 
         bar.text("Evaluate models")
-        result_df = train_and_evaluate_models(models, X_test, y_test["tracker"])
+        result_df_list = test_models(models, X_test, y_test["tracker"])
         bar(0.9)
 
         bar.text("Export results to CSV")
-        result_df.to_csv(f"{result_csv_filename}", index=True)
+        result_df_list[0].to_csv(f"{result_csv_filename}.csv", index=True)
+        result_df_list[1].to_csv(f"{result_csv_filename}_CI.csv", index=True)
         bar(1)
