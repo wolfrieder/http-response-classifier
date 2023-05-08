@@ -115,16 +115,16 @@ stages:
     outs:
       - ../../../models/result_metrics/chrome_old_BE.csv
       - ../../../models/${browsers.chrome}/${dir_name.date_one}/Logistic_Regression_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Gaussian_NB_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Bernoulli_NB_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Decision_Tree_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Gaussian_NB_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Bernoulli_NB_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Decision_Tree_BE.sav.gz
       - ../../../models/${browsers.chrome}/${dir_name.date_one}/Random_Forest_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Extra_Trees_Classifier_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Ada_Boost_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Gradient_Boosting_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Extra_Trees_Classifier_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Ada_Boost_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Gradient_Boosting_BE.sav.gz
       - ../../../models/${browsers.chrome}/${dir_name.date_one}/LightGBM_BE.sav.gz
       - ../../../models/${browsers.chrome}/${dir_name.date_one}/Hist_GB_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/XGBoost_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/XGBoost_BE.sav.gz
 
   model_evaluation:
     cmd: >-
@@ -137,16 +137,16 @@ stages:
       - ../../../src/models/test_model.py
       - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_featurized_BE.parquet.gzip
       - ../../../models/${browsers.chrome}/${dir_name.date_one}/Logistic_Regression_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Gaussian_NB_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Bernoulli_NB_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Decision_Tree_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Gaussian_NB_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Bernoulli_NB_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Decision_Tree_BE.sav.gz
       - ../../../models/${browsers.chrome}/${dir_name.date_one}/Random_Forest_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Extra_Trees_Classifier_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Ada_Boost_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Gradient_Boosting_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Extra_Trees_Classifier_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Ada_Boost_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/Gradient_Boosting_BE.sav.gz
       - ../../../models/${browsers.chrome}/${dir_name.date_one}/LightGBM_BE.sav.gz
       - ../../../models/${browsers.chrome}/${dir_name.date_one}/Hist_GB_BE.sav.gz
-#      - ../../../models/${browsers.chrome}/${dir_name.date_one}/XGBoost_BE.sav.gz
+      - ../../../models/${browsers.chrome}/${dir_name.date_one}/XGBoost_BE.sav.gz
     outs:
       - ../../../models/result_metrics/chrome_new_BE.csv
       - ../../../models/result_metrics/chrome_new_BE_CI.csv

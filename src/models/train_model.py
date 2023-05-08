@@ -62,8 +62,7 @@ def train_models_run(
                 random_state=10,
                 n_jobs=-1,
                 max_iter=1000,
-                solver='newton-cholesky',
-                class_weight='balanced'
+                solver='newton-cholesky'
             ),
             "Gaussian_NB": GaussianNB(),
             "Bernoulli_NB": BernoulliNB(),
@@ -73,15 +72,14 @@ def train_models_run(
                 n_jobs=-1,
                 random_state=10,
                 criterion="gini",
-                max_features=None,
-                class_weight='balanced'
+                max_features=None
             ),
             "Extra_Trees_Classifier": ExtraTreesClassifier(random_state=10,
                                                            n_jobs=-1),
             "Ada_Boost": AdaBoostClassifier(random_state=10),
             "Gradient_Boosting": GradientBoostingClassifier(random_state=10),
             "LightGBM": LGBMClassifier(random_state=10, n_jobs=-1),
-            "Hist_GB": HistGradientBoostingClassifier(random_state=10, class_weight='balanced'),
+            "Hist_GB": HistGradientBoostingClassifier(random_state=10),
             "XGBoost": XGBClassifier(
                 random_state=10,
                 eval_metric="logloss",

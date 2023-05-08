@@ -157,7 +157,7 @@ def calculate_confidence_intervals(
         for _ in range(n_bootstrap_samples)
     ]
 
-    bootstrap_metrics = Parallel(n_jobs=n_jobs)(
+    bootstrap_metrics = Parallel(n_jobs=n_jobs, timeout=400)(
         delayed(calculate_single_bootstrap_sample)(y_true, y_pred, y_pred_proba, rs)
         for rs in random_states
     )
