@@ -53,13 +53,7 @@ follow the step-by-step instructions outlined below:
    pip install -r requirements.txt
    ```
 
-7. Install and set up [MLflow](https://mlflow.org/docs/latest/quickstart.html) for experiment tracking and model 
-management:
-   ```
-   TEST
-   ```
-
-8. Installation of PyArrow Nightly build:
+7. Installation of PyArrow Nightly build:
    ```
    pip install --extra-index-url https://pypi.fury.io/arrow-nightlies/ \
     --prefer-binary --pre pyarrow==12.0.0.dev464
@@ -83,4 +77,7 @@ in two GitHub issues: [Pandas 1](https://github.com/pandas-dev/pandas/issues/517
 PyArrow but is not yet released.
 
 The LightGBM installation might throw an error when installed on an Apple Silicon 
-Macbook with `pip`.
+Macbook with `pip`. One solution was proposed 
+[here](https://stackoverflow.com/questions/74566704/cannot-install-lightgbm-3-3-3-on-apple-silicon)
+and requires the installation of two more dependencies via `brew install cmake libomp`.
+An installation via `pip install lightgbm` will then work correctly. 

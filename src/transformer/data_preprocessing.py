@@ -30,14 +30,10 @@ def run(
     except OSError as error:
         print(f"Directory {dir_path_two} can not be created.")
 
-    dir_path_one = (
-        f"../../../data/processed/{dir_path_one}/{train_data_file_name}"
-    )
-    dir_path_two = (
-        f"../../../data/processed/{dir_path_two}/{test_data_file_name}"
-    )
+    dir_path_one = f"../../../data/processed/{dir_path_one}/{train_data_file_name}"
+    dir_path_two = f"../../../data/processed/{dir_path_two}/{test_data_file_name}"
 
-    other_test_data = True if other_test_data == 'other' else False
+    other_test_data = True if other_test_data == "other" else False
 
     preprocessing_data(dir_path_one, dir_path_two, other_test_data)
 
@@ -49,12 +45,14 @@ def preprocessing_data(
 
         bar.text("Read-in data")
         data_train = pd.read_parquet(
-            f'{train_data_file_path}.parquet.gzip', engine="pyarrow",
-            dtype_backend="pyarrow"
+            f"{train_data_file_path}.parquet.gzip",
+            engine="pyarrow",
+            dtype_backend="pyarrow",
         )
         data_test = pd.read_parquet(
-            f'{test_data_file_path}.parquet.gzip', engine="pyarrow",
-            dtype_backend="pyarrow"
+            f"{test_data_file_path}.parquet.gzip",
+            engine="pyarrow",
+            dtype_backend="pyarrow",
         )
         bar(0.05)
 
@@ -250,18 +248,25 @@ def preprocessing_data(
         data_train["tracker"] = data_train["tracker"].astype("Int32")
         data_test["tracker"] = data_test["tracker"].astype("Int32")
         reordered_cols = label_as_last_column(data_train)
+        if len(data_test.columns) != len(reordered_cols):
+            missing_cols = list(
+                set(reordered_cols).difference(data_test.columns.tolist())
+            )
+            data_test = data_test.reindex(
+                columns=data_test.columns.tolist() + missing_cols
+            )
         data_test = data_test[reordered_cols]
         bar(0.99)
 
         bar.text("Write data to parquet.gzip")
 
         data_train.to_parquet(
-            f'{train_data_file_path}_processed.parquet.gzip',
+            f"{train_data_file_path}_processed.parquet.gzip",
             compression="gzip",
         )
 
         data_test.to_parquet(
-            f'{test_data_file_path}_processed.parquet.gzip',
+            f"{test_data_file_path}_processed.parquet.gzip",
             compression="gzip",
         )
         bar(1)

@@ -9,6 +9,7 @@ from sklearn.model_selection import BaseCrossValidator
 from sklearn.model_selection import cross_validate
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer, make_column_selector as selector
+from joblib import Parallel, delayed
 
 
 def calculate_metrics(
@@ -81,23 +82,33 @@ def calculate_confusion_matrix_elements(
     return {"FP": fp, "TN": tn, "FN": fn, "TP": tp}
 
 
+def calculate_single_bootstrap_sample(y_true, y_pred, y_pred_proba, random_state):
+    sample_idx = random_state.choice(len(y_true), len(y_true), replace=True)
+    y_true_sample = y_true.iloc[sample_idx]
+    y_pred_sample = y_pred[sample_idx]
+    y_pred_proba_sample = y_pred_proba[sample_idx]
+
+    return calculate_metrics(y_true_sample, y_pred_sample, y_pred_proba_sample)
+
+
 def calculate_confidence_intervals(
     y_true: pd.Series,
     y_pred: np.ndarray,
     y_pred_proba: np.ndarray,
     n_bootstrap_samples: int = 1000,
+    random_state: int = 10,
+    n_jobs: int = -1,
 ) -> Dict[str, Tuple[float, float]]:
-    bootstrap_metrics = []
-    for _ in range(n_bootstrap_samples):
-        sample_idx = np.random.choice(len(y_true), len(y_true), replace=True)
-        y_true_sample = y_true.iloc[sample_idx]
-        y_pred_sample = y_pred[sample_idx]
-        y_pred_proba_sample = y_pred_proba[sample_idx]
+    rng = np.random.RandomState(random_state)
+    random_states = [
+        np.random.RandomState(rng.randint(np.iinfo(np.int32).max))
+        for _ in range(n_bootstrap_samples)
+    ]
 
-        sample_metrics = calculate_metrics(
-            y_true_sample, y_pred_sample, y_pred_proba_sample
-        )
-        bootstrap_metrics.append(sample_metrics)
+    bootstrap_metrics = Parallel(n_jobs=n_jobs)(
+        delayed(calculate_single_bootstrap_sample)(y_true, y_pred, y_pred_proba, rs)
+        for rs in random_states
+    )
 
     confidence_intervals = {}
     for metric in bootstrap_metrics[0].keys():
@@ -188,6 +199,12 @@ def train_and_evaluate_models(
         best_estimator = cv_results["estimator"][best_estimator_idx]
         y_pred_test = best_estimator.predict(X_test)
         y_pred_proba_test = best_estimator.predict_proba(X_test)[:, 1]
+
+        # confidence_intervals = calculate_confidence_intervals(
+        #     y_test, y_pred_test, y_pred_proba_test
+        # )
+        #
+        # print(pd.DataFrame(confidence_intervals))
 
         test_metrics = calculate_metrics(y_test, y_pred_test, y_pred_proba_test)
         test_metrics.update(calculate_confusion_matrix_elements(y_test, y_pred_test))

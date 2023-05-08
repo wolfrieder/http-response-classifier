@@ -2,10 +2,12 @@ browsers:
   chrome: 'chrome'
   firefox: 'firefox'
   brave: 'brave'
+  mobile: 'mobile'
 
 dir_name:
   date_one: '08_12_2022'
   date_two: '03_29_2023'
+  date_three: '00_00_0000'
 
 ml_flow:
   MLFLOW_TRACKING_URI: https://dagshub.com/wolfrieder/thesis_project_v2.mlflow

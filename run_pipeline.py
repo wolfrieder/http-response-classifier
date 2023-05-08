@@ -64,7 +64,8 @@ def run_train_model(
         data_second: str,
         file_second: str,
         strategy: str,
-        experiment_name: str
+        experiment_name: str,
+        models_trained: str
 ) -> None:
     train_model.run(
         browser,
@@ -74,7 +75,8 @@ def run_train_model(
         data_second,
         file_second,
         strategy,
-        experiment_name
+        experiment_name,
+        models_trained
     )
 
 

@@ -2,21 +2,22 @@ import logging
 import sys
 
 import category_encoders as ce
-
-from xgboost import XGBClassifier
 from alive_progress import alive_bar
+from lightgbm import LGBMClassifier
 from sklearn.ensemble import (
     RandomForestClassifier,
     GradientBoostingClassifier,
     HistGradientBoostingClassifier,
     AdaBoostClassifier,
-    ExtraTreesClassifier
+    ExtraTreesClassifier,
 )
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
 from sklearn.naive_bayes import GaussianNB, BernoulliNB
-from sklearn.preprocessing import Normalizer, FunctionTransformer, MinMaxScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import Normalizer, FunctionTransformer
 from sklearn.tree import DecisionTreeClassifier
+from xgboost import XGBClassifier
 
 sys.path.append("../../")
 from src.pipeline_functions.train_model_functions import *
@@ -79,18 +80,17 @@ def train_models(
                 max_features=None,
             ),
             "Extra Trees Classifier": ExtraTreesClassifier(random_state=10, n_jobs=-1),
-            # "MLP": MLPClassifier(random_state=10),
             "Ada Boost": AdaBoostClassifier(random_state=10),
             "Gradient Boosting": GradientBoostingClassifier(random_state=10),
-            # "Hist Gradient Boosting": HistGradientBoostingClassifier(
-            #     random_state=10, class_weight="balanced"
-            # ),
-            "Hist Gradient Boosting": HistGradientBoostingClassifier(
-                random_state=10
+            "LightGBM": LGBMClassifier(random_state=10, n_jobs=-1),
+            "Hist Gradient Boosting": HistGradientBoostingClassifier(random_state=10),
+            "XGBoost": XGBClassifier(
+                random_state=10,
+                use_label_encoder=False,
+                eval_metric="logloss",
+                n_jobs=-1,
             ),
-            "XGBoost": XGBClassifier(random_state=10, use_label_encoder=False, eval_metric="logloss", n_jobs=-1),
-            # "LightGBM": LGBMClassifier(random_state=10, class_weight="balanced"),
-            # "CatBoost": CatBoostClassifier(random_state=10, verbose=0),
+            "MLP": MLPClassifier(random_state=10),
         }
         bar(0.3)
 
