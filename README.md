@@ -32,6 +32,7 @@ follow the step-by-step instructions outlined below:
 1. Ensure that Python 3.10.11 is installed on your system. If you do not have Python 3.9.12, download and install it
    from the official [Python website](https://www.python.org/downloads/), 
    [asdf](https://asdf-vm.com), or a another tool of your choice. Python version 3.9.12 was also tested and works. 
+   However, Python version 3.10.11 is recommended due to performance improvements. 
 
 2. Install the [Conda](https://docs.conda.io/en/latest/miniconda.html) package manager, which will be utilized for
    managing dependencies and creating a virtual environment.
@@ -52,12 +53,6 @@ follow the step-by-step instructions outlined below:
    ```
    pip install -r requirements.txt
    ```
-
-7. Installation of PyArrow Nightly build:
-   ```
-   pip install --extra-index-url https://pypi.fury.io/arrow-nightlies/ \
-    --prefer-binary --pre pyarrow==12.0.0.dev464
-   ```
    
 With these steps completed, you should now have a functional environment for executing the research project, as well as 
 the necessary tools for efficient model development and tracking.
@@ -70,7 +65,7 @@ then you should update `dask` and `dependencies`. The problem is described
 [here](https://github.com/microsoft/LightGBM/issues/5739) and is related to the
 recent release of `pandas` version 2. 
 
-If the PyArrow Nightly build is not installed, there will be an error message when 
+If PyArrow version 12.0.0 is not installed, there will be an error message when 
 the datasets are exported to parquet files. This is a known issue and is described 
 in two GitHub issues: [Pandas 1](https://github.com/pandas-dev/pandas/issues/51752) and 
 [PyArrow 2](https://github.com/apache/arrow/issues/34449). The bug was already fixed in 
