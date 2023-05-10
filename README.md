@@ -57,6 +57,13 @@ follow the step-by-step instructions outlined below:
 With these steps completed, you should now have a functional environment for executing the research project, as well as 
 the necessary tools for efficient model development and tracking.
 
+## Computer Setup
+The code was tested on an MacBook Pro with the 10-core Apple M1 Pro, 32GB memory,
+and 1TB storage. It is recommended to have at least 32GB memory as tests with
+16GB memory led to memory issues while training the classifiers. Therefore, the
+current requirement are 32GB of memory until further tests and optimizations are
+performed. 
+
 ## Known Installation Problems
 
 If the LightGBM import throws this error message: 
