@@ -162,7 +162,14 @@ def preprocessing_data(
         data_test = data_test.iloc[:, 6:]
         list_of_dtypes = create_categories_list(data_train)
         list_of_dtypes_test = create_categories_list(data_test)
+        empty_columns = data_test.columns[data_test.dtypes == 'null[pyarrow]'].tolist()
         data_train = data_train.astype(list_of_dtypes)
+
+        # parsing to object, otherwise error with pyarrow when col is empty
+        if len(empty_columns) > 0:
+            dtypes_of_empty_columns = dict.fromkeys(empty_columns, 'object')
+            data_test = data_test.astype(dtypes_of_empty_columns)
+
         data_test = data_test.astype(list_of_dtypes_test)
 
         bar(0.7)

@@ -26,7 +26,11 @@ def test_new_categories_update(
         A dictionary with the column name and 'Int64' if the column can be
         converted to the Int64 data type, None otherwise.
     """
-    categories = dataset[element].astype("category").cat.categories.values.tolist()
+    try:
+        categories = dataset[element].astype("category").cat.categories.values.tolist()
+    except ValueError:
+        return None
+
     try:
         np.array(categories, dtype="int64")
         return {element: "Int64"}
@@ -368,7 +372,7 @@ def label_as_last_column(dataset: pd.DataFrame) -> List[str]:
     index_col = dataset.columns.get_loc("tracker")
     new_col_order = (
         temp_cols[0:index_col]
-        + temp_cols[index_col + 1:]
-        + temp_cols[index_col: index_col + 1]
+        + temp_cols[index_col + 1 :]
+        + temp_cols[index_col : index_col + 1]
     )
     return new_col_order
