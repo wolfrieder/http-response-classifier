@@ -11,9 +11,9 @@ def run_parse_raw_data(browser: str, date: str, filename: str, data_dir: str) ->
 
 
 def run_train_test_split(
-    browser: str, date: str, filename_one: str, filename_second: str = ''
+    browser: str, date: str, filename_one: str
 ) -> None:
-    train_test_split.run(browser, date, filename_one, filename_second)
+    train_test_split.run(browser, date, filename_one)
 
 
 def run_preprocessing_data(

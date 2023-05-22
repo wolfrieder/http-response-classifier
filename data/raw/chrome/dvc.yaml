@@ -3,96 +3,108 @@ vars:
 
 stages:
   merge:
-    cmd: >-
-      python3 ../../../src/transformer/merge_jsons.py
-      ${data.raw_dir}
-      ${data.merged_dir}
-    deps:
-      - ../../../src/transformer/merge_jsons.py
-      - ${data.raw_dir}
-    outs:
-      - ${data.merged_dir}/merged_data.json.gz
+    foreach: ${browser_object}
+    do:
+      frozen: true
+      wdir: ../../../
+      cmd: >-
+        python3 src/transformer/merge_jsons.py
+        data/raw/${item.browser}/${item.date}
+        data/merged/${item.browser}/${item.date}
+      deps:
+        - src/transformer/merge_jsons.py
+        - data/raw/${item.browser}/${item.date}
+      outs:
+        - data/merged/${item.browser}/${item.date}/merged_data.json.gz
 
   parse_to_parquet:
+    foreach: ${browser_object}
+    do:
+      frozen: true
+      wdir: ../../../
+      cmd: >-
+        python3 run_pipeline.py parse_raw_data.py
+        ${item.browser}
+        ${item.date}
+        merged_data
+        processed
+      deps:
+        - run_pipeline.py
+        - src/transformer/parse_raw_data.py
+        - src/pipeline_functions/parse_raw_data_functions.py
+        - data/merged/${item.browser}/${item.date}/merged_data.json.gz
+      outs:
+        - data/processed/${item.browser}/${item.date}/merged_data.parquet.gzip
+
+  train_test_split:
+#    frozen: true
+    wdir: ../../../
     cmd: >-
-      python3 ../../../run_pipeline.py parse_raw_data.py
+      python3 run_pipeline.py train_test_split.py
       ${browsers.chrome}
-      ${dir_name.date_two}
+      ${dir_name.date_one}
       merged_data
-      processed
     deps:
-      - ../../../run_pipeline.py
-      - ../../../src/transformer/parse_raw_data.py
-      - ../../../src/pipeline_functions/parse_raw_data_functions.py
-      - ../../../data/merged/chrome/${dir_name.date_two}/merged_data.json.gz
+      - src/transformer/train_test_split.py
+      - src/pipeline_functions/train_test_split_functions.py
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/merged_data.parquet.gzip
     outs:
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data.parquet.gzip
-#
-#  train_test_split:
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/test_set.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/validation_set.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/calibration_set.parquet.gzip
+
+#  pre_processing:
+#    frozen: true
 #    cmd: >-
-#      python3 ../../../src/transformer/train_test_split.py
+#      python3 ../../../run_pipeline.py data_preprocessing.py
 #      ${browsers.chrome}
 #      ${dir_name.date_one}
-#      http.0
-#      0
-#      http.1
-#      1
+#      train_set_01
+#      ${browsers.chrome}
+#      ${dir_name.date_two}
+#      merged_data
+#      other
+##      test_set_01
+##      same
 #    deps:
-#      - ../../../src/transformer/train_test_split.py
-#      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/http.0.parquet.gzip
-#      - ../../../data/interim/${browsers.chrome}/${dir_name.date_one}/http.1.parquet.gzip
-#    outs:
+#      - ../../../run_pipeline.py
+#      - ../../../src/pipeline_functions/data_preprocessing_functions.py
+#      - ../../../src/transformer/data_preprocessing.py
 #      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01.parquet.gzip
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01.parquet.gzip
-
-  pre_processing:
-    cmd: >-
-      python3 ../../../run_pipeline.py data_preprocessing.py
-      ${browsers.chrome}
-      ${dir_name.date_one}
-      train_set_01
-      ${browsers.chrome}
-      ${dir_name.date_two}
-      merged_data
-      other
-#      test_set_01
-#      same
-    deps:
-      - ../../../run_pipeline.py
-      - ../../../src/pipeline_functions/data_preprocessing_functions.py
-      - ../../../src/transformer/data_preprocessing.py
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01.parquet.gzip
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data.parquet.gzip
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01.parquet.gzip
-    outs:
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_processed.parquet.gzip
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
-
-  feature_engineering:
-    cmd: >-
-      python3 ../../../run_pipeline.py feature_engineering.py
-      ${browsers.chrome}
-      ${dir_name.date_one}
-      train_set_01_processed
-      ${browsers.chrome}
-      ${dir_name.date_two}
-      merged_data_processed
-      binary_encoding
-#      test_set_01_processed
-    deps:
-      - ../../../run_pipeline.py
-      - ../../../src/pipeline_functions/feature_engineering_functions.py
-      - ../../../src/features/feature_engineering.py
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_processed.parquet.gzip
-    outs:
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized_BE.parquet.gzip
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized_BE.parquet.gzip
-      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_featurized_BE.parquet.gzip
-
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data.parquet.gzip
+##      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01.parquet.gzip
+#    outs:
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_processed.parquet.gzip
+##      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
+#
+#  feature_engineering:
+#    frozen: true
+#    cmd: >-
+#      python3 ../../../run_pipeline.py feature_engineering.py
+#      ${browsers.chrome}
+#      ${dir_name.date_one}
+#      train_set_01_processed
+#      ${browsers.chrome}
+#      ${dir_name.date_two}
+#      merged_data_processed
+#      binary_encoding
+##      test_set_01_processed
+#    deps:
+#      - ../../../run_pipeline.py
+#      - ../../../src/pipeline_functions/feature_engineering_functions.py
+#      - ../../../src/features/feature_engineering.py
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
+##      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_processed.parquet.gzip
+#    outs:
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized_BE.parquet.gzip
+##      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized_BE.parquet.gzip
+#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_featurized_BE.parquet.gzip
+#
 #  model_training:
+#    frozen: true
 #    cmd: >-
 #      python3 ../../../run_pipeline.py train_model.py
 #      ${browsers.chrome}
@@ -118,6 +130,7 @@ stages:
 #      - ${dir_paths.chrome_old_models}/XGBoost_BE.sav.gz
 #
 #  model_evaluation:
+#    frozen: true
 #    cmd: >-
 #      python3 ../../../run_pipeline.py test_model.py
 #      ${browsers.chrome}

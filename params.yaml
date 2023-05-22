@@ -9,27 +9,22 @@ dir_name:
   date_two: '03_29_2023'
   date_three: '00_00_0000'
 
-data:
-  raw_dir: "../../../data/raw/chrome/03_29_2023"
-  merged_dir: "../../../data/merged/chrome/03_29_2023"
-
 dir_paths:
   cd: '../../../'
   cd_src: '../../../src/'
   cd_pipeline: '../../../pipeline_functions/'
   chrome_old_models: '../../../models/chrome/08_12_2022'
 
-#python_script:
-#  merger: *cd_src 'transformer/merge_jsons.py'
-#  parse_raw_data: *cd_src 'transformer/parse_raw_data.py'
-#  train_test_split: *cd_src 'transformer/train_test_split.py'
-#  data_preprocessing: *cd_src 'transformer/data_preprocessing.py'
-#  feature_engineering: *cd_src 'features/feature_engineering.py'
-#  train_model: *cd_src 'models/train_model.py'
-#
-#pipeline_function_script:
-#  parse_raw_data_f: *cd_p 'parse_raw_data_functions.py'
-#  train_test_split_f: *cd_p 'train_test_split_functions.py'
-#  data_preprocessing_f: *cd_p 'data_preprocessing_functions.py'
-#  feature_engineering_f: *cd_p 'feature_engineering_functions.py'
-#  train_model_f: *cd_p 'train_test_split_functions.py'
+browser_object:
+  chrome_old:
+    browser: 'chrome'
+    date: '08_12_2022'
+  chrome_new:
+    browser: 'chrome'
+    date: '03_29_2023'
+#  firefox:
+#    browser: 'firefox'
+#    date: '08_12_2022'
+  brave:
+    browser: 'brave'
+    date: '08_12_2022'

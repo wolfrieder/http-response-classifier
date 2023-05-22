@@ -6,3 +6,8 @@
 /test_set_01_featurized.parquet.gzip
 /train_set_01_featurized_BE.parquet.gzip
 /test_set_01_featurized_BE.parquet.gzip
+/merged_data.parquet.gzip
+/train_set.parquet.gzip
+/test_set.parquet.gzip
+/validation_set.parquet.gzip
+/calibration_set.parquet.gzip

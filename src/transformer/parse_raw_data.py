@@ -1,11 +1,9 @@
 import os
-import sys
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 from alive_progress import alive_bar
 
-sys.path.append("../../")
 from src.pipeline_functions.parse_raw_data_functions import *
 
 
@@ -13,7 +11,7 @@ def run(browser, directory, file_name, data_dir):
     dir_path = f"{browser}/{directory}"
 
     try:
-        os.makedirs(f"../../../data/interim/{dir_path}", exist_ok=True)
+        os.makedirs(f"data/interim/{dir_path}", exist_ok=True)
         print(f"Directory {dir_path} created successfully.")
     except OSError as error:
         print(f"Directory {dir_path} can not be created.")
@@ -127,7 +125,7 @@ def parse_dataset(
         bar.text("Write to local file")
         pq.write_table(
             combined_dataset,
-            f"../../../data/{target_dir_name}/{target_file_name}.parquet.gzip",
+            f"data/{target_dir_name}/{target_file_name}.parquet.gzip",
             compression="gzip",
         )
         bar(1)

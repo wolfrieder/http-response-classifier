@@ -10,6 +10,53 @@ from sklearn.model_selection import (
 from sklearn.model_selection import train_test_split
 
 
+def split_wrapper(
+    X: pd.DataFrame, y: pd.Series, test_size: float, splitter_function_name: str
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Split the input data into training and testing sets using specified
+    splitting strategy.
+
+    Parameters
+    ----------
+    X : pd.DataFrame
+        Input features.
+    y : pd.Series
+        Target variable.
+    test_size : float
+        Proportion of the dataset to include in the test split. Should be
+        between 0.0 and 1.0.
+    splitter_function_name : str
+        Name of the splitting strategy to use. Options are 'stratified_shuffle_split',
+        'stratified_k_fold', 'stratified_group_k_fold', and 'standard_split'.
+
+    Returns
+    -------
+    Tuple[pd.DataFrame, pd.DataFrame]
+        The training and testing sets. Each set is a DataFrame that includes both
+        features and target variable.
+
+    Raises
+    ------
+    KeyError
+        If the specified splitter_function_name does not match any of the available
+        splitting strategies.
+    """
+    functions = {
+        "stratified_shuffle_split": stratified_shuffle_split,
+        "stratified_k_fold": stratified_kfold_split,
+        "stratified_group_k_fold": stratified_group_kfold_split,
+        "standard_split": standard_split,
+    }
+
+    X_train, y_train, X_test, y_test = functions[splitter_function_name](
+        X, y, test_size
+    )
+    train_set = pd.concat([X_train, y_train], axis=1)
+    test_set = pd.concat([X_test, y_test], axis=1)
+    return train_set, test_set
+
+
 def split_dataset(
     splitter: Any, X: pd.DataFrame, y: pd.Series
 ) -> Tuple[pd.DataFrame, pd.Series, pd.DataFrame, pd.Series]:
@@ -41,7 +88,7 @@ def split_dataset(
 
 
 def stratified_shuffle_split(
-    X: pd.DataFrame, y: pd.Series
+    X: pd.DataFrame, y: pd.Series, test_size: float
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
     """
     Stratified shuffle split of the input data into training and testing sets.
@@ -54,6 +101,9 @@ def stratified_shuffle_split(
     y : pandas.Series
         The target variable data to split.
 
+    test_size : float
+        The proportion of the dataset to include in the test split.
+
     Returns
     -------
     Tuple[pandas.DataFrame, pandas.DataFrame, pandas.Series, pandas.Series]
@@ -61,7 +111,7 @@ def stratified_shuffle_split(
         training and testing sets, respectively.
 
     """
-    split = StratifiedShuffleSplit(n_splits=1, random_state=10, test_size=0.2)
+    split = StratifiedShuffleSplit(n_splits=1, random_state=10, test_size=test_size)
     return split_dataset(split, X, y)
 
 

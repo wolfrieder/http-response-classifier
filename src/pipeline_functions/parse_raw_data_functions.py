@@ -162,7 +162,7 @@ def read_json_file(
     object, type of objs
 
     """
-    path = f"../../../data/{target_data_dir}/{target_file_name}/{name}.json.{compression_alg}"
+    path = f"data/{target_data_dir}/{target_file_name}/{name}.json.{compression_alg}"
     print(f"\nDEBUG: File exists? {os.path.isfile(path)}\n")
 
     return pd.read_json(path, orient="records", compression="gzip")
