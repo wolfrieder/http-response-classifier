@@ -21,7 +21,7 @@ def run(browser: str, date: str, filename_one: str) -> None:
 
         bar.text("Split dataset into train and test set")
         train_set, test_set = split_wrapper(
-            data.iloc[:, :-1], data[["tracker"]], 0.2, "stratified_shuffle_split"
+            data.iloc[:, :-1], data["tracker"], 0.2, "stratified_shuffle_split"
         )
         bar(0.4)
 
@@ -34,7 +34,7 @@ def run(browser: str, date: str, filename_one: str) -> None:
         bar.text("Split data into train and validation set")
         train_set, validation_set = split_wrapper(
             train_set.iloc[:, :-1],
-            train_set[["tracker"]],
+            train_set["tracker"],
             0.1,
             "stratified_shuffle_split",
         )
@@ -43,7 +43,7 @@ def run(browser: str, date: str, filename_one: str) -> None:
         bar.text("Split data into train and calibration set")
         train_set, calibration_set = split_wrapper(
             train_set.iloc[:, :-1],
-            train_set[["tracker"]],
+            train_set["tracker"],
             0.1,
             "stratified_shuffle_split",
         )

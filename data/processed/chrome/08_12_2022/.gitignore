@@ -11,3 +11,7 @@
 /test_set.parquet.gzip
 /validation_set.parquet.gzip
 /calibration_set.parquet.gzip
+/train_set_processed.parquet.gzip
+/calibration_set_processed.parquet.gzip
+/merged_data_processed.parquet.gzip
+/validation_set_processed.parquet.gzip

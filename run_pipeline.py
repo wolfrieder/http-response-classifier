@@ -2,6 +2,7 @@ import sys
 
 sys.path.append("src")
 from src.transformer import parse_raw_data, data_preprocessing, train_test_split
+from src.transformer import data_preprocessing_config
 from src.features import feature_engineering
 from src.models import train_model, test_model
 
@@ -20,19 +21,15 @@ def run_preprocessing_data(
     browser_one: str,
     date_one: str,
     train_data_file_name: str,
-    browser_two: str,
-    date_two: str,
-    test_data_file_name: str,
-    other_test_data: str,
+    config_path: str,
+    other_test_data: bool
 ) -> None:
-    data_preprocessing.run(
+    data_preprocessing_config.run(
         browser_one,
         date_one,
         train_data_file_name,
-        browser_two,
-        date_two,
-        test_data_file_name,
-        other_test_data,
+        config_path,
+        other_test_data
     )
 
 
@@ -96,7 +93,7 @@ if __name__ == "__main__":
         run_parse_raw_data(*args)
     elif script_to_run == "train_test_split.py":
         run_train_test_split(*args)
-    elif script_to_run == "data_preprocessing.py":
+    elif script_to_run == "data_preprocessing_config.py":
         run_preprocessing_data(*args)
     elif script_to_run == "feature_engineering.py":
         run_feature_engineering(*args)

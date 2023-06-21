@@ -70,13 +70,7 @@ If the LightGBM import throws this error message:
 `AttributeError: module 'pandas.core.strings' has no attribute 'StringMethods'` 
 then you should update `dask` and `dependencies`. The problem is described 
 [here](https://github.com/microsoft/LightGBM/issues/5739) and is related to the
-recent release of `pandas` version 2. 
-
-If PyArrow version 12.0.0 is not installed, there will be an error message when 
-the datasets are exported to parquet files. This is a known issue and is described 
-in two GitHub issues: [Pandas 1](https://github.com/pandas-dev/pandas/issues/51752) and 
-[PyArrow 2](https://github.com/apache/arrow/issues/34449). The bug was already fixed in 
-PyArrow but is not yet released.
+recent release of `pandas` version 2.
 
 The LightGBM installation might throw an error when installed on an Apple Silicon 
 Macbook with `pip`. One solution was proposed 

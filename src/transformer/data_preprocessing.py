@@ -82,7 +82,7 @@ def preprocessing_data(
         bar.text("Fuzzy match")
         data_column_values = data_train.columns.values[6:-1].tolist()
         match = [
-            new_fuzzy_string_matching_for_column(j, data_column_values[i + 1 :])
+            new_fuzzy_string_matching_for_column(j, data_column_values[i + 1:])
             for i, j in enumerate(data_column_values)
             if i != len(data_column_values) - 1
         ]
@@ -108,6 +108,7 @@ def preprocessing_data(
             for col in result
             if col is not None
         ]
+        del result
 
         similar_values_test = pd.concat(similar_values, ignore_index=True)
         similar_values = pd.concat(similar_values, ignore_index=True)
@@ -149,7 +150,6 @@ def preprocessing_data(
             )
         data_test.drop(columns_to_remove, axis=1, inplace=True)
 
-        del result
         del similar_values
         del similar_values_test
         del columns_to_remove

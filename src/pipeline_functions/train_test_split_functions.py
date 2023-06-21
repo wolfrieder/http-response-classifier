@@ -111,7 +111,7 @@ def stratified_shuffle_split(
         training and testing sets, respectively.
 
     """
-    split = StratifiedShuffleSplit(n_splits=1, random_state=10, test_size=test_size)
+    split = StratifiedShuffleSplit(n_splits=5, random_state=10, test_size=test_size)
     return split_dataset(split, X, y)
 
 
