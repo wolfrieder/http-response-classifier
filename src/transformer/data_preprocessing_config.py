@@ -19,7 +19,6 @@ def run(
 
 def preprocessing_train_data(file_path: str, config_path: str) -> None:
     with alive_bar(100, force_tty=True, manual=True, title="Data Processing") as bar:
-
         bar.text("Read-in data")
         data = pd.read_parquet(
             f"{file_path}.parquet.gzip",
@@ -172,14 +171,6 @@ def preprocessing_test_data(file_path, config_path, other_test_data: bool = Fals
         with open(config_path, "r") as infile:
             config = json.load(infile)
         bar(0.05)
-
-        # bar.text("Align test set column names with train set")
-        # test_columns = data.columns.values.tolist()
-        # cols_not_in_train = list(set(test_columns).difference(config["train_columns"]))
-        # cols_not_in_test = list(set(config["train_columns"]).difference(test_columns))
-        #
-        # data.drop(cols_not_in_train, axis=1, inplace=True)
-        # data = data.reindex(columns=data.columns.tolist() + cols_not_in_test)
 
         bar.text("Remove empty columns")
         empty_columns = config["empty_columns"]

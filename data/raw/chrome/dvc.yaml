@@ -47,7 +47,7 @@ stages:
     deps:
       - src/transformer/train_test_split.py
       - src/pipeline_functions/train_test_split_functions.py
-      - data/processed/${browsers.chrome}/${dir_name.date_one}/merged_data.parquet.gzipclera
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/merged_data.parquet.gzip
     outs:
       - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set.parquet.gzip
       - data/processed/${browsers.chrome}/${dir_name.date_one}/test_set.parquet.gzip
@@ -76,6 +76,7 @@ stages:
   pre_processing_other_sets:
     foreach: ${browser_object_parsed}
     do:
+      frozen: true
       wdir: ../../../
       cmd: >-
         python3 run_pipeline.py data_preprocessing_config.py 
@@ -93,78 +94,77 @@ stages:
       outs:
         - data/processed/${item.browser}/${item.date}/${item.file_name}_processed.parquet.gzip
 
-#  feature_engineering:
-#    frozen: true
-#    cmd: >-
-#      python3 ../../../run_pipeline.py feature_engineering.py
-#      ${browsers.chrome}
-#      ${dir_name.date_one}
-#      train_set_01_processed
-#      ${browsers.chrome}
-#      ${dir_name.date_two}
-#      merged_data_processed
-#      binary_encoding
-##      test_set_01_processed
-#    deps:
-#      - ../../../run_pipeline.py
-#      - ../../../src/pipeline_functions/feature_engineering_functions.py
-#      - ../../../src/features/feature_engineering.py
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_processed.parquet.gzip
-##      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_processed.parquet.gzip
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_processed.parquet.gzip
-#    outs:
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized_BE.parquet.gzip
-##      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_01_featurized_BE.parquet.gzip
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_featurized_BE.parquet.gzip
-#
-#  model_training:
-#    frozen: true
-#    cmd: >-
-#      python3 ../../../run_pipeline.py train_model.py
-#      ${browsers.chrome}
-#      ${dir_name.date_one}
-#      train_set_01_featurized_BE
-#      binary
-#      chrome_old_BE
-#    deps:
-#      - ../../../src/models/train_model.py
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_01_featurized_BE.parquet.gzip
-#    outs:
-#      - ../../../models/result_metrics/chrome_old_BE.csv
-#      - ${dir_paths.chrome_old_models}/Logistic_Regression_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Gaussian_NB_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Bernoulli_NB_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Decision_Tree_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Random_Forest_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Extra_Trees_Classifier_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Ada_Boost_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Gradient_Boosting_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/LightGBM_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Hist_GB_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/XGBoost_BE.sav.gz
-#
-#  model_evaluation:
-#    frozen: true
-#    cmd: >-
-#      python3 ../../../run_pipeline.py test_model.py
-#      ${browsers.chrome}
-#      ${dir_name.date_two}
-#      merged_data_featurized_BE
-#      chrome_new_BE
-#    deps:
-#      - ../../../src/models/test_model.py
-#      - ../../../data/processed/${browsers.chrome}/${dir_name.date_two}/merged_data_featurized_BE.parquet.gzip
-#      - ${dir_paths.chrome_old_models}/Logistic_Regression_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Gaussian_NB_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Bernoulli_NB_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Decision_Tree_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Random_Forest_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Extra_Trees_Classifier_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Ada_Boost_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Gradient_Boosting_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/LightGBM_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/Hist_GB_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/XGBoost_BE.sav.gz
-#    outs:
-#      - ../../../models/result_metrics/chrome_new_BE.csv
-#      - ../../../models/result_metrics/chrome_new_BE_CI.csv
+  feature_engineering:
+    foreach: ${browser_object_feature_engineering}
+    do:
+      frozen: true
+      wdir: ../../../
+      cmd: >-
+        python3 run_pipeline.py feature_engineering.py
+        ${item.browser}
+        ${item.date}
+        ${item.file_name}
+        binary_encoding
+      deps:
+        - run_pipeline.py
+        - src/features/feature_engineering.py
+        - src/pipeline_functions/feature_engineering_functions.py
+        - data/processed/${item.browser}/${item.date}/${item.file_name}_processed.parquet.gzip
+      outs:
+        - data/processed/${item.browser}/${item.date}/${item.file_name}_featurized_BE.parquet.gzip
+
+  model_training:
+    frozen: true
+    wdir: ../../../
+    cmd: >-
+      python3 run_pipeline.py train_model.py
+      ${browsers.chrome}
+      ${dir_name.date_one}
+      train_set_featurized_BE
+      binary
+      chrome_old_BE
+    deps:
+      - src/models/train_model.py
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_featurized_BE.parquet.gzip
+    outs:
+      - models/result_metrics/chrome_old_BE.csv
+      - ${dir_paths.chrome_old_models}/Logistic_Regression_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/Gaussian_NB_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/Bernoulli_NB_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/Decision_Tree_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/Random_Forest_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/Extra_Trees_Classifier_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/Ada_Boost_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/Gradient_Boosting_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/LightGBM_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/Hist_GB_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/XGBoost_BE.sav.gz
+
+  model_evaluation:
+    foreach: ${browser_object_evaluation}
+    do:
+#      frozen: true
+      wdir: ../../../
+      cmd: >-
+        python3 run_pipeline.py test_model.py
+        ${item.browser}
+        ${item.date}
+        ${item.file_name}
+      deps:
+        - run_pipeline.py
+        - src/models/test_model.py
+        - ${dir_paths.chrome_old_models}/Logistic_Regression_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/Gaussian_NB_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/Bernoulli_NB_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/Decision_Tree_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/Random_Forest_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/Extra_Trees_Classifier_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/Ada_Boost_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/Gradient_Boosting_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/LightGBM_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/Hist_GB_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/XGBoost_BE.sav.gz
+        - data/processed/${item.browser}/${item.date}/${item.file_name}_featurized_BE.parquet.gzip
+      outs:
+        - models/result_metrics/${item.browser}_${item.date}_${item.file_name}.csv
+        - models/result_metrics/${item.browser}_${item.date}_${item.file_name}_CI.csv

@@ -12,7 +12,6 @@ from sklearn.ensemble import (
     ExtraTreesClassifier,
 )
 from sklearn.linear_model import LogisticRegression
-# from sklearn.model_selection import StratifiedKFold, RepeatedStratifiedKFold
 from sklearn.naive_bayes import GaussianNB, BernoulliNB
 from sklearn.preprocessing import Normalizer, FunctionTransformer
 from sklearn.tree import DecisionTreeClassifier
@@ -26,16 +25,16 @@ logger = logging.getLogger(__name__)
 
 
 def run(
-    browser_one: str,
-    date_one: str,
+    browser: str,
+    date: str,
     train_data_file_name: str,
     strategy: str,
     experiment_name: str,
 ) -> None:
-    dir_path_one = f"{browser_one}/{date_one}"
+    dir_path_one = f"{browser}/{date}"
 
-    dir_path_one = f"../../../data/processed/{dir_path_one}/{train_data_file_name}"
-    result_csv_filename = f"../../../models/result_metrics/{experiment_name}.csv"
+    dir_path_one = f"data/processed/{dir_path_one}/{train_data_file_name}"
+    result_csv_filename = f"models/result_metrics/{experiment_name}.csv"
 
     train_models_run(dir_path_one, strategy, result_csv_filename)
 
@@ -89,8 +88,7 @@ def train_models_run(
         bar(0.3)
 
         bar.text("Define CV Method")
-        # cv = StratifiedKFold(n_splits=5, random_state=10, shuffle=True)
-        cv = RepeatedStratifiedKFold(random_state=10, n_splits=5, n_repeats=10)
+        cv = RepeatedStratifiedKFold(random_state=10, n_splits=5, n_repeats=5)
         bar(0.4)
 
         bar.text("Train and evaluate models")

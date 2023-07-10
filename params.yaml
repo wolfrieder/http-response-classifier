@@ -13,7 +13,7 @@ dir_paths:
   cd: '../../../'
   cd_src: '../../../src/'
   cd_pipeline: '../../../pipeline_functions/'
-  chrome_old_models: '../../../models/chrome/08_12_2022'
+  chrome_old_models: 'models/chrome/08_12_2022'
 
 browser_object:
   chrome_old:
@@ -30,10 +30,10 @@ browser_object:
     date: '08_12_2022'
 
 browser_object_parsed:
-  chrome_old:
+  chrome_old_test:
     browser: 'chrome'
     date: '08_12_2022'
-    file_name: 'merged_data'
+    file_name: 'test_set'
     other_data_set_bool: False
   chrome_old_calibration:
     browser: 'chrome'
@@ -60,3 +60,59 @@ browser_object_parsed:
     date: '08_12_2022'
     file_name: 'merged_data'
     other_data_set_bool: True
+
+browser_object_feature_engineering:
+  chrome_old_train:
+    browser: 'chrome'
+    date: '08_12_2022'
+    file_name: 'train_set'
+  chrome_old_test:
+    browser: 'chrome'
+    date: '08_12_2022'
+    file_name: 'test_set'
+  chrome_old_calibration:
+    browser: 'chrome'
+    date: '08_12_2022'
+    file_name: 'calibration_set'
+  chrome_old_validation:
+    browser: 'chrome'
+    date: '08_12_2022'
+    file_name: 'validation_set'
+  chrome_new:
+    browser: 'chrome'
+    date: '03_29_2023'
+    file_name: 'merged_data'
+  firefox:
+    browser: 'firefox'
+    date: '08_12_2022'
+    file_name: 'merged_data'
+  brave:
+    browser: 'brave'
+    date: '08_12_2022'
+    file_name: 'merged_data'
+
+browser_object_evaluation:
+  chrome_old_test:
+    browser: 'chrome'
+    date: '08_12_2022'
+    file_name: 'test_set'
+  chrome_old_calibration:
+    browser: 'chrome'
+    date: '08_12_2022'
+    file_name: 'calibration_set'
+  chrome_old_validation:
+    browser: 'chrome'
+    date: '08_12_2022'
+    file_name: 'validation_set'
+  chrome_new:
+    browser: 'chrome'
+    date: '03_29_2023'
+    file_name: 'merged_data'
+  firefox:
+    browser: 'firefox'
+    date: '08_12_2022'
+    file_name: 'merged_data'
+  brave:
+    browser: 'brave'
+    date: '08_12_2022'
+    file_name: 'merged_data'

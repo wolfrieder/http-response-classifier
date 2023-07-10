@@ -15,3 +15,8 @@
 /calibration_set_processed.parquet.gzip
 /merged_data_processed.parquet.gzip
 /validation_set_processed.parquet.gzip
+/test_set_processed.parquet.gzip
+/test_set_featurized_BE.parquet.gzip
+/train_set_featurized_BE.parquet.gzip
+/calibration_set_featurized_BE.parquet.gzip
+/validation_set_featurized_BE.parquet.gzip

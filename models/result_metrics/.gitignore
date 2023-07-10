@@ -3,3 +3,15 @@
 /chrome_old_BE.csv
 /chrome_new_BE.csv
 /chrome_new_BE_CI.csv
+/brave_08_12_2022_merged_data.csv
+/brave_08_12_2022_merged_data_CI.csv
+/chrome_08_12_2022_calibration_set.csv
+/chrome_08_12_2022_calibration_set_CI.csv
+/chrome_08_12_2022_validation_set.csv
+/chrome_08_12_2022_validation_set_CI.csv
+/firefox_08_12_2022_merged_data.csv
+/firefox_08_12_2022_merged_data_CI.csv
+/chrome_08_12_2022_test_set.csv
+/chrome_08_12_2022_test_set_CI.csv
+/chrome_03_29_2023_merged_data.csv
+/chrome_03_29_2023_merged_data_CI.csv

@@ -49,77 +49,115 @@ warnings.simplefilter(action="ignore", category=pd.errors.PerformanceWarning)
 
 
 def run(
-    browser_one: str,
-    date_one: str,
-    train_data_file_name: str,
-    browser_two: str,
-    date_two: str,
-    test_data_file_name: str,
-    # other_test_data: str,
+    browser: str,
+    date: str,
+    file_name: str,
     strategy: str,
 ) -> None:
-    dir_path_one = f"{browser_one}/{date_one}"
-    dir_path_two = f"{browser_two}/{date_two}"
+    dir_path = f"{browser}/{date}"
+    dir_path = f"data/processed/{dir_path}/{file_name}"
 
-    dir_path_one = f"../../../data/processed/{dir_path_one}/{train_data_file_name}"
-    dir_path_two = f"../../../data/processed/{dir_path_two}/{test_data_file_name}"
+    print(dir_path)
 
-    featurize_data(dir_path_one, dir_path_two, strategy)
+    if strategy == "binary_encoding":
+        featurize_data_binary_encoding(dir_path)
 
 
-def featurize_data(
-    train_data_file_path: str, test_data_file_path: str, strategy: str
+def featurize_data_binary_encoding(
+    file_path: str
 ) -> None:
     with alive_bar(
         100, force_tty=True, manual=True, title="Feature Engineering"
     ) as bar:
         bar.text("Read-in data")
-        train_data = pd.read_parquet(f"{train_data_file_path}.parquet.gzip")
-        test_data = pd.read_parquet(f"{test_data_file_path}.parquet.gzip")
+        data = pd.read_parquet(f"{file_path}_processed.parquet.gzip")
         bar(0.1)
 
         bar.text("Prepare data")
-        number_of_features = len(train_data.columns) - 3
+        number_of_features = len(data.columns) - 3
         bar(0.2)
 
         bar.text("Binary Encoding of Features")
-        for elem in train_data.iloc[:, :-3].columns.values.tolist():
-            train_data[f"{elem}_binary"] = np.where(train_data[elem].isnull(), 0, 1)
-            test_data[f"{elem}_binary"] = np.where(test_data[elem].isnull(), 0, 1)
+        for elem in data.iloc[:, :-3].columns.values.tolist():
+            data[f"{elem}_binary"] = np.where(data[elem].isnull(), 0, 1)
         bar(0.6)
 
         bar.text("Removing old columns")
-        train_data = train_data.iloc[:, number_of_features:]
-        test_data = test_data.iloc[:, number_of_features:]
+        data = data.iloc[:, number_of_features:]
         bar(0.7)
 
         bar.text("Parsing to uint8 data type")
-        for elem in train_data.columns.values.tolist():
-            train_data[elem] = train_data[elem].astype("uint8")
-            test_data[elem] = test_data[elem].astype("uint8")
+        for elem in data.columns.values.tolist():
+            data[elem] = data[elem].astype("uint8")
         bar(0.8)
 
         bar.text("Reordering features")
-        reordered_cols = label_as_last_column(train_data)
-        train_data = train_data[reordered_cols]
-        test_data = test_data[reordered_cols]
+        reordered_cols = label_as_last_column(data)
+        data = data[reordered_cols]
         bar(0.9)
 
         bar.text("Export data to local parquet files")
-        suffix = '_processed'
-        train_data_file_path = train_data_file_path[:-len(suffix)]
-        test_data_file_path = test_data_file_path[:-len(suffix)]
 
-        train_data.to_parquet(
-            f"{train_data_file_path}_featurized_BE.parquet.gzip",
-            compression="gzip",
-        )
-
-        test_data.to_parquet(
-            f"{test_data_file_path}_featurized_BE.parquet.gzip",
+        data.to_parquet(
+            f"{file_path}_featurized_BE.parquet.gzip",
             compression="gzip",
         )
         bar(1)
+
+
+# def featurize_data(
+#     train_data_file_path: str, test_data_file_path: str, strategy: str
+# ) -> None:
+#     with alive_bar(
+#         100, force_tty=True, manual=True, title="Feature Engineering"
+#     ) as bar:
+#         bar.text("Read-in data")
+#         train_data = pd.read_parquet(f"{train_data_file_path}.parquet.gzip")
+#         test_data = pd.read_parquet(f"{test_data_file_path}.parquet.gzip")
+#         bar(0.1)
+#
+#         bar.text("Prepare data")
+#         number_of_features = len(train_data.columns) - 3
+#         bar(0.2)
+#
+#         bar.text("Binary Encoding of Features")
+#         for elem in train_data.iloc[:, :-3].columns.values.tolist():
+#             train_data[f"{elem}_binary"] = np.where(train_data[elem].isnull(), 0, 1)
+#             test_data[f"{elem}_binary"] = np.where(test_data[elem].isnull(), 0, 1)
+#         bar(0.6)
+#
+#         bar.text("Removing old columns")
+#         train_data = train_data.iloc[:, number_of_features:]
+#         test_data = test_data.iloc[:, number_of_features:]
+#         bar(0.7)
+#
+#         bar.text("Parsing to uint8 data type")
+#         for elem in train_data.columns.values.tolist():
+#             train_data[elem] = train_data[elem].astype("uint8")
+#             test_data[elem] = test_data[elem].astype("uint8")
+#         bar(0.8)
+#
+#         bar.text("Reordering features")
+#         reordered_cols = label_as_last_column(train_data)
+#         train_data = train_data[reordered_cols]
+#         test_data = test_data[reordered_cols]
+#         bar(0.9)
+#
+#         bar.text("Export data to local parquet files")
+#         suffix = '_processed'
+#         train_data_file_path = train_data_file_path[:-len(suffix)]
+#         test_data_file_path = test_data_file_path[:-len(suffix)]
+#
+#         train_data.to_parquet(
+#             f"{train_data_file_path}_featurized_BE.parquet.gzip",
+#             compression="gzip",
+#         )
+#
+#         test_data.to_parquet(
+#             f"{test_data_file_path}_featurized_BE.parquet.gzip",
+#             compression="gzip",
+#         )
+#         bar(1)
 
         # exclude metadata columns
         # train_data = train_data.iloc[:, 4:]

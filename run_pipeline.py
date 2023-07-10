@@ -11,9 +11,7 @@ def run_parse_raw_data(browser: str, date: str, filename: str, data_dir: str) ->
     parse_raw_data.run(browser, date, filename, data_dir)
 
 
-def run_train_test_split(
-    browser: str, date: str, filename_one: str
-) -> None:
+def run_train_test_split(browser: str, date: str, filename_one: str) -> None:
     train_test_split.run(browser, date, filename_one)
 
 
@@ -22,65 +20,29 @@ def run_preprocessing_data(
     date_one: str,
     train_data_file_name: str,
     config_path: str,
-    other_test_data: bool
+    other_test_data: bool,
 ) -> None:
     data_preprocessing_config.run(
-        browser_one,
-        date_one,
-        train_data_file_name,
-        config_path,
-        other_test_data
+        browser_one, date_one, train_data_file_name, config_path, other_test_data
     )
 
 
 def run_feature_engineering(
-        browser: str,
-        date: str,
-        filename: str,
-        browser_two: str,
-        data_two: str,
-        file_two: str,
-        strategy: str
+    browser: str, date: str, filename: str, strategy: str
 ) -> None:
-    feature_engineering.run(
-        browser,
-        date,
-        filename,
-        browser_two,
-        data_two,
-        file_two,
-        strategy
-    )
+    feature_engineering.run(browser, date, filename, strategy)
 
 
 def run_train_model(
-        browser: str,
-        date: str,
-        filename: str,
-        strategy: str,
-        experiment_name: str
+    browser: str, date: str, filename: str, strategy: str, experiment_name: str
 ) -> None:
-    train_model.run(
-        browser,
-        date,
-        filename,
-        strategy,
-        experiment_name
-    )
+    train_model.run(browser, date, filename, strategy, experiment_name)
 
 
 def run_test_model(
-        browser: str,
-        date: str,
-        filename: str,
-        experiment_name: str
+    browser: str, date: str, filename: str
 ) -> None:
-    test_model.run(
-        browser,
-        date,
-        filename,
-        experiment_name
-    )
+    test_model.run(browser, date, filename)
 
 
 if __name__ == "__main__":

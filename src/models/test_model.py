@@ -7,17 +7,18 @@ from src.pipeline_functions.train_model_functions import *
 
 
 def run(
-    browser_two: str,
-    date_two: str,
+    browser: str,
+    date: str,
     test_data_file_name: str,
-    experiment_name: str,
+    # experiment_name: str,
 ) -> None:
-    dir_path_two = f"{browser_two}/{date_two}"
+    dir_path = f"{browser}/{date}"
+    experiment_name = f"{browser}_{date}_{test_data_file_name}"
 
-    dir_path_two = f"../../../data/processed/{dir_path_two}/{test_data_file_name}"
-    result_csv_filename = f"../../../models/result_metrics/{experiment_name}"
+    dir_path = f"data/processed/{dir_path}/{test_data_file_name}_featurized_BE"
+    result_csv_filename = f"models/result_metrics/{experiment_name}"
 
-    test_models_run(dir_path_two, result_csv_filename)
+    test_models_run(dir_path, result_csv_filename)
 
 
 def test_models_run(

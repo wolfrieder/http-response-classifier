@@ -122,7 +122,7 @@ def calculate_confidence_intervals(
     y_true: pd.Series,
     y_pred: np.ndarray,
     y_pred_proba: np.ndarray,
-    n_bootstrap_samples: int = 599,
+    n_bootstrap_samples: int = 100,
     random_state: int = 10,
     n_jobs: int = -1,
 ) -> Dict[str, Tuple[float, float]]:
@@ -248,7 +248,7 @@ def train_models(
         best_estimator = cv_results["estimator"][best_estimator_idx]
 
         filename = f"{model_name}_BE.sav.gz"
-        gzip_path = f"../../../models/chrome/08_12_2022/{filename}"
+        gzip_path = f"models/chrome/08_12_2022/{filename}"
 
         with gzip.GzipFile(gzip_path, "wb") as model_gzip:
             pickle.dump(best_estimator["classifier"], model_gzip)
@@ -297,7 +297,7 @@ def test_models(
         print(f"Evaluating {model_name}...")
 
         filename = f"{model_name}_BE.sav.gz"
-        gzip_path = f"../../../models/chrome/08_12_2022/{filename}"
+        gzip_path = f"models/chrome/08_12_2022/{filename}"
 
         with gzip.GzipFile(gzip_path, "rb") as f:
             best_estimator = pickle.load(f)
