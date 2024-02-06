@@ -40,11 +40,11 @@ browser_object_parsed:
     date: '08_12_2022'
     file_name: 'calibration_set'
     other_data_set_bool: False
-  chrome_old_validation:
-    browser: 'chrome'
-    date: '08_12_2022'
-    file_name: 'validation_set'
-    other_data_set_bool: False
+#  chrome_old_validation:
+#    browser: 'chrome'
+#    date: '08_12_2022'
+#    file_name: 'validation_set'
+#    other_data_set_bool: False
   chrome_new:
     browser: 'chrome'
     date: '03_29_2023'
@@ -74,10 +74,10 @@ browser_object_feature_engineering:
     browser: 'chrome'
     date: '08_12_2022'
     file_name: 'calibration_set'
-  chrome_old_validation:
-    browser: 'chrome'
-    date: '08_12_2022'
-    file_name: 'validation_set'
+#  chrome_old_validation:
+#    browser: 'chrome'
+#    date: '08_12_2022'
+#    file_name: 'validation_set'
   chrome_new:
     browser: 'chrome'
     date: '03_29_2023'
@@ -100,10 +100,10 @@ browser_object_evaluation:
     browser: 'chrome'
     date: '08_12_2022'
     file_name: 'calibration_set'
-  chrome_old_validation:
-    browser: 'chrome'
-    date: '08_12_2022'
-    file_name: 'validation_set'
+#  chrome_old_validation:
+#    browser: 'chrome'
+#    date: '08_12_2022'
+#    file_name: 'validation_set'
   chrome_new:
     browser: 'chrome'
     date: '03_29_2023'

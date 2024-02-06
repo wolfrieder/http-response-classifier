@@ -32,12 +32,12 @@ def run(browser: str, date: str, filename_one: str) -> None:
         bar(0.5)
 
         bar.text("Split data into train and validation set")
-        train_set, validation_set = split_wrapper(
-            train_set.iloc[:, :-1],
-            train_set["tracker"],
-            0.1,
-            "stratified_shuffle_split",
-        )
+        # train_set, validation_set = split_wrapper(
+        #     train_set.iloc[:, :-1],
+        #     train_set["tracker"],
+        #     0.1,
+        #     "stratified_shuffle_split",
+        # )
         bar(0.7)
 
         bar.text("Split data into train and calibration set")
@@ -61,10 +61,10 @@ def run(browser: str, date: str, filename_one: str) -> None:
             compression="gzip",
         )
 
-        validation_set.to_parquet(
-            f"data/processed/{dir_path}/validation_set.parquet.gzip",
-            compression="gzip",
-        )
+        # validation_set.to_parquet(
+        #     f"data/processed/{dir_path}/validation_set.parquet.gzip",
+        #     compression="gzip",
+        # )
 
         calibration_set.to_parquet(
             f"data/processed/{dir_path}/calibration_set.parquet.gzip",

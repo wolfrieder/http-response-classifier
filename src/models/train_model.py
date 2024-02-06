@@ -13,7 +13,7 @@ from sklearn.ensemble import (
 )
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB, BernoulliNB
-from sklearn.preprocessing import Normalizer, FunctionTransformer
+from sklearn.preprocessing import Normalizer, FunctionTransformer, MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
 
@@ -44,9 +44,7 @@ def train_models_run(
     strategy: str,
     result_csv_filename: str,
 ) -> None:
-    with alive_bar(
-        100, force_tty=True, manual=True, title="Training Models"
-    ) as bar:
+    with alive_bar(100, force_tty=True, manual=True, title="Training Models") as bar:
         bar.text("Read-in data")
         train_data = pd.read_parquet(f"{train_data_file_path}.parquet.gzip")
         bar(0.1)
@@ -58,10 +56,7 @@ def train_models_run(
         bar.text("Define models")
         models = {
             "Logistic_Regression": LogisticRegression(
-                random_state=10,
-                n_jobs=-1,
-                max_iter=1000,
-                solver='newton-cholesky'
+                random_state=10, n_jobs=-1, max_iter=1000, solver="newton-cholesky"
             ),
             "Gaussian_NB": GaussianNB(),
             "Bernoulli_NB": BernoulliNB(),
@@ -71,10 +66,9 @@ def train_models_run(
                 n_jobs=-1,
                 random_state=10,
                 criterion="gini",
-                max_features=None
+                max_features=None,
             ),
-            "Extra_Trees_Classifier": ExtraTreesClassifier(random_state=10,
-                                                           n_jobs=-1),
+            "Extra_Trees_Classifier": ExtraTreesClassifier(random_state=10, n_jobs=-1),
             "Ada_Boost": AdaBoostClassifier(random_state=10),
             "Gradient_Boosting": GradientBoostingClassifier(random_state=10),
             "LightGBM": LGBMClassifier(random_state=10, n_jobs=-1),
@@ -93,16 +87,15 @@ def train_models_run(
 
         bar.text("Train and evaluate models")
         if strategy == "binary":
-            result_df = train_models(
-                models, X_train, y_train["tracker"], cv)
+            result_df = train_models(models, X_train, y_train["tracker"], cv)
         else:
             numeric_transformer = Pipeline(
                 steps=[("scaler", FunctionTransformer(np.log1p))]
             )
             norm_transformer = Pipeline(steps=[("norm_scaler", Normalizer())])
-            # minmax_transformer = Pipeline(
-            #     steps=[("mmscaler", MinMaxScaler(feature_range=[-1, 1]))]
-            # )
+            minmax_transformer = Pipeline(
+                steps=[("mmscaler", MinMaxScaler(feature_range=[-1, 1]))]
+            )
 
             preprocessor = ColumnTransformer(
                 transformers=[

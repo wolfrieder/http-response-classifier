@@ -51,7 +51,7 @@ stages:
     outs:
       - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set.parquet.gzip
       - data/processed/${browsers.chrome}/${dir_name.date_one}/test_set.parquet.gzip
-      - data/processed/${browsers.chrome}/${dir_name.date_one}/validation_set.parquet.gzip
+#      - data/processed/${browsers.chrome}/${dir_name.date_one}/validation_set.parquet.gzip
       - data/processed/${browsers.chrome}/${dir_name.date_one}/calibration_set.parquet.gzip
 
   pre_processing_train_set:
