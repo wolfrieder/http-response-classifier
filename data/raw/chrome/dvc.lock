@@ -187,18 +187,19 @@ stages:
       size: 1943
   merge@brave:
     cmd: python3 src/transformer/merge_jsons.py data/raw/brave/08_12_2022 data/merged/brave/08_12_2022
+      request
     deps:
     - path: data/raw/brave/08_12_2022
       md5: 12ad2682b82b8e3cbcec4f6c6b692484.dir
       size: 109590451
       nfiles: 2
     - path: src/transformer/merge_jsons.py
-      md5: 98c73a8831ca01aa961f6c8de5509a7f
-      size: 3470
+      md5: 10fda0cbce0f34e83c1d5ac68da23bdd
+      size: 5187
     outs:
-    - path: data/merged/brave/08_12_2022/merged_data.json.gz
-      md5: c15e69cd57e070da750132ddca11364c
-      size: 72086512
+    - path: data/merged/brave/08_12_2022/merged_data_request.json.gz
+      md5: 7c1c2704e56420b79091ccd2acc5ac9a
+      size: 27184783
   merge@chrome/08_12_2022:
     cmd: python3 src/transformer/merge_jsons.py data/raw/chrome/08_12_2022 data/merged/chrome/08_12_2022
     deps:
@@ -243,32 +244,34 @@ stages:
       size: 72086512
   merge@chrome_old:
     cmd: python3 src/transformer/merge_jsons.py data/raw/chrome/08_12_2022 data/merged/chrome/08_12_2022
+      request
     deps:
     - path: data/raw/chrome/08_12_2022
       md5: b83b3a7e8a0f840612a3ae460428cfae.dir
       size: 232154726
       nfiles: 2
     - path: src/transformer/merge_jsons.py
-      md5: 98c73a8831ca01aa961f6c8de5509a7f
-      size: 3470
+      md5: 10fda0cbce0f34e83c1d5ac68da23bdd
+      size: 5187
     outs:
-    - path: data/merged/chrome/08_12_2022/merged_data.json.gz
-      md5: 386f554979d12e787679cd7906d4c53f
-      size: 135996306
+    - path: data/merged/chrome/08_12_2022/merged_data_request.json.gz
+      md5: 5eb123041f8e8a6aaccc042c1dcae654
+      size: 84822176
   merge@chrome_new:
     cmd: python3 src/transformer/merge_jsons.py data/raw/chrome/03_29_2023 data/merged/chrome/03_29_2023
+      request
     deps:
     - path: data/raw/chrome/03_29_2023
-      md5: e9dfc3a371f3ff86c4bb6ab913620a64.dir
-      size: 204555264
-      nfiles: 13
+      md5: 16f223efdb3cb89c7415f9f93afc7401.dir
+      size: 204561412
+      nfiles: 14
     - path: src/transformer/merge_jsons.py
-      md5: 98c73a8831ca01aa961f6c8de5509a7f
-      size: 3470
+      md5: 10fda0cbce0f34e83c1d5ac68da23bdd
+      size: 5187
     outs:
-    - path: data/merged/chrome/03_29_2023/merged_data.json.gz
-      md5: fa63b4cef02c8eb1be422d7bfea7d4c2
-      size: 123121857
+    - path: data/merged/chrome/03_29_2023/merged_data_request.json.gz
+      md5: c37c6daed6a21eeea1cd09c5083b660b
+      size: 72825767
   parse_to_parquet@chrome_new:
     cmd: python3 run_pipeline.py parse_raw_data.py chrome 03_29_2023 merged_data processed
     deps:
@@ -350,18 +353,19 @@ stages:
       size: 103387793
   merge@firefox:
     cmd: python3 src/transformer/merge_jsons.py data/raw/firefox/08_12_2022 data/merged/firefox/08_12_2022
+      request
     deps:
     - path: data/raw/firefox/08_12_2022
       md5: 233ccf36ea7ca5a0b791cc3b4e489487.dir
       size: 217382839
       nfiles: 3
     - path: src/transformer/merge_jsons.py
-      md5: 98c73a8831ca01aa961f6c8de5509a7f
-      size: 3470
+      md5: 10fda0cbce0f34e83c1d5ac68da23bdd
+      size: 5187
     outs:
-    - path: data/merged/firefox/08_12_2022/merged_data.json.gz
-      md5: 922171d7f02bd9bbc9b5247a17f0e880
-      size: 134021753
+    - path: data/merged/firefox/08_12_2022/merged_data_request.json.gz
+      md5: f638a9c700f1d02b030838cfae54a2b9
+      size: 74145418
   parse_to_parquet@firefox:
     cmd: python3 run_pipeline.py parse_raw_data.py firefox 08_12_2022 merged_data
       processed
@@ -961,11 +965,11 @@ stages:
       size: 1784
     outs:
     - path: models/result_metrics/chrome_08_12_2022_test_set.csv
-      md5: 9d8a9c0b3c36a4e398c51884db6489cc
-      size: 1230
+      md5: b4b04ae79d19ac214d039379a931879e
+      size: 728
     - path: models/result_metrics/chrome_08_12_2022_test_set_CI.csv
-      md5: 644b066d1abcfccaf32f81ed887cb38a
-      size: 1610
+      md5: ea481dbfd6eb1652f56175e7fb316c0f
+      size: 1620
   model_evaluation@chrome_new:
     cmd: python3 run_pipeline.py test_model.py chrome 03_29_2023 merged_data
     deps:
@@ -1018,3 +1022,123 @@ stages:
     - path: models/result_metrics/chrome_03_29_2023_merged_data_CI.csv
       md5: b3f80f8a28aa1af62ac3e0c48ad9024d
       size: 1613
+  merge_request@chrome_new:
+    cmd: python3 src/transformer/merge_jsons.py data/raw/chrome/03_29_2023 data/merged/chrome/03_29_2023
+      request
+    deps:
+    - path: data/raw/chrome/03_29_2023
+      md5: 16f223efdb3cb89c7415f9f93afc7401.dir
+      size: 204561412
+      nfiles: 14
+    - path: src/transformer/merge_jsons.py
+      md5: 28b6d39b4394adfff9242fee5b0540b2
+      size: 5309
+    outs:
+    - path: data/merged/chrome/03_29_2023/merged_data_request.json.gz
+      md5: d8090c473a1a6c8bd8fa3c4c3aa823fd
+      size: 75259489
+  merge_request@chrome_old:
+    cmd: python3 src/transformer/merge_jsons.py data/raw/chrome/08_12_2022 data/merged/chrome/08_12_2022
+      request
+    deps:
+    - path: data/raw/chrome/08_12_2022
+      md5: b83b3a7e8a0f840612a3ae460428cfae.dir
+      size: 232154726
+      nfiles: 2
+    - path: src/transformer/merge_jsons.py
+      md5: 28b6d39b4394adfff9242fee5b0540b2
+      size: 5309
+    outs:
+    - path: data/merged/chrome/08_12_2022/merged_data_request.json.gz
+      md5: c173c1b6c54fbed72b907e4e7e82c48b
+      size: 87453380
+  merge_response@brave:
+    cmd: python3 src/transformer/merge_jsons.py data/raw/brave/08_12_2022 data/merged/brave/08_12_2022
+      response
+    deps:
+    - path: data/raw/brave/08_12_2022
+      md5: 12ad2682b82b8e3cbcec4f6c6b692484.dir
+      size: 109590451
+      nfiles: 2
+    - path: src/transformer/merge_jsons.py
+      md5: 28b6d39b4394adfff9242fee5b0540b2
+      size: 5309
+    outs:
+    - path: data/merged/brave/08_12_2022/merged_data_response.json.gz
+      md5: 575b6d933c7169679745e4e6fa674bfa
+      size: 73445932
+  merge_response@chrome_old:
+    cmd: python3 src/transformer/merge_jsons.py data/raw/chrome/08_12_2022 data/merged/chrome/08_12_2022
+      response
+    deps:
+    - path: data/raw/chrome/08_12_2022
+      md5: b83b3a7e8a0f840612a3ae460428cfae.dir
+      size: 232154726
+      nfiles: 2
+    - path: src/transformer/merge_jsons.py
+      md5: 28b6d39b4394adfff9242fee5b0540b2
+      size: 5309
+    outs:
+    - path: data/merged/chrome/08_12_2022/merged_data_response.json.gz
+      md5: 4a719e86851ae03c4eeb7390d09e761c
+      size: 138492783
+  merge_response@firefox:
+    cmd: python3 src/transformer/merge_jsons.py data/raw/firefox/08_12_2022 data/merged/firefox/08_12_2022
+      response
+    deps:
+    - path: data/raw/firefox/08_12_2022
+      md5: 233ccf36ea7ca5a0b791cc3b4e489487.dir
+      size: 217382839
+      nfiles: 3
+    - path: src/transformer/merge_jsons.py
+      md5: 28b6d39b4394adfff9242fee5b0540b2
+      size: 5309
+    outs:
+    - path: data/merged/firefox/08_12_2022/merged_data_response.json.gz
+      md5: 0995e4a6cc241e16211393b9cb601652
+      size: 137201992
+  merge_request@brave:
+    cmd: python3 src/transformer/merge_jsons.py data/raw/brave/08_12_2022 data/merged/brave/08_12_2022
+      request
+    deps:
+    - path: data/raw/brave/08_12_2022
+      md5: 12ad2682b82b8e3cbcec4f6c6b692484.dir
+      size: 109590451
+      nfiles: 2
+    - path: src/transformer/merge_jsons.py
+      md5: 28b6d39b4394adfff9242fee5b0540b2
+      size: 5309
+    outs:
+    - path: data/merged/brave/08_12_2022/merged_data_request.json.gz
+      md5: 4f57cb40bf16913dd84454ac5ebb5545
+      size: 28708656
+  merge_response@chrome_new:
+    cmd: python3 src/transformer/merge_jsons.py data/raw/chrome/03_29_2023 data/merged/chrome/03_29_2023
+      response
+    deps:
+    - path: data/raw/chrome/03_29_2023
+      md5: 16f223efdb3cb89c7415f9f93afc7401.dir
+      size: 204561412
+      nfiles: 14
+    - path: src/transformer/merge_jsons.py
+      md5: 28b6d39b4394adfff9242fee5b0540b2
+      size: 5309
+    outs:
+    - path: data/merged/chrome/03_29_2023/merged_data_response.json.gz
+      md5: 4659fc30b001daf8e73dffa9c2377ada
+      size: 125599856
+  merge_request@firefox:
+    cmd: python3 src/transformer/merge_jsons.py data/raw/firefox/08_12_2022 data/merged/firefox/08_12_2022
+      request
+    deps:
+    - path: data/raw/firefox/08_12_2022
+      md5: 233ccf36ea7ca5a0b791cc3b4e489487.dir
+      size: 217382839
+      nfiles: 3
+    - path: src/transformer/merge_jsons.py
+      md5: 28b6d39b4394adfff9242fee5b0540b2
+      size: 5309
+    outs:
+    - path: data/merged/firefox/08_12_2022/merged_data_request.json.gz
+      md5: 775a98cbd4f567bb1eb5c1474231d99b
+      size: 77073786

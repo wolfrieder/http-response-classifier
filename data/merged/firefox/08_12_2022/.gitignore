@@ -1,2 +1,4 @@
 /merged_data.parquet.gzip
 /merged_data.json.gz
+/merged_data_request.json.gz
+/merged_data_response.json.gz

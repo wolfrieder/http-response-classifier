@@ -38,7 +38,7 @@ def generate_url(r: Dict[str, Any]) -> Dict[str, Union[str, List[str]]]:
     }
 
 
-def generate_response_headers(r: Dict[str, Any]) -> List[List[str]]:
+def generate_headers(r: Dict[str, Any], httpMessage, headers) -> List[List[str]]:
     """
     Extract and generate response headers from a given request dictionary.
 
@@ -52,7 +52,11 @@ def generate_response_headers(r: Dict[str, Any]) -> List[List[str]]:
     List[List[str]]
         A list of lists, where each inner list contains a header name and its value.
     """
-    headers = r["response"]["responseHeaders"]
+    if httpMessage == "response":
+        headers = r[httpMessage][headers]
+    else:
+        headers = r[headers]
+
     transformed = []
 
     for header in headers:
@@ -68,6 +72,7 @@ if __name__ == "__main__":
     # Inputs
     root = pathlib.Path().resolve()
     data_dir = sys.argv[1]
+    http_message = sys.argv[3]
 
     jsons = [
         x for x in listdir(data_dir) if x.startswith("http-") and x.endswith(".json.gz")
@@ -76,7 +81,10 @@ if __name__ == "__main__":
     # Outputs
     output_dir = sys.argv[2]
     makedirs(output_dir, exist_ok=True)
-    out = join(sys.argv[2], "merged_data.json.gz")
+    if http_message == "response":
+        out = join(sys.argv[2], "merged_data_response.json.gz")
+    else:
+        out = join(sys.argv[2], "merged_data_request.json.gz")
     output_file = gzip.open(out, "at", encoding="utf-8")
     output_file.write("[")
 
@@ -84,31 +92,71 @@ if __name__ == "__main__":
 
     print(f"\nRead {len(jsons)} files from {data_dir}\n")
 
+    print(f"Request?: {http_message}")
+
     first = True
 
-    print("\n The upper boundary of parsed items per file (71000) is only an estimate.")
-    for index, file in enumerate(jsons):
-        with alive_bar(71000, title=f"Parse {file}") as bar:
-            with gzip.open(join(data_dir, file), "rt") as f:
-                requests = load(f)
-                for r in requests.persistent():
-                    if not first:
-                        output_file.write(", ")
+    if http_message == "response":
+        print(f"HTTP Message: {http_message}")
+        print(
+            "\n The upper boundary of parsed items per file (71000) is only an estimate."
+        )
+        for index, file in enumerate(jsons):
+            with alive_bar(71000, title=f"Parse {file}") as bar:
+                with gzip.open(join(data_dir, file), "rt") as f:
+                    requests = load(f)
+                    for r in requests.persistent():
+                        if not first:
+                            output_file.write(", ")
 
-                    first = False
+                        first = False
 
-                    t = {
-                        "url": generate_url(r),
-                        "labels": r["labels"],
-                        "response": {
-                            "statusCode": r["response"]["statusCode"],
-                            "fromCache": r["response"]["fromCache"],
-                        },
-                        "responseHeaders": generate_response_headers(r),
-                    }
+                        t = {
+                            "url": generate_url(r),
+                            "labels": r["labels"],
+                            "response": {
+                                "statusCode": r["response"]["statusCode"],
+                                "fromCache": r["response"]["fromCache"],
+                                "requestId": r["requestId"],
+                            },
+                            "responseHeaders": generate_headers(
+                                r, "response", "responseHeaders"
+                            ),
+                        }
 
-                    output_file.write(json.dumps(t, cls=JSONStreamEncoder))
-                    bar()
+                        output_file.write(json.dumps(t, cls=JSONStreamEncoder))
+                        bar()
+
+    else:
+        print(f"HTTP Message: {http_message}")
+        print(
+            "\n The upper boundary of parsed items per file (71000) is only an estimate."
+        )
+        for index, file in enumerate(jsons):
+            with alive_bar(71000, title=f"Parse {file}") as bar:
+                with gzip.open(join(data_dir, file), "rt") as f:
+                    requests = load(f)
+                    for r in requests.persistent():
+                        if not first:
+                            output_file.write(", ")
+
+                        first = False
+
+                        t = {
+                            "url": generate_url(r),
+                            "labels": r["labels"],
+                            "request": {
+                                "method": r["method"],
+                                "type": r["type"],
+                                "requestId": r["requestId"],
+                            },
+                            "requestHeaders": generate_headers(
+                                r, "request", "requestHeaders"
+                            ),
+                        }
+
+                        output_file.write(json.dumps(t, cls=JSONStreamEncoder))
+                        bar()
 
     output_file.write("]")
     output_file.close()
