@@ -1142,3 +1142,163 @@ stages:
     - path: data/merged/firefox/08_12_2022/merged_data_request.json.gz
       md5: 775a98cbd4f567bb1eb5c1474231d99b
       size: 77073786
+  parse_to_parquet_response@brave:
+    cmd: python3 run_pipeline.py parse_raw_data.py brave 08_12_2022 merged_data_response
+      processed response
+    deps:
+    - path: data/merged/brave/08_12_2022/merged_data_response.json.gz
+      md5: 575b6d933c7169679745e4e6fa674bfa
+      size: 73445932
+    - path: run_pipeline.py
+      md5: 3eaf2bfb65ba8a9098f181a0b5951de2
+      size: 2022
+    - path: src/pipeline_functions/parse_raw_data_functions.py
+      md5: e962c227c96ee59c3933ad3a1995aca9
+      size: 13535
+    - path: src/transformer/parse_raw_data.py
+      md5: 2f25d2a5accfb1bcb444cde0185520b7
+      size: 4876
+    outs:
+    - path: data/processed/brave/08_12_2022/merged_data_response.parquet.gzip
+      md5: 8e52e2c7650bb0dd0333b0e3ea7efcdd
+      size: 60299586
+  parse_to_parquet_request@brave:
+    cmd: python3 run_pipeline.py parse_raw_data.py brave 08_12_2022 merged_data_request
+      processed request
+    deps:
+    - path: data/merged/brave/08_12_2022/merged_data_request.json.gz
+      md5: 4f57cb40bf16913dd84454ac5ebb5545
+      size: 28708656
+    - path: run_pipeline.py
+      md5: 3eaf2bfb65ba8a9098f181a0b5951de2
+      size: 2022
+    - path: src/pipeline_functions/parse_raw_data_functions.py
+      md5: e962c227c96ee59c3933ad3a1995aca9
+      size: 13535
+    - path: src/transformer/parse_raw_data.py
+      md5: 2f25d2a5accfb1bcb444cde0185520b7
+      size: 4876
+    outs:
+    - path: data/processed/brave/08_12_2022/merged_data_request.parquet.gzip
+      md5: 90737ed2f133ecdb5320b5aa8aa4d02b
+      size: 26736409
+  parse_to_parquet_request@chrome_new:
+    cmd: python3 run_pipeline.py parse_raw_data.py chrome 03_29_2023 merged_data_request
+      processed request
+    deps:
+    - path: data/merged/chrome/03_29_2023/merged_data_request.json.gz
+      md5: d8090c473a1a6c8bd8fa3c4c3aa823fd
+      size: 75259489
+    - path: run_pipeline.py
+      md5: 3eaf2bfb65ba8a9098f181a0b5951de2
+      size: 2022
+    - path: src/pipeline_functions/parse_raw_data_functions.py
+      md5: e962c227c96ee59c3933ad3a1995aca9
+      size: 13535
+    - path: src/transformer/parse_raw_data.py
+      md5: 2f25d2a5accfb1bcb444cde0185520b7
+      size: 4876
+    outs:
+    - path: data/processed/chrome/03_29_2023/merged_data_request.parquet.gzip
+      md5: 501473f45932f8986709875041a51114
+      size: 53075302
+  parse_to_parquet_request@chrome_old:
+    cmd: python3 run_pipeline.py parse_raw_data.py chrome 08_12_2022 merged_data_request
+      processed request
+    deps:
+    - path: data/merged/chrome/08_12_2022/merged_data_request.json.gz
+      md5: c173c1b6c54fbed72b907e4e7e82c48b
+      size: 87453380
+    - path: run_pipeline.py
+      md5: 3eaf2bfb65ba8a9098f181a0b5951de2
+      size: 2022
+    - path: src/pipeline_functions/parse_raw_data_functions.py
+      md5: e962c227c96ee59c3933ad3a1995aca9
+      size: 13535
+    - path: src/transformer/parse_raw_data.py
+      md5: 2f25d2a5accfb1bcb444cde0185520b7
+      size: 4876
+    outs:
+    - path: data/processed/chrome/08_12_2022/merged_data_request.parquet.gzip
+      md5: 226a2c91abaffaf98ed3cc98f3b9c3da
+      size: 59909190
+  parse_to_parquet_response@chrome_old:
+    cmd: python3 run_pipeline.py parse_raw_data.py chrome 08_12_2022 merged_data_response
+      processed response
+    deps:
+    - path: data/merged/chrome/08_12_2022/merged_data_response.json.gz
+      md5: 4a719e86851ae03c4eeb7390d09e761c
+      size: 138492783
+    - path: run_pipeline.py
+      md5: 3eaf2bfb65ba8a9098f181a0b5951de2
+      size: 2022
+    - path: src/pipeline_functions/parse_raw_data_functions.py
+      md5: e962c227c96ee59c3933ad3a1995aca9
+      size: 13535
+    - path: src/transformer/parse_raw_data.py
+      md5: 2f25d2a5accfb1bcb444cde0185520b7
+      size: 4876
+    outs:
+    - path: data/processed/chrome/08_12_2022/merged_data_response.parquet.gzip
+      md5: 65e132db7778237d7cc95e8093acbee9
+      size: 95379203
+  parse_to_parquet_request@firefox:
+    cmd: python3 run_pipeline.py parse_raw_data.py firefox 08_12_2022 merged_data_request
+      processed request
+    deps:
+    - path: data/merged/firefox/08_12_2022/merged_data_request.json.gz
+      md5: 775a98cbd4f567bb1eb5c1474231d99b
+      size: 77073786
+    - path: run_pipeline.py
+      md5: 3eaf2bfb65ba8a9098f181a0b5951de2
+      size: 2022
+    - path: src/pipeline_functions/parse_raw_data_functions.py
+      md5: e962c227c96ee59c3933ad3a1995aca9
+      size: 13535
+    - path: src/transformer/parse_raw_data.py
+      md5: 2f25d2a5accfb1bcb444cde0185520b7
+      size: 4876
+    outs:
+    - path: data/processed/firefox/08_12_2022/merged_data_request.parquet.gzip
+      md5: 38fbbadded309ec393d7248f76925aa6
+      size: 52161616
+  parse_to_parquet_response@firefox:
+    cmd: python3 run_pipeline.py parse_raw_data.py firefox 08_12_2022 merged_data_response
+      processed response
+    deps:
+    - path: data/merged/firefox/08_12_2022/merged_data_response.json.gz
+      md5: 0995e4a6cc241e16211393b9cb601652
+      size: 137201992
+    - path: run_pipeline.py
+      md5: 3eaf2bfb65ba8a9098f181a0b5951de2
+      size: 2022
+    - path: src/pipeline_functions/parse_raw_data_functions.py
+      md5: e962c227c96ee59c3933ad3a1995aca9
+      size: 13535
+    - path: src/transformer/parse_raw_data.py
+      md5: 2f25d2a5accfb1bcb444cde0185520b7
+      size: 4876
+    outs:
+    - path: data/processed/firefox/08_12_2022/merged_data_response.parquet.gzip
+      md5: f0fa5ba769fa9fb1e82529ac3504077d
+      size: 91538248
+  parse_to_parquet_response@chrome_new:
+    cmd: python3 run_pipeline.py parse_raw_data.py chrome 03_29_2023 merged_data_response
+      processed response
+    deps:
+    - path: data/merged/chrome/03_29_2023/merged_data_response.json.gz
+      md5: 4659fc30b001daf8e73dffa9c2377ada
+      size: 125599856
+    - path: run_pipeline.py
+      md5: 3eaf2bfb65ba8a9098f181a0b5951de2
+      size: 2022
+    - path: src/pipeline_functions/parse_raw_data_functions.py
+      md5: e962c227c96ee59c3933ad3a1995aca9
+      size: 13535
+    - path: src/transformer/parse_raw_data.py
+      md5: 2f25d2a5accfb1bcb444cde0185520b7
+      size: 4876
+    outs:
+    - path: data/processed/chrome/03_29_2023/merged_data_response.parquet.gzip
+      md5: c322df07be3ebef78e58e1543d1f9eba
+      size: 87896883

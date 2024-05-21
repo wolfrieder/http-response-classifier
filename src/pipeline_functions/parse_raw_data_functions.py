@@ -56,7 +56,7 @@ def process_url_rows(row: List[Dict]) -> np.ndarray:
 
 
 def prepare_initial_dataset(
-    file_name: str, target_file: str, target_data_dir, compression_alg
+    file_name: str, target_file: str, target_data_dir, compression_alg, http_message
 ) -> pd.DataFrame:
     """
     Prepare the initial dataset by reading a JSON file, filtering, and resetting
@@ -89,7 +89,10 @@ def prepare_initial_dataset(
         .dropna()
         .reset_index(drop=True)
     )
-    return data.loc[data["responseHeaders"].map(len) != 0].reset_index(drop=True)
+    if http_message == "response":
+        return data.loc[data["responseHeaders"].map(len) != 0].reset_index(drop=True)
+    else:
+        return data.loc[data["requestHeaders"].map(len) != 0].reset_index(drop=True)
 
 
 def create_target_column(data: np.ndarray) -> np.ndarray:
@@ -417,10 +420,10 @@ def create_key_mapping(duplicate_keys: List[str]) -> Dict[str, str]:
 
 
 def parse_chunks(
-        header_array: np.ndarray,
-        url_array: np.ndarray,
-        label_array: np.ndarray,
-        chunk_size: int
+    header_array: np.ndarray,
+    url_array: np.ndarray,
+    label_array: np.ndarray,
+    chunk_size: int,
 ) -> List[np.ndarray]:
     """
     Split and concatenate arrays into chunks of the specified size.

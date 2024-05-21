@@ -7,8 +7,10 @@ from src.features import feature_engineering
 from src.models import train_model, test_model
 
 
-def run_parse_raw_data(browser: str, date: str, filename: str, data_dir: str) -> None:
-    parse_raw_data.run(browser, date, filename, data_dir)
+def run_parse_raw_data(
+    browser: str, date: str, filename: str, data_dir: str, http_message: str
+) -> None:
+    parse_raw_data.run(browser, date, filename, data_dir, http_message)
 
 
 def run_train_test_split(browser: str, date: str, filename_one: str) -> None:
@@ -39,9 +41,7 @@ def run_train_model(
     train_model.run(browser, date, filename, strategy, experiment_name)
 
 
-def run_test_model(
-    browser: str, date: str, filename: str
-) -> None:
+def run_test_model(browser: str, date: str, filename: str) -> None:
     test_model.run(browser, date, filename)
 
 

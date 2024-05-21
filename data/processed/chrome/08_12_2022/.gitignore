@@ -20,3 +20,4 @@
 /train_set_featurized_BE.parquet.gzip
 /calibration_set_featurized_BE.parquet.gzip
 /validation_set_featurized_BE.parquet.gzip
+/merged_data_response.parquet.gzip

@@ -5,7 +5,7 @@ stages:
   merge_response:
     foreach: ${browser_object}
     do:
-#      frozen: true
+      frozen: true
       wdir: ../../../
       cmd: >-
         python3 src/transformer/merge_jsons.py
@@ -21,7 +21,7 @@ stages:
   merge_request:
     foreach: ${browser_object}
     do:
-      #      frozen: true
+      frozen: true
       wdir: ../../../
       cmd: >-
         python3 src/transformer/merge_jsons.py
@@ -34,24 +34,45 @@ stages:
       outs:
         - data/merged/${item.browser}/${item.date}/merged_data_request.json.gz
 
-  parse_to_parquet:
+  parse_to_parquet_response:
     foreach: ${browser_object}
     do:
-      frozen: true
+#      frozen: true
       wdir: ../../../
       cmd: >-
         python3 run_pipeline.py parse_raw_data.py
         ${item.browser}
         ${item.date}
-        merged_data
+        merged_data_response
         processed
+        response
       deps:
         - run_pipeline.py
         - src/transformer/parse_raw_data.py
         - src/pipeline_functions/parse_raw_data_functions.py
-        - data/merged/${item.browser}/${item.date}/merged_data.json.gz
+        - data/merged/${item.browser}/${item.date}/merged_data_response.json.gz
       outs:
-        - data/processed/${item.browser}/${item.date}/merged_data.parquet.gzip
+        - data/processed/${item.browser}/${item.date}/merged_data_response.parquet.gzip
+
+  parse_to_parquet_request:
+    foreach: ${browser_object}
+    do:
+#      frozen: true
+      wdir: ../../../
+      cmd: >-
+        python3 run_pipeline.py parse_raw_data.py
+        ${item.browser}
+        ${item.date}
+        merged_data_request
+        processed
+        request
+      deps:
+        - run_pipeline.py
+        - src/transformer/parse_raw_data.py
+        - src/pipeline_functions/parse_raw_data_functions.py
+        - data/merged/${item.browser}/${item.date}/merged_data_request.json.gz
+      outs:
+        - data/processed/${item.browser}/${item.date}/merged_data_request.parquet.gzip
 
   train_test_split:
     frozen: true
