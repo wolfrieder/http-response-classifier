@@ -74,23 +74,41 @@ stages:
       outs:
         - data/processed/${item.browser}/${item.date}/merged_data_request.parquet.gzip
 
-  train_test_split:
-    frozen: true
+  train_test_split_response:
+#    frozen: true
     wdir: ../../../
     cmd: >-
       python3 run_pipeline.py train_test_split.py
       ${browsers.chrome}
       ${dir_name.date_one}
-      merged_data
+      merged_data_response
     deps:
       - src/transformer/train_test_split.py
       - src/pipeline_functions/train_test_split_functions.py
-      - data/processed/${browsers.chrome}/${dir_name.date_one}/merged_data.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/merged_data_response.parquet.gzip
     outs:
-      - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set.parquet.gzip
-      - data/processed/${browsers.chrome}/${dir_name.date_one}/test_set.parquet.gzip
-#      - data/processed/${browsers.chrome}/${dir_name.date_one}/validation_set.parquet.gzip
-      - data/processed/${browsers.chrome}/${dir_name.date_one}/calibration_set.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_response.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_response.parquet.gzip
+#      - data/processed/${browsers.chrome}/${dir_name.date_one}/validation_set_response.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/calibration_set_response.parquet.gzip
+
+  train_test_split_request:
+#    frozen: true
+    wdir: ../../../
+    cmd: >-
+      python3 run_pipeline.py train_test_split.py
+      ${browsers.chrome}
+      ${dir_name.date_one}
+      merged_data_request
+    deps:
+      - src/transformer/train_test_split.py
+      - src/pipeline_functions/train_test_split_functions.py
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/merged_data_request.parquet.gzip
+    outs:
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_request.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_request.parquet.gzip
+#      - data/processed/${browsers.chrome}/${dir_name.date_one}/validation_set_request.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/calibration_set_request.parquet.gzip
 
   pre_processing_train_set:
     frozen: true

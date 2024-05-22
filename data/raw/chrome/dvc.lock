@@ -1302,3 +1302,47 @@ stages:
     - path: data/processed/chrome/03_29_2023/merged_data_response.parquet.gzip
       md5: ef16e20d1098a53c6545e3f5647e91a5
       size: 89958779
+  train_test_split_response:
+    cmd: python3 run_pipeline.py train_test_split.py chrome 08_12_2022 merged_data_response
+    deps:
+    - path: data/processed/chrome/08_12_2022/merged_data_response.parquet.gzip
+      md5: c3bd913000346bfb52e47ba342dfea00
+      size: 97581170
+    - path: src/pipeline_functions/train_test_split_functions.py
+      md5: 4392b1978c7d9328dd8d2ed5c1baf07a
+      size: 6898
+    - path: src/transformer/train_test_split.py
+      md5: 9d194cce9438ecd431f6626c78c7abe7
+      size: 2284
+    outs:
+    - path: data/processed/chrome/08_12_2022/calibration_set_response.parquet.gzip
+      md5: 3375494d7ae0dfee76dd5e0b4f9e8105
+      size: 17466654
+    - path: data/processed/chrome/08_12_2022/test_set_response.parquet.gzip
+      md5: fe7d0ec319f7a7291088370ba93c3f43
+      size: 34164650
+    - path: data/processed/chrome/08_12_2022/train_set_response.parquet.gzip
+      md5: cb79aeec19307e5a6d8fe03d8817d2e4
+      size: 105899959
+  train_test_split_request:
+    cmd: python3 run_pipeline.py train_test_split.py chrome 08_12_2022 merged_data_request
+    deps:
+    - path: data/processed/chrome/08_12_2022/merged_data_request.parquet.gzip
+      md5: 16fb5198e344c5c5ac00b4282d24c1df
+      size: 62111159
+    - path: src/pipeline_functions/train_test_split_functions.py
+      md5: 4392b1978c7d9328dd8d2ed5c1baf07a
+      size: 6898
+    - path: src/transformer/train_test_split.py
+      md5: 9d194cce9438ecd431f6626c78c7abe7
+      size: 2284
+    outs:
+    - path: data/processed/chrome/08_12_2022/calibration_set_request.parquet.gzip
+      md5: 5843ca8f0f901125f949be01a26f76a3
+      size: 14507542
+    - path: data/processed/chrome/08_12_2022/test_set_request.parquet.gzip
+      md5: eca8967c8c845628a5f20f7e5da78a99
+      size: 33890836
+    - path: data/processed/chrome/08_12_2022/train_set_request.parquet.gzip
+      md5: de6544c993a3bd9545e3751a5d6b5fbf
+      size: 119967401

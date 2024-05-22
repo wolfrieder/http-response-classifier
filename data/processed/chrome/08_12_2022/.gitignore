@@ -22,3 +22,9 @@
 /validation_set_featurized_BE.parquet.gzip
 /merged_data_response.parquet.gzip
 /merged_data_request.parquet.gzip
+/train_set_response.parquet.gzip
+/test_set_response.parquet.gzip
+/calibration_set_response.parquet.gzip
+/train_set_request.parquet.gzip
+/test_set_request.parquet.gzip
+/calibration_set_request.parquet.gzip
