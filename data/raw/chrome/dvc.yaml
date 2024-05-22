@@ -37,7 +37,7 @@ stages:
   parse_to_parquet_response:
     foreach: ${browser_object}
     do:
-#      frozen: true
+      frozen: true
       wdir: ../../../
       cmd: >-
         python3 run_pipeline.py parse_raw_data.py
@@ -57,7 +57,7 @@ stages:
   parse_to_parquet_request:
     foreach: ${browser_object}
     do:
-#      frozen: true
+      frozen: true
       wdir: ../../../
       cmd: >-
         python3 run_pipeline.py parse_raw_data.py

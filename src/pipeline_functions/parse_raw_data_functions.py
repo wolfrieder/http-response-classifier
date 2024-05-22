@@ -55,6 +55,26 @@ def process_url_rows(row: List[Dict]) -> np.ndarray:
     return pd.DataFrame.from_records(row).to_numpy()
 
 
+def process_request_ids_rows(row: List[Dict]) -> np.ndarray:
+    """
+    Normalize semi-structured JSON data into a flat table.
+
+    This function takes a dictionary containing nested JSON data and returns
+    a flattened Pandas DataFrame.
+
+    Parameters
+    ----------
+    row : dict
+        A dictionary containing nested JSON data.
+
+    Returns
+    -------
+    np.ndarray
+        A NumPy array representation of the input JSON data.
+    """
+    return pd.DataFrame.from_records(row).iloc[:, 2].to_numpy()
+
+
 def prepare_initial_dataset(
     file_name: str, target_file: str, target_data_dir, compression_alg, http_message
 ) -> pd.DataFrame:
@@ -262,6 +282,7 @@ def process_header_rows(row: list) -> dict:
 def concat_arrays(
     header_array: np.ndarray,
     url_array: np.ndarray,
+    id_array: np.ndarray,
     label_array: np.ndarray,
 ) -> np.ndarray:
     """
@@ -269,6 +290,7 @@ def concat_arrays(
 
     Parameters
     ----------
+    id_array
     header_array : np.ndarray
         2D NumPy array containing header information.
     url_array : np.ndarray
@@ -286,7 +308,7 @@ def concat_arrays(
     # print(f"label_array shape: {label_array.shape}")
 
     final_array = np.hstack((url_array, header_array))
-    final_array = np.column_stack((final_array, label_array))
+    final_array = np.column_stack((final_array, id_array, label_array))
 
     return final_array
 
@@ -422,6 +444,7 @@ def create_key_mapping(duplicate_keys: List[str]) -> Dict[str, str]:
 def parse_chunks(
     header_array: np.ndarray,
     url_array: np.ndarray,
+    id_array: np.ndarray,
     label_array: np.ndarray,
     chunk_size: int,
 ) -> List[np.ndarray]:
@@ -434,6 +457,7 @@ def parse_chunks(
 
     Parameters
     ----------
+    id_array
     header_array : np.ndarray
         2D NumPy array containing header information.
     url_array : np.ndarray
@@ -463,9 +487,10 @@ def parse_chunks(
 
         part_header = header_array[start_idx:end_idx, :]
         part_url = url_array[start_idx:end_idx, :]
+        part_id = id_array[start_idx:end_idx]
         part_label = label_array[start_idx:end_idx]
 
-        combined = concat_arrays(part_header, part_url, part_label)
+        combined = concat_arrays(part_header, part_url, part_id, part_label)
         result_chunks.append(combined.T)
 
     return result_chunks

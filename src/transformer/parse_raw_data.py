@@ -102,7 +102,9 @@ def parse_dataset(
 
         bar.text("Remove duplicated Header Fields")
         url_rows_column_names = [*http_data["url"][0]]
-        duplicates = find_duplicates([*url_rows_column_names, *column_names, "tracker"])
+        duplicates = find_duplicates(
+            [*url_rows_column_names, *column_names, "httpMessageId", "tracker"]
+        )
         column_names = rename_duplicates(column_names, duplicates)
         key_mapper = create_key_mapping(duplicates)
         parsed_headers = rename_duplicate_keys(parsed_headers, key_mapper)
@@ -117,17 +119,30 @@ def parse_dataset(
         final_labels = create_target_column(final_labels_raw)
         bar(0.5)
 
+        bar.text("Parse HTTP Ids")
+        final_request_ids = process_request_ids_rows(http_data[http_message])
+        bar(0.55)
+
         bar.text("Parse URLs")
         final_urls = process_url_rows(http_data["url"])
         bar(0.6)
 
         bar.text(f"Combine Results and Write to data/interim as data/{target_dir_name}")
         label_column_name = ["tracker"]
-        column_names = [*url_rows_column_names, *column_names, *label_column_name]
+        request_ids_column_name = ["httpMessageId"]
+        column_names = [
+            *url_rows_column_names,
+            *column_names,
+            *request_ids_column_name,
+            *label_column_name,
+        ]
+        print(column_names)
         bar(0.65)
 
         bar.text("Parse data in chunks")
-        parsed_chunks = parse_chunks(final_headers, final_urls, final_labels, 50000)
+        parsed_chunks = parse_chunks(
+            final_headers, final_urls, final_request_ids, final_labels, 50000
+        )
         bar(0.8)
 
         bar.text("Convert chunks to pyarrow tables")
