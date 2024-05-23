@@ -5,3 +5,5 @@
 /merged_data_response.parquet.gzip
 /merged_data_processed_response.parquet.gzip
 /merged_data_processed_request.parquet.gzip
+/merged_data_featurized_response_BE.parquet.gzip
+/merged_data_featurized_request_BE.parquet.gzip

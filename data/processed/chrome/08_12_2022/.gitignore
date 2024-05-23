@@ -34,3 +34,9 @@
 /calibration_set_processed_response.parquet.gzip
 /calibration_set_processed_request.parquet.gzip
 /test_set_processed_request.parquet.gzip
+/calibration_set_featurized_response_BE.parquet.gzip
+/train_set_featurized_response_BE.parquet.gzip
+/test_set_featurized_response_BE.parquet.gzip
+/test_set_featurized_request_BE.parquet.gzip
+/train_set_featurized_request_BE.parquet.gzip
+/calibration_set_featurized_request_BE.parquet.gzip

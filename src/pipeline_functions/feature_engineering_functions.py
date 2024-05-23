@@ -114,7 +114,7 @@ def variance_per_column(column: str, train_data: pd.DataFrame) -> List[Any]:
     return [column, trackers, non_trackers]
 
 
-def label_as_last_column(dataset: pd.DataFrame) -> List[str]:
+def feature_as_last_column(dataset: pd.DataFrame, feature: str) -> List[str]:
     """
     Reorder the columns of a DataFrame, moving the "tracker" column to the end.
 
@@ -129,11 +129,11 @@ def label_as_last_column(dataset: pd.DataFrame) -> List[str]:
         A list of column names in the new order, with the "tracker" column last.
     """
     temp_cols = dataset.columns.tolist()
-    index_col = dataset.columns.get_loc("tracker")
+    index_col = dataset.columns.get_loc(feature)
     new_col_order = (
         temp_cols[0:index_col]
-        + temp_cols[index_col + 1:]
-        + temp_cols[index_col: index_col + 1]
+        + temp_cols[index_col + 1 :]
+        + temp_cols[index_col : index_col + 1]
     )
     return new_col_order
 

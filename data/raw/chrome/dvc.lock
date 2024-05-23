@@ -1622,3 +1622,246 @@ stages:
     - path: data/processed/firefox/08_12_2022/merged_data_processed_request.parquet.gzip
       md5: b11dd5bc5c4e10a3d57f638020517528
       size: 8677441
+  feature_engineering_response@firefox:
+    cmd: python3 run_pipeline.py feature_engineering.py firefox 08_12_2022 merged_data
+      binary_encoding response
+    deps:
+    - path: data/processed/firefox/08_12_2022/merged_data_processed_response.parquet.gzip
+      md5: 97875ffc8ae26dce37563885c70b9ad2
+      size: 42056421
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: 
+        data/processed/firefox/08_12_2022/merged_data_featurized_response_BE.parquet.gzip
+      md5: 2c75dfa7cd64f9068f6b7d254b607df4
+      size: 4232410
+  feature_engineering_response@chrome_old_calibration:
+    cmd: python3 run_pipeline.py feature_engineering.py chrome 08_12_2022 calibration_set
+      binary_encoding response
+    deps:
+    - path: data/processed/chrome/08_12_2022/calibration_set_processed_response.parquet.gzip
+      md5: a04faaf1bc67213ed6eed8e028130c84
+      size: 4762663
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: 
+        data/processed/chrome/08_12_2022/calibration_set_featurized_response_BE.parquet.gzip
+      md5: 5eee1bf723fa92d52c40f63933a70737
+      size: 599468
+  feature_engineering_response@chrome_new:
+    cmd: python3 run_pipeline.py feature_engineering.py chrome 03_29_2023 merged_data
+      binary_encoding response
+    deps:
+    - path: data/processed/chrome/03_29_2023/merged_data_processed_response.parquet.gzip
+      md5: 10d9fd05170b1db4af0450b8633c2f9e
+      size: 40458171
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: data/processed/chrome/03_29_2023/merged_data_featurized_response_BE.parquet.gzip
+      md5: 1da83782147fe5bc6cabb29fb93860f0
+      size: 3864656
+  feature_engineering_response@brave:
+    cmd: python3 run_pipeline.py feature_engineering.py brave 08_12_2022 merged_data
+      binary_encoding response
+    deps:
+    - path: data/processed/brave/08_12_2022/merged_data_processed_response.parquet.gzip
+      md5: f8a5c85a35233196a98756ab0b0b02e1
+      size: 31557190
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: data/processed/brave/08_12_2022/merged_data_featurized_response_BE.parquet.gzip
+      md5: f1d8442d4b2ff213f5bb351d030ca89d
+      size: 2137791
+  feature_engineering_response@chrome_old_train:
+    cmd: python3 run_pipeline.py feature_engineering.py chrome 08_12_2022 train_set
+      binary_encoding response
+    deps:
+    - path: data/processed/chrome/08_12_2022/train_set_processed_response.parquet.gzip
+      md5: 1207ad4384ac451caa2a2583564688d2
+      size: 35843539
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: data/processed/chrome/08_12_2022/train_set_featurized_response_BE.parquet.gzip
+      md5: b69f65b1410d0ccc40f1e1241f498af0
+      size: 4414812
+  feature_engineering_response@chrome_old_test:
+    cmd: python3 run_pipeline.py feature_engineering.py chrome 08_12_2022 test_set
+      binary_encoding response
+    deps:
+    - path: data/processed/chrome/08_12_2022/test_set_processed_response.parquet.gzip
+      md5: c560ec601aabaa59c0a3cb5209026282
+      size: 11032093
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: data/processed/chrome/08_12_2022/test_set_featurized_response_BE.parquet.gzip
+      md5: d98c5986e60087a1a95fe07ec933a339
+      size: 1290299
+  feature_engineering_request@brave:
+    cmd: python3 run_pipeline.py feature_engineering.py brave 08_12_2022 merged_data
+      binary_encoding request
+    deps:
+    - path: data/processed/brave/08_12_2022/merged_data_processed_request.parquet.gzip
+      md5: 9cd1b85349cf0dda920ceba1b5a89b1e
+      size: 5698057
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: data/processed/brave/08_12_2022/merged_data_featurized_request_BE.parquet.gzip
+      md5: b3fdd4a2dc7fb63cdf20fe9f4721550c
+      size: 477982
+  feature_engineering_request@chrome_old_test:
+    cmd: python3 run_pipeline.py feature_engineering.py chrome 08_12_2022 test_set
+      binary_encoding request
+    deps:
+    - path: data/processed/chrome/08_12_2022/test_set_processed_request.parquet.gzip
+      md5: 562cb331ec2a5dc0406202cbee36630e
+      size: 5051627
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: data/processed/chrome/08_12_2022/test_set_featurized_request_BE.parquet.gzip
+      md5: 098c6d207283742d2877f43bc4b8dcb8
+      size: 311857
+  feature_engineering_request@chrome_old_train:
+    cmd: python3 run_pipeline.py feature_engineering.py chrome 08_12_2022 train_set
+      binary_encoding request
+    deps:
+    - path: data/processed/chrome/08_12_2022/train_set_processed_request.parquet.gzip
+      md5: 4558aef8fff94fd6ec6a05da45105650
+      size: 10796256
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: data/processed/chrome/08_12_2022/train_set_featurized_request_BE.parquet.gzip
+      md5: 608d9e166cd30ef65e9dada21efa77e0
+      size: 1053759
+  feature_engineering_request@chrome_old_calibration:
+    cmd: python3 run_pipeline.py feature_engineering.py chrome 08_12_2022 calibration_set
+      binary_encoding request
+    deps:
+    - path: data/processed/chrome/08_12_2022/calibration_set_processed_request.parquet.gzip
+      md5: e2482716c25ee07e611ece00f4d4cf5c
+      size: 2922198
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: 
+        data/processed/chrome/08_12_2022/calibration_set_featurized_request_BE.parquet.gzip
+      md5: 11664db75788518c4fc5f7aba417da25
+      size: 140355
+  feature_engineering_request@chrome_new:
+    cmd: python3 run_pipeline.py feature_engineering.py chrome 03_29_2023 merged_data
+      binary_encoding request
+    deps:
+    - path: data/processed/chrome/03_29_2023/merged_data_processed_request.parquet.gzip
+      md5: 72b2cff7a8849521842dc615cd181e34
+      size: 9476214
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: data/processed/chrome/03_29_2023/merged_data_featurized_request_BE.parquet.gzip
+      md5: a137349863cefd7de632a8b2cb831057
+      size: 991205
+  feature_engineering_request@firefox:
+    cmd: python3 run_pipeline.py feature_engineering.py firefox 08_12_2022 merged_data
+      binary_encoding request
+    deps:
+    - path: data/processed/firefox/08_12_2022/merged_data_processed_request.parquet.gzip
+      md5: b11dd5bc5c4e10a3d57f638020517528
+      size: 8677441
+    - path: run_pipeline.py
+      md5: 13d1207946bc9e26b2f103e89516a881
+      size: 2055
+    - path: src/features/feature_engineering.py
+      md5: 8af083b90f5dd083b94c54ac160c10a5
+      size: 12061
+    - path: src/pipeline_functions/feature_engineering_functions.py
+      md5: 32b114b7e6af7154cede6b376d861b19
+      size: 7391
+    outs:
+    - path: data/processed/firefox/08_12_2022/merged_data_featurized_request_BE.parquet.gzip
+      md5: c2f238e568f3c32f0f1bef3171200d3d
+      size: 1092286
