@@ -30,3 +30,7 @@
 /calibration_set_request.parquet.gzip
 /train_set_processed_response.parquet.gzip
 /train_set_processed_request.parquet.gzip
+/test_set_processed_response.parquet.gzip
+/calibration_set_processed_response.parquet.gzip
+/calibration_set_processed_request.parquet.gzip
+/test_set_processed_request.parquet.gzip

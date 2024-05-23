@@ -165,8 +165,9 @@ def preprocessing_test_data(file_path, config_path, other_test_data: bool = Fals
     with alive_bar(100, force_tty=True, manual=True, title="Data Processing") as bar:
 
         bar.text("Read-in data")
+        httpMessage = "response" if "response" in config_path else "request"
         data = pd.read_parquet(
-            f"{file_path}.parquet.gzip",
+            f"{file_path}_{httpMessage}.parquet.gzip",
             engine="pyarrow",
             dtype_backend="pyarrow",
         )
@@ -302,6 +303,14 @@ def preprocessing_test_data(file_path, config_path, other_test_data: bool = Fals
             data.drop(config["only_tracker_col"], axis=1, inplace=True)
 
         data["tracker"] = data["tracker"].astype("Int32")
+        data["httpMessageId"] = data["httpMessageId"].astype("Int32")
+
+        # Identify columns in data that are not in reordered_cols
+        columns_to_remove = set(data.columns) - set(config["reordered_cols"])
+
+        # Remove these columns from data
+        data.drop(columns=columns_to_remove, inplace=True)
+
         if len(data.columns) != len(config["reordered_cols"]):
             missing_cols = list(
                 set(config["reordered_cols"]).difference(data.columns.tolist())
@@ -309,9 +318,10 @@ def preprocessing_test_data(file_path, config_path, other_test_data: bool = Fals
             data = data.reindex(columns=data.columns.tolist() + missing_cols)
         data = data[config["reordered_cols"]]
         bar(0.9)
+
         bar.text("Write data to parquet.gzip")
         data.to_parquet(
-            f"{file_path}_processed.parquet.gzip",
+            f"{file_path}_processed_{httpMessage}.parquet.gzip",
             compression="gzip",
         )
         bar(1)

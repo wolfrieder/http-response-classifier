@@ -151,7 +151,7 @@ stages:
   pre_processing_other_sets_response:
     foreach: ${browser_object_parsed}
     do:
-#      frozen: true
+      frozen: true
       wdir: ../../../
       cmd: >-
         python3 run_pipeline.py data_preprocessing_config.py 
@@ -168,6 +168,27 @@ stages:
         - preprocessing_config_response.json
       outs:
         - data/processed/${item.browser}/${item.date}/${item.file_name}_processed_response.parquet.gzip
+
+  pre_processing_other_sets_request:
+    foreach: ${browser_object_parsed}
+    do:
+      frozen: true
+      wdir: ../../../
+      cmd: >-
+        python3 run_pipeline.py data_preprocessing_config.py 
+        ${item.browser}
+        ${item.date}
+        ${item.file_name}
+        preprocessing_config_request.json
+        ${item.other_data_set_bool}
+      deps:
+        - run_pipeline.py
+        - src/pipeline_functions/data_preprocessing_functions.py
+        - src/transformer/data_preprocessing_config.py
+        - data/processed/${item.browser}/${item.date}/${item.file_name}_request.parquet.gzip
+        - preprocessing_config_request.json
+      outs:
+        - data/processed/${item.browser}/${item.date}/${item.file_name}_processed_request.parquet.gzip
 
   feature_engineering:
     foreach: ${browser_object_feature_engineering}
