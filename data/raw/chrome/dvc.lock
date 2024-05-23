@@ -1865,3 +1865,97 @@ stages:
     - path: data/processed/firefox/08_12_2022/merged_data_featurized_request_BE.parquet.gzip
       md5: c2f238e568f3c32f0f1bef3171200d3d
       size: 1092286
+  model_training_response:
+    cmd: python3 run_pipeline.py train_model.py chrome 08_12_2022 train_set_featurized_response_BE
+      binary chrome_old_response_BE
+    deps:
+    - path: data/processed/chrome/08_12_2022/train_set_featurized_response_BE.parquet.gzip
+      md5: b69f65b1410d0ccc40f1e1241f498af0
+      size: 4414812
+    - path: src/models/train_model.py
+      md5: 25111deb7a6a855eaa751900322b8cff
+      size: 4536
+    outs:
+    - path: models/chrome/08_12_2022/response/Ada_Boost_BE.sav.gz
+      md5: 179f87b4fffd4f3ea9cf3e48b2d1133d
+      size: 8123
+    - path: models/chrome/08_12_2022/response/Bernoulli_NB_BE.sav.gz
+      md5: 16c9327dcd44b56aeac93a58179bc7d4
+      size: 5426
+    - path: models/chrome/08_12_2022/response/Decision_Tree_BE.sav.gz
+      md5: 90266283df85af39f25378006f268db7
+      size: 222972
+    - path: models/chrome/08_12_2022/response/Extra_Trees_Classifier_BE.sav.gz
+      md5: 196025d729ab87b0e3870131d6410674
+      size: 49930123
+    - path: models/chrome/08_12_2022/response/Gaussian_NB_BE.sav.gz
+      md5: 41932adb7b0d8dd2875094787e264961
+      size: 6603
+    - path: models/chrome/08_12_2022/response/Gradient_Boosting_BE.sav.gz
+      md5: c873b99c59d3b5391c52e1de458e8efe
+      size: 41600
+    - path: models/chrome/08_12_2022/response/Hist_GB_BE.sav.gz
+      md5: dc797ac109d87e3395a2fabad7364c21
+      size: 147436
+    - path: models/chrome/08_12_2022/response/LightGBM_BE.sav.gz
+      md5: 88e1c3c35af9800e34a056599d97ed48
+      size: 134319
+    - path: models/chrome/08_12_2022/response/Logistic_Regression_BE.sav.gz
+      md5: 7d18090b068e2d09b4a932f84df8ddf4
+      size: 3357
+    - path: models/chrome/08_12_2022/response/Random_Forest_BE.sav.gz
+      md5: 4796dd68669ad9ba72eec9663cefcf0b
+      size: 19772570
+    - path: models/chrome/08_12_2022/response/XGBoost_BE.sav.gz
+      md5: 1e6175a55ae7e64ccc281333f3ab0d44
+      size: 93705
+    - path: models/result_metrics/chrome_old_response_BE.csv
+      md5: dbffdcb0215c1419feb1f49ebdc28de2
+      size: 2120
+  model_training_request:
+    cmd: python3 run_pipeline.py train_model.py chrome 08_12_2022 train_set_featurized_request_BE
+      binary chrome_old_request_BE
+    deps:
+    - path: data/processed/chrome/08_12_2022/train_set_featurized_request_BE.parquet.gzip
+      md5: 608d9e166cd30ef65e9dada21efa77e0
+      size: 1053759
+    - path: src/models/train_model.py
+      md5: 25111deb7a6a855eaa751900322b8cff
+      size: 4536
+    outs:
+    - path: models/chrome/08_12_2022/request/Ada_Boost_BE.sav.gz
+      md5: a1fe3b5eb689d8448ac1cb8a6b0c0d96
+      size: 6415
+    - path: models/chrome/08_12_2022/request/Bernoulli_NB_BE.sav.gz
+      md5: 8f387d365c1650d6c8418385818f0a5a
+      size: 1341
+    - path: models/chrome/08_12_2022/request/Decision_Tree_BE.sav.gz
+      md5: 6258e537bfd253336bd094750d7156f1
+      size: 6171
+    - path: models/chrome/08_12_2022/request/Extra_Trees_Classifier_BE.sav.gz
+      md5: 87caa0e5ad2ef96ce68fdbd015c389d1
+      size: 495108
+    - path: models/chrome/08_12_2022/request/Gaussian_NB_BE.sav.gz
+      md5: 7372251746440433698eb232a42f48bc
+      size: 1504
+    - path: models/chrome/08_12_2022/request/Gradient_Boosting_BE.sav.gz
+      md5: e539273653e6fc90c2c7af175b0b6c9f
+      size: 35039
+    - path: models/chrome/08_12_2022/request/Hist_GB_BE.sav.gz
+      md5: 248dd4a9f9919e349cd76d70a41c8160
+      size: 122170
+    - path: models/chrome/08_12_2022/request/LightGBM_BE.sav.gz
+      md5: a509db5daf910cbc526e144483250ef7
+      size: 126327
+    - path: models/chrome/08_12_2022/request/Logistic_Regression_BE.sav.gz
+      md5: 636ddfa77406b7bd8c081e4810d257c3
+      size: 1090
+    - path: models/chrome/08_12_2022/request/Random_Forest_BE.sav.gz
+      md5: 7dadd0aac35a4d6d58a1cafdc0402275
+      size: 454610
+    - path: models/chrome/08_12_2022/request/XGBoost_BE.sav.gz
+      md5: 363f4c32580fc85f99cbb89439c26a23
+      size: 55065
+    - path: models/result_metrics/chrome_old_request_BE.csv
+      md5: b9b01aed2ef6d55f61a23315b08d994b
+      size: 2128

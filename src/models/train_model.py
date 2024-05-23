@@ -13,6 +13,7 @@ from sklearn.ensemble import (
 )
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB, BernoulliNB
+from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import Normalizer, FunctionTransformer, MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
@@ -45,12 +46,13 @@ def train_models_run(
     result_csv_filename: str,
 ) -> None:
     with alive_bar(100, force_tty=True, manual=True, title="Training Models") as bar:
+        httpMessage = "response" if "response" in train_data_file_path else "request"
         bar.text("Read-in data")
         train_data = pd.read_parquet(f"{train_data_file_path}.parquet.gzip")
         bar(0.1)
 
         bar.text("Split data into features and targets")
-        X_train, y_train = train_data.iloc[:, :-1], train_data[["tracker"]]
+        X_train, y_train = train_data.iloc[:, :-2], train_data[["tracker"]]
         bar(0.2)
 
         bar.text("Define models")
@@ -78,6 +80,15 @@ def train_models_run(
                 eval_metric="logloss",
                 n_jobs=-1,
             ),
+            # "MLP": MLPClassifier(
+            #     solver="adam",
+            #     random_state=10,
+            #     activation="relu",
+            #     alpha=1e-05,
+            #     learning_rate_init=0.001,
+            #     hidden_layer_sizes=(128, 64),
+            #     learning_rate="adaptive",
+            # ),
         }
         bar(0.3)
 
@@ -87,7 +98,9 @@ def train_models_run(
 
         bar.text("Train and evaluate models")
         if strategy == "binary":
-            result_df = train_models(models, X_train, y_train["tracker"], cv)
+            result_df = train_models(
+                models, X_train, y_train["tracker"], httpMessage, cv
+            )
         else:
             numeric_transformer = Pipeline(
                 steps=[("scaler", FunctionTransformer(np.log1p))]

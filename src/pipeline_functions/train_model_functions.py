@@ -178,6 +178,7 @@ def train_models(
     models: Dict[str, BaseEstimator],
     X_train: pd.DataFrame,
     y_train: pd.Series,
+    http_message: str,
     cv: RepeatedStratifiedKFold,
     clf_preprocessor: ColumnTransformer = None,
 ) -> pd.DataFrame:
@@ -186,6 +187,7 @@ def train_models(
 
     Parameters
     ----------
+    http_message
     models : Dict[str, BaseEstimator]
         A dictionary containing model names as keys and estimator instances as
         values.
@@ -248,7 +250,7 @@ def train_models(
         best_estimator = cv_results["estimator"][best_estimator_idx]
 
         filename = f"{model_name}_BE.sav.gz"
-        gzip_path = f"models/chrome/08_12_2022/{filename}"
+        gzip_path = f"models/chrome/08_12_2022/{http_message}/{filename}"
 
         with gzip.GzipFile(gzip_path, "wb") as model_gzip:
             pickle.dump(best_estimator["classifier"], model_gzip)
