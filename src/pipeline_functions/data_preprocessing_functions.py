@@ -56,8 +56,8 @@ def create_categories_list(dataset: pd.DataFrame) -> Dict[str, Union[str, None]]
     Dict[str, Union[str, None]]
         A dictionary of column names and their corresponding data types.
     """
-    dtype_list = {i: "category" for i in dataset.columns.values[:-1]}
-    current_columns = dataset.columns.values[:-1].tolist()
+    dtype_list = {i: "category" for i in dataset.columns.values[:-2]}
+    current_columns = dataset.columns.values[:-2].tolist()
     int64_columns = [
         test_new_categories_update(element, dataset) for element in current_columns
     ]
@@ -258,7 +258,7 @@ def create_summary_table_2(dataset: pd.DataFrame) -> pd.DataFrame:
     number_of_elements_reduced = np.array(
         [
             count_trackers_and_non_trackers(dataset[column], dataset["tracker"])
-            for column in dataset.iloc[:, 4:-1].columns
+            for column in dataset.iloc[:, :-2].columns
         ]
     )
     result_table = pd.DataFrame(
@@ -350,8 +350,11 @@ def concise_information_wrapper(dataset: pd.DataFrame, table: pd.DataFrame) -> N
     dataset["comb_col_non_tracker"] = 0
     dataset["comb_col_tracker"] = 0
 
-    update_combined_columns(dataset, only_tracker_cols, 1, "comb_col_tracker")
-    update_combined_columns(dataset, only_non_tracker_cols, 0, "comb_col_non_tracker")
+    if len(only_non_tracker_cols) > 0:
+        update_combined_columns(dataset, only_non_tracker_cols, 1, "comb_col_tracker")
+
+    if len(only_tracker_cols) > 0:
+        update_combined_columns(dataset, only_tracker_cols, 0, "comb_col_non_tracker")
 
 
 def label_as_last_column(dataset: pd.DataFrame) -> List[str]:

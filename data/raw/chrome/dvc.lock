@@ -1346,3 +1346,49 @@ stages:
     - path: data/processed/chrome/08_12_2022/train_set_request.parquet.gzip
       md5: de6544c993a3bd9545e3751a5d6b5fbf
       size: 119967401
+  pre_processing_train_set_response:
+    cmd: python3 run_pipeline.py data_preprocessing_config.py  chrome 08_12_2022 train_set
+      preprocessing_config_response.json False
+    deps:
+    - path: data/processed/chrome/08_12_2022/train_set_response.parquet.gzip
+      md5: cb79aeec19307e5a6d8fe03d8817d2e4
+      size: 105899959
+    - path: run_pipeline.py
+      md5: 3eaf2bfb65ba8a9098f181a0b5951de2
+      size: 2022
+    - path: src/pipeline_functions/data_preprocessing_functions.py
+      md5: 7e5f55508011506405baf80506cb94a2
+      size: 11282
+    - path: src/transformer/data_preprocessing_config.py
+      md5: d04e07be046a1936c07cb1099d3d3979
+      size: 11553
+    outs:
+    - path: data/processed/chrome/08_12_2022/train_set_processed_response.parquet.gzip
+      md5: 1207ad4384ac451caa2a2583564688d2
+      size: 35843539
+    - path: preprocessing_config_response.json
+      md5: ffc46dc046f0b9683892ff5df5365f5e
+      size: 651701
+  pre_processing_train_set_request:
+    cmd: python3 run_pipeline.py data_preprocessing_config.py  chrome 08_12_2022 train_set
+      preprocessing_config_request.json False
+    deps:
+    - path: data/processed/chrome/08_12_2022/train_set_request.parquet.gzip
+      md5: de6544c993a3bd9545e3751a5d6b5fbf
+      size: 119967401
+    - path: run_pipeline.py
+      md5: 3eaf2bfb65ba8a9098f181a0b5951de2
+      size: 2022
+    - path: src/pipeline_functions/data_preprocessing_functions.py
+      md5: c2e4026b233102556445d0d9d229b275
+      size: 11365
+    - path: src/transformer/data_preprocessing_config.py
+      md5: d04e07be046a1936c07cb1099d3d3979
+      size: 11553
+    outs:
+    - path: data/processed/chrome/08_12_2022/train_set_processed_request.parquet.gzip
+      md5: 4558aef8fff94fd6ec6a05da45105650
+      size: 10796256
+    - path: preprocessing_config_request.json
+      md5: 5f68278de0c27648ab758558670ca393
+      size: 85902

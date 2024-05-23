@@ -11,7 +11,7 @@ def run(
 
     dir_path = f"data/processed/{dir_path}/{file_name}"
 
-    if file_name == "train_set":
+    if "train_set" in file_name:
         preprocessing_train_data(dir_path, config_path)
     else:
         preprocessing_test_data(dir_path, config_path, other_test_data)
@@ -20,8 +20,10 @@ def run(
 def preprocessing_train_data(file_path: str, config_path: str) -> None:
     with alive_bar(100, force_tty=True, manual=True, title="Data Processing") as bar:
         bar.text("Read-in data")
+        httpMessage = "response" if "response" in config_path else "request"
+        print(f"{file_path}_{httpMessage}.parquet.gzip")
         data = pd.read_parquet(
-            f"{file_path}.parquet.gzip",
+            f"{file_path}_{httpMessage}.parquet.gzip",
             engine="pyarrow",
             dtype_backend="pyarrow",
         )
@@ -35,7 +37,7 @@ def preprocessing_train_data(file_path: str, config_path: str) -> None:
         bar(0.15)
 
         bar.text("Fuzzy match")
-        data_column_values = data.columns.values[6:-1].tolist()
+        data_column_values = data.columns.values[6:-2].tolist()
         match = [
             new_fuzzy_string_matching_for_column(j, data_column_values[i + 1 :])
             for i, j in enumerate(data_column_values)
@@ -92,7 +94,7 @@ def preprocessing_train_data(file_path: str, config_path: str) -> None:
 
         bar.text("Find columns with na_ratio of 1")
 
-        summary_table = create_summary_table(data.iloc[:, :-1])
+        summary_table = create_summary_table(data.iloc[:, :-2])
         remove_headers_with_one_na_ratio = summary_table[
             summary_table["na_ratio"] == 1
         ].header_name.values.tolist()
@@ -127,6 +129,7 @@ def preprocessing_train_data(file_path: str, config_path: str) -> None:
         reordered_cols = label_as_last_column(data)
 
         data["tracker"] = data["tracker"].astype("Int32")
+        data["httpMessageId"] = data["httpMessageId"].astype("Int32")
         bar(0.99)
 
         if config_path:
@@ -149,9 +152,9 @@ def preprocessing_train_data(file_path: str, config_path: str) -> None:
                 json.dump(config, outfile)
 
         bar.text("Write data to parquet.gzip")
-
+        print(f"{file_path}_processed_{httpMessage}.parquet.gzip")
         data.to_parquet(
-            f"{file_path}_processed.parquet.gzip",
+            f"{file_path}_processed_{httpMessage}.parquet.gzip",
             compression="gzip",
         )
 
