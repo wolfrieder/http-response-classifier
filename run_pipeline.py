@@ -41,8 +41,8 @@ def run_train_model(
     train_model.run(browser, date, filename, strategy, experiment_name)
 
 
-def run_test_model(browser: str, date: str, filename: str) -> None:
-    test_model.run(browser, date, filename)
+def run_test_model(browser: str, date: str, filename: str, http_message: str) -> None:
+    test_model.run(browser, date, filename, http_message)
 
 
 if __name__ == "__main__":
