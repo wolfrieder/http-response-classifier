@@ -1959,3 +1959,526 @@ stages:
     - path: models/result_metrics/chrome_old_request_BE.csv
       md5: b9b01aed2ef6d55f61a23315b08d994b
       size: 2128
+  model_evaluation_request@chrome_old_calibration:
+    cmd: python3 run_pipeline.py test_model.py chrome 08_12_2022 calibration_set request
+    deps:
+    - path: 
+        data/processed/chrome/08_12_2022/calibration_set_featurized_request_BE.parquet.gzip
+      md5: 11664db75788518c4fc5f7aba417da25
+      size: 140355
+    - path: models/chrome/08_12_2022/request/Ada_Boost_BE.sav.gz
+      md5: a1fe3b5eb689d8448ac1cb8a6b0c0d96
+      size: 6415
+    - path: models/chrome/08_12_2022/request/Bernoulli_NB_BE.sav.gz
+      md5: 8f387d365c1650d6c8418385818f0a5a
+      size: 1341
+    - path: models/chrome/08_12_2022/request/Decision_Tree_BE.sav.gz
+      md5: 6258e537bfd253336bd094750d7156f1
+      size: 6171
+    - path: models/chrome/08_12_2022/request/Extra_Trees_Classifier_BE.sav.gz
+      md5: 87caa0e5ad2ef96ce68fdbd015c389d1
+      size: 495108
+    - path: models/chrome/08_12_2022/request/Gaussian_NB_BE.sav.gz
+      md5: 7372251746440433698eb232a42f48bc
+      size: 1504
+    - path: models/chrome/08_12_2022/request/Gradient_Boosting_BE.sav.gz
+      md5: e539273653e6fc90c2c7af175b0b6c9f
+      size: 35039
+    - path: models/chrome/08_12_2022/request/Hist_GB_BE.sav.gz
+      md5: 248dd4a9f9919e349cd76d70a41c8160
+      size: 122170
+    - path: models/chrome/08_12_2022/request/LightGBM_BE.sav.gz
+      md5: a509db5daf910cbc526e144483250ef7
+      size: 126327
+    - path: models/chrome/08_12_2022/request/Logistic_Regression_BE.sav.gz
+      md5: 636ddfa77406b7bd8c081e4810d257c3
+      size: 1090
+    - path: models/chrome/08_12_2022/request/Random_Forest_BE.sav.gz
+      md5: 7dadd0aac35a4d6d58a1cafdc0402275
+      size: 454610
+    - path: models/chrome/08_12_2022/request/XGBoost_BE.sav.gz
+      md5: 363f4c32580fc85f99cbb89439c26a23
+      size: 55065
+    - path: run_pipeline.py
+      md5: 54d7970d0d1a966e59af4988e29c1c28
+      size: 2088
+    - path: src/models/test_model.py
+      md5: 5240ef9a6de904572d141dbd3d5e0120
+      size: 1828
+    outs:
+    - path: models/result_metrics/chrome_08_12_2022_calibration_set_request.csv
+      md5: 7a4bb15d7f80aadbdd5d5776cfb4e50c
+      size: 1221
+    - path: models/result_metrics/chrome_08_12_2022_calibration_set_request_CI.csv
+      md5: 83f127df9e4b93b3c69862f863023afa
+      size: 1613
+  model_evaluation_response@chrome_old_test:
+    cmd: python3 run_pipeline.py test_model.py chrome 08_12_2022 test_set response
+    deps:
+    - path: data/processed/chrome/08_12_2022/test_set_featurized_response_BE.parquet.gzip
+      md5: d98c5986e60087a1a95fe07ec933a339
+      size: 1290299
+    - path: models/chrome/08_12_2022/response/Ada_Boost_BE.sav.gz
+      md5: 179f87b4fffd4f3ea9cf3e48b2d1133d
+      size: 8123
+    - path: models/chrome/08_12_2022/response/Bernoulli_NB_BE.sav.gz
+      md5: 16c9327dcd44b56aeac93a58179bc7d4
+      size: 5426
+    - path: models/chrome/08_12_2022/response/Decision_Tree_BE.sav.gz
+      md5: 90266283df85af39f25378006f268db7
+      size: 222972
+    - path: models/chrome/08_12_2022/response/Extra_Trees_Classifier_BE.sav.gz
+      md5: 196025d729ab87b0e3870131d6410674
+      size: 49930123
+    - path: models/chrome/08_12_2022/response/Gaussian_NB_BE.sav.gz
+      md5: 41932adb7b0d8dd2875094787e264961
+      size: 6603
+    - path: models/chrome/08_12_2022/response/Gradient_Boosting_BE.sav.gz
+      md5: c873b99c59d3b5391c52e1de458e8efe
+      size: 41600
+    - path: models/chrome/08_12_2022/response/Hist_GB_BE.sav.gz
+      md5: dc797ac109d87e3395a2fabad7364c21
+      size: 147436
+    - path: models/chrome/08_12_2022/response/LightGBM_BE.sav.gz
+      md5: 88e1c3c35af9800e34a056599d97ed48
+      size: 134319
+    - path: models/chrome/08_12_2022/response/Logistic_Regression_BE.sav.gz
+      md5: 7d18090b068e2d09b4a932f84df8ddf4
+      size: 3357
+    - path: models/chrome/08_12_2022/response/Random_Forest_BE.sav.gz
+      md5: 4796dd68669ad9ba72eec9663cefcf0b
+      size: 19772570
+    - path: models/chrome/08_12_2022/response/XGBoost_BE.sav.gz
+      md5: 1e6175a55ae7e64ccc281333f3ab0d44
+      size: 93705
+    - path: run_pipeline.py
+      md5: 54d7970d0d1a966e59af4988e29c1c28
+      size: 2088
+    - path: src/models/test_model.py
+      md5: 5240ef9a6de904572d141dbd3d5e0120
+      size: 1828
+    outs:
+    - path: models/result_metrics/chrome_08_12_2022_test_set_response.csv
+      md5: 912ca55985fb1bf7be8129bbd1308d45
+      size: 1234
+    - path: models/result_metrics/chrome_08_12_2022_test_set_response_CI.csv
+      md5: be425e312fb69412eea7057ef65bb1d8
+      size: 1620
+  model_evaluation_request@brave:
+    cmd: python3 run_pipeline.py test_model.py brave 08_12_2022 merged_data request
+    deps:
+    - path: data/processed/brave/08_12_2022/merged_data_featurized_request_BE.parquet.gzip
+      md5: b3fdd4a2dc7fb63cdf20fe9f4721550c
+      size: 477982
+    - path: models/chrome/08_12_2022/request/Ada_Boost_BE.sav.gz
+      md5: a1fe3b5eb689d8448ac1cb8a6b0c0d96
+      size: 6415
+    - path: models/chrome/08_12_2022/request/Bernoulli_NB_BE.sav.gz
+      md5: 8f387d365c1650d6c8418385818f0a5a
+      size: 1341
+    - path: models/chrome/08_12_2022/request/Decision_Tree_BE.sav.gz
+      md5: 6258e537bfd253336bd094750d7156f1
+      size: 6171
+    - path: models/chrome/08_12_2022/request/Extra_Trees_Classifier_BE.sav.gz
+      md5: 87caa0e5ad2ef96ce68fdbd015c389d1
+      size: 495108
+    - path: models/chrome/08_12_2022/request/Gaussian_NB_BE.sav.gz
+      md5: 7372251746440433698eb232a42f48bc
+      size: 1504
+    - path: models/chrome/08_12_2022/request/Gradient_Boosting_BE.sav.gz
+      md5: e539273653e6fc90c2c7af175b0b6c9f
+      size: 35039
+    - path: models/chrome/08_12_2022/request/Hist_GB_BE.sav.gz
+      md5: 248dd4a9f9919e349cd76d70a41c8160
+      size: 122170
+    - path: models/chrome/08_12_2022/request/LightGBM_BE.sav.gz
+      md5: a509db5daf910cbc526e144483250ef7
+      size: 126327
+    - path: models/chrome/08_12_2022/request/Logistic_Regression_BE.sav.gz
+      md5: 636ddfa77406b7bd8c081e4810d257c3
+      size: 1090
+    - path: models/chrome/08_12_2022/request/Random_Forest_BE.sav.gz
+      md5: 7dadd0aac35a4d6d58a1cafdc0402275
+      size: 454610
+    - path: models/chrome/08_12_2022/request/XGBoost_BE.sav.gz
+      md5: 363f4c32580fc85f99cbb89439c26a23
+      size: 55065
+    - path: run_pipeline.py
+      md5: 54d7970d0d1a966e59af4988e29c1c28
+      size: 2088
+    - path: src/models/test_model.py
+      md5: 5240ef9a6de904572d141dbd3d5e0120
+      size: 1828
+    outs:
+    - path: models/result_metrics/brave_08_12_2022_merged_data_request.csv
+      md5: 46feaccbfff8ffdf59b979ebb19b0751
+      size: 1212
+    - path: models/result_metrics/brave_08_12_2022_merged_data_request_CI.csv
+      md5: 49c9b0d24cbec7287cc3301a9e26c651
+      size: 1634
+  model_evaluation_response@chrome_new:
+    cmd: python3 run_pipeline.py test_model.py chrome 03_29_2023 merged_data response
+    deps:
+    - path: data/processed/chrome/03_29_2023/merged_data_featurized_response_BE.parquet.gzip
+      md5: 1da83782147fe5bc6cabb29fb93860f0
+      size: 3864656
+    - path: models/chrome/08_12_2022/response/Ada_Boost_BE.sav.gz
+      md5: 179f87b4fffd4f3ea9cf3e48b2d1133d
+      size: 8123
+    - path: models/chrome/08_12_2022/response/Bernoulli_NB_BE.sav.gz
+      md5: 16c9327dcd44b56aeac93a58179bc7d4
+      size: 5426
+    - path: models/chrome/08_12_2022/response/Decision_Tree_BE.sav.gz
+      md5: 90266283df85af39f25378006f268db7
+      size: 222972
+    - path: models/chrome/08_12_2022/response/Extra_Trees_Classifier_BE.sav.gz
+      md5: 196025d729ab87b0e3870131d6410674
+      size: 49930123
+    - path: models/chrome/08_12_2022/response/Gaussian_NB_BE.sav.gz
+      md5: 41932adb7b0d8dd2875094787e264961
+      size: 6603
+    - path: models/chrome/08_12_2022/response/Gradient_Boosting_BE.sav.gz
+      md5: c873b99c59d3b5391c52e1de458e8efe
+      size: 41600
+    - path: models/chrome/08_12_2022/response/Hist_GB_BE.sav.gz
+      md5: dc797ac109d87e3395a2fabad7364c21
+      size: 147436
+    - path: models/chrome/08_12_2022/response/LightGBM_BE.sav.gz
+      md5: 88e1c3c35af9800e34a056599d97ed48
+      size: 134319
+    - path: models/chrome/08_12_2022/response/Logistic_Regression_BE.sav.gz
+      md5: 7d18090b068e2d09b4a932f84df8ddf4
+      size: 3357
+    - path: models/chrome/08_12_2022/response/Random_Forest_BE.sav.gz
+      md5: 4796dd68669ad9ba72eec9663cefcf0b
+      size: 19772570
+    - path: models/chrome/08_12_2022/response/XGBoost_BE.sav.gz
+      md5: 1e6175a55ae7e64ccc281333f3ab0d44
+      size: 93705
+    - path: run_pipeline.py
+      md5: 54d7970d0d1a966e59af4988e29c1c28
+      size: 2088
+    - path: src/models/test_model.py
+      md5: 5240ef9a6de904572d141dbd3d5e0120
+      size: 1828
+    outs:
+    - path: models/result_metrics/chrome_03_29_2023_merged_data_response.csv
+      md5: ad1b850609fc1743e1b268974b49c729
+      size: 1252
+    - path: models/result_metrics/chrome_03_29_2023_merged_data_response_CI.csv
+      md5: bfa0644697df9983b01c85e6e4abd76a
+      size: 1620
+  model_evaluation_request@chrome_old_test:
+    cmd: python3 run_pipeline.py test_model.py chrome 08_12_2022 test_set request
+    deps:
+    - path: data/processed/chrome/08_12_2022/test_set_featurized_request_BE.parquet.gzip
+      md5: 098c6d207283742d2877f43bc4b8dcb8
+      size: 311857
+    - path: models/chrome/08_12_2022/request/Ada_Boost_BE.sav.gz
+      md5: a1fe3b5eb689d8448ac1cb8a6b0c0d96
+      size: 6415
+    - path: models/chrome/08_12_2022/request/Bernoulli_NB_BE.sav.gz
+      md5: 8f387d365c1650d6c8418385818f0a5a
+      size: 1341
+    - path: models/chrome/08_12_2022/request/Decision_Tree_BE.sav.gz
+      md5: 6258e537bfd253336bd094750d7156f1
+      size: 6171
+    - path: models/chrome/08_12_2022/request/Extra_Trees_Classifier_BE.sav.gz
+      md5: 87caa0e5ad2ef96ce68fdbd015c389d1
+      size: 495108
+    - path: models/chrome/08_12_2022/request/Gaussian_NB_BE.sav.gz
+      md5: 7372251746440433698eb232a42f48bc
+      size: 1504
+    - path: models/chrome/08_12_2022/request/Gradient_Boosting_BE.sav.gz
+      md5: e539273653e6fc90c2c7af175b0b6c9f
+      size: 35039
+    - path: models/chrome/08_12_2022/request/Hist_GB_BE.sav.gz
+      md5: 248dd4a9f9919e349cd76d70a41c8160
+      size: 122170
+    - path: models/chrome/08_12_2022/request/LightGBM_BE.sav.gz
+      md5: a509db5daf910cbc526e144483250ef7
+      size: 126327
+    - path: models/chrome/08_12_2022/request/Logistic_Regression_BE.sav.gz
+      md5: 636ddfa77406b7bd8c081e4810d257c3
+      size: 1090
+    - path: models/chrome/08_12_2022/request/Random_Forest_BE.sav.gz
+      md5: 7dadd0aac35a4d6d58a1cafdc0402275
+      size: 454610
+    - path: models/chrome/08_12_2022/request/XGBoost_BE.sav.gz
+      md5: 363f4c32580fc85f99cbb89439c26a23
+      size: 55065
+    - path: run_pipeline.py
+      md5: 54d7970d0d1a966e59af4988e29c1c28
+      size: 2088
+    - path: src/models/test_model.py
+      md5: 5240ef9a6de904572d141dbd3d5e0120
+      size: 1828
+    outs:
+    - path: models/result_metrics/chrome_08_12_2022_test_set_request.csv
+      md5: acd7c37ee0f3ebd873f3b6c3acc4f1d6
+      size: 1236
+    - path: models/result_metrics/chrome_08_12_2022_test_set_request_CI.csv
+      md5: 77314a36300428825d63fecff4f155e4
+      size: 1614
+  model_evaluation_response@chrome_old_calibration:
+    cmd: python3 run_pipeline.py test_model.py chrome 08_12_2022 calibration_set response
+    deps:
+    - path: 
+        data/processed/chrome/08_12_2022/calibration_set_featurized_response_BE.parquet.gzip
+      md5: 5eee1bf723fa92d52c40f63933a70737
+      size: 599468
+    - path: models/chrome/08_12_2022/response/Ada_Boost_BE.sav.gz
+      md5: 179f87b4fffd4f3ea9cf3e48b2d1133d
+      size: 8123
+    - path: models/chrome/08_12_2022/response/Bernoulli_NB_BE.sav.gz
+      md5: 16c9327dcd44b56aeac93a58179bc7d4
+      size: 5426
+    - path: models/chrome/08_12_2022/response/Decision_Tree_BE.sav.gz
+      md5: 90266283df85af39f25378006f268db7
+      size: 222972
+    - path: models/chrome/08_12_2022/response/Extra_Trees_Classifier_BE.sav.gz
+      md5: 196025d729ab87b0e3870131d6410674
+      size: 49930123
+    - path: models/chrome/08_12_2022/response/Gaussian_NB_BE.sav.gz
+      md5: 41932adb7b0d8dd2875094787e264961
+      size: 6603
+    - path: models/chrome/08_12_2022/response/Gradient_Boosting_BE.sav.gz
+      md5: c873b99c59d3b5391c52e1de458e8efe
+      size: 41600
+    - path: models/chrome/08_12_2022/response/Hist_GB_BE.sav.gz
+      md5: dc797ac109d87e3395a2fabad7364c21
+      size: 147436
+    - path: models/chrome/08_12_2022/response/LightGBM_BE.sav.gz
+      md5: 88e1c3c35af9800e34a056599d97ed48
+      size: 134319
+    - path: models/chrome/08_12_2022/response/Logistic_Regression_BE.sav.gz
+      md5: 7d18090b068e2d09b4a932f84df8ddf4
+      size: 3357
+    - path: models/chrome/08_12_2022/response/Random_Forest_BE.sav.gz
+      md5: 4796dd68669ad9ba72eec9663cefcf0b
+      size: 19772570
+    - path: models/chrome/08_12_2022/response/XGBoost_BE.sav.gz
+      md5: 1e6175a55ae7e64ccc281333f3ab0d44
+      size: 93705
+    - path: run_pipeline.py
+      md5: 54d7970d0d1a966e59af4988e29c1c28
+      size: 2088
+    - path: src/models/test_model.py
+      md5: 5240ef9a6de904572d141dbd3d5e0120
+      size: 1828
+    outs:
+    - path: models/result_metrics/chrome_08_12_2022_calibration_set_response.csv
+      md5: 4a21022bee3d914d6d64f79a27333598
+      size: 1215
+    - path: models/result_metrics/chrome_08_12_2022_calibration_set_response_CI.csv
+      md5: 706d26564782ea4f3f657055d1098e65
+      size: 1611
+  model_evaluation_request@chrome_new:
+    cmd: python3 run_pipeline.py test_model.py chrome 03_29_2023 merged_data request
+    deps:
+    - path: data/processed/chrome/03_29_2023/merged_data_featurized_request_BE.parquet.gzip
+      md5: a137349863cefd7de632a8b2cb831057
+      size: 991205
+    - path: models/chrome/08_12_2022/request/Ada_Boost_BE.sav.gz
+      md5: a1fe3b5eb689d8448ac1cb8a6b0c0d96
+      size: 6415
+    - path: models/chrome/08_12_2022/request/Bernoulli_NB_BE.sav.gz
+      md5: 8f387d365c1650d6c8418385818f0a5a
+      size: 1341
+    - path: models/chrome/08_12_2022/request/Decision_Tree_BE.sav.gz
+      md5: 6258e537bfd253336bd094750d7156f1
+      size: 6171
+    - path: models/chrome/08_12_2022/request/Extra_Trees_Classifier_BE.sav.gz
+      md5: 87caa0e5ad2ef96ce68fdbd015c389d1
+      size: 495108
+    - path: models/chrome/08_12_2022/request/Gaussian_NB_BE.sav.gz
+      md5: 7372251746440433698eb232a42f48bc
+      size: 1504
+    - path: models/chrome/08_12_2022/request/Gradient_Boosting_BE.sav.gz
+      md5: e539273653e6fc90c2c7af175b0b6c9f
+      size: 35039
+    - path: models/chrome/08_12_2022/request/Hist_GB_BE.sav.gz
+      md5: 248dd4a9f9919e349cd76d70a41c8160
+      size: 122170
+    - path: models/chrome/08_12_2022/request/LightGBM_BE.sav.gz
+      md5: a509db5daf910cbc526e144483250ef7
+      size: 126327
+    - path: models/chrome/08_12_2022/request/Logistic_Regression_BE.sav.gz
+      md5: 636ddfa77406b7bd8c081e4810d257c3
+      size: 1090
+    - path: models/chrome/08_12_2022/request/Random_Forest_BE.sav.gz
+      md5: 7dadd0aac35a4d6d58a1cafdc0402275
+      size: 454610
+    - path: models/chrome/08_12_2022/request/XGBoost_BE.sav.gz
+      md5: 363f4c32580fc85f99cbb89439c26a23
+      size: 55065
+    - path: run_pipeline.py
+      md5: 54d7970d0d1a966e59af4988e29c1c28
+      size: 2088
+    - path: src/models/test_model.py
+      md5: 5240ef9a6de904572d141dbd3d5e0120
+      size: 1828
+    outs:
+    - path: models/result_metrics/chrome_03_29_2023_merged_data_request.csv
+      md5: 0abc72ed58f8233f8f545cf0d80a81c5
+      size: 1255
+    - path: models/result_metrics/chrome_03_29_2023_merged_data_request_CI.csv
+      md5: aed5cef0245cde1ff574415d58b1677a
+      size: 1615
+  model_evaluation_request@firefox:
+    cmd: python3 run_pipeline.py test_model.py firefox 08_12_2022 merged_data request
+    deps:
+    - path: data/processed/firefox/08_12_2022/merged_data_featurized_request_BE.parquet.gzip
+      md5: c2f238e568f3c32f0f1bef3171200d3d
+      size: 1092286
+    - path: models/chrome/08_12_2022/request/Ada_Boost_BE.sav.gz
+      md5: a1fe3b5eb689d8448ac1cb8a6b0c0d96
+      size: 6415
+    - path: models/chrome/08_12_2022/request/Bernoulli_NB_BE.sav.gz
+      md5: 8f387d365c1650d6c8418385818f0a5a
+      size: 1341
+    - path: models/chrome/08_12_2022/request/Decision_Tree_BE.sav.gz
+      md5: 6258e537bfd253336bd094750d7156f1
+      size: 6171
+    - path: models/chrome/08_12_2022/request/Extra_Trees_Classifier_BE.sav.gz
+      md5: 87caa0e5ad2ef96ce68fdbd015c389d1
+      size: 495108
+    - path: models/chrome/08_12_2022/request/Gaussian_NB_BE.sav.gz
+      md5: 7372251746440433698eb232a42f48bc
+      size: 1504
+    - path: models/chrome/08_12_2022/request/Gradient_Boosting_BE.sav.gz
+      md5: e539273653e6fc90c2c7af175b0b6c9f
+      size: 35039
+    - path: models/chrome/08_12_2022/request/Hist_GB_BE.sav.gz
+      md5: 248dd4a9f9919e349cd76d70a41c8160
+      size: 122170
+    - path: models/chrome/08_12_2022/request/LightGBM_BE.sav.gz
+      md5: a509db5daf910cbc526e144483250ef7
+      size: 126327
+    - path: models/chrome/08_12_2022/request/Logistic_Regression_BE.sav.gz
+      md5: 636ddfa77406b7bd8c081e4810d257c3
+      size: 1090
+    - path: models/chrome/08_12_2022/request/Random_Forest_BE.sav.gz
+      md5: 7dadd0aac35a4d6d58a1cafdc0402275
+      size: 454610
+    - path: models/chrome/08_12_2022/request/XGBoost_BE.sav.gz
+      md5: 363f4c32580fc85f99cbb89439c26a23
+      size: 55065
+    - path: run_pipeline.py
+      md5: 54d7970d0d1a966e59af4988e29c1c28
+      size: 2088
+    - path: src/models/test_model.py
+      md5: 5240ef9a6de904572d141dbd3d5e0120
+      size: 1828
+    outs:
+    - path: models/result_metrics/firefox_08_12_2022_merged_data_request.csv
+      md5: 2f13276b657f0967bc3c5040efe73b4e
+      size: 1260
+    - path: models/result_metrics/firefox_08_12_2022_merged_data_request_CI.csv
+      md5: be28b3f0d1625ac4f70ba05b41d275fb
+      size: 1628
+  model_evaluation_response@brave:
+    cmd: python3 run_pipeline.py test_model.py brave 08_12_2022 merged_data response
+    deps:
+    - path: data/processed/brave/08_12_2022/merged_data_featurized_response_BE.parquet.gzip
+      md5: f1d8442d4b2ff213f5bb351d030ca89d
+      size: 2137791
+    - path: models/chrome/08_12_2022/response/Ada_Boost_BE.sav.gz
+      md5: 179f87b4fffd4f3ea9cf3e48b2d1133d
+      size: 8123
+    - path: models/chrome/08_12_2022/response/Bernoulli_NB_BE.sav.gz
+      md5: 16c9327dcd44b56aeac93a58179bc7d4
+      size: 5426
+    - path: models/chrome/08_12_2022/response/Decision_Tree_BE.sav.gz
+      md5: 90266283df85af39f25378006f268db7
+      size: 222972
+    - path: models/chrome/08_12_2022/response/Extra_Trees_Classifier_BE.sav.gz
+      md5: 196025d729ab87b0e3870131d6410674
+      size: 49930123
+    - path: models/chrome/08_12_2022/response/Gaussian_NB_BE.sav.gz
+      md5: 41932adb7b0d8dd2875094787e264961
+      size: 6603
+    - path: models/chrome/08_12_2022/response/Gradient_Boosting_BE.sav.gz
+      md5: c873b99c59d3b5391c52e1de458e8efe
+      size: 41600
+    - path: models/chrome/08_12_2022/response/Hist_GB_BE.sav.gz
+      md5: dc797ac109d87e3395a2fabad7364c21
+      size: 147436
+    - path: models/chrome/08_12_2022/response/LightGBM_BE.sav.gz
+      md5: 88e1c3c35af9800e34a056599d97ed48
+      size: 134319
+    - path: models/chrome/08_12_2022/response/Logistic_Regression_BE.sav.gz
+      md5: 7d18090b068e2d09b4a932f84df8ddf4
+      size: 3357
+    - path: models/chrome/08_12_2022/response/Random_Forest_BE.sav.gz
+      md5: 4796dd68669ad9ba72eec9663cefcf0b
+      size: 19772570
+    - path: models/chrome/08_12_2022/response/XGBoost_BE.sav.gz
+      md5: 1e6175a55ae7e64ccc281333f3ab0d44
+      size: 93705
+    - path: run_pipeline.py
+      md5: 54d7970d0d1a966e59af4988e29c1c28
+      size: 2088
+    - path: src/models/test_model.py
+      md5: 5240ef9a6de904572d141dbd3d5e0120
+      size: 1828
+    outs:
+    - path: models/result_metrics/brave_08_12_2022_merged_data_response.csv
+      md5: 0df991bb72a86e062fad5555b69f711d
+      size: 1208
+    - path: models/result_metrics/brave_08_12_2022_merged_data_response_CI.csv
+      md5: 4e51166ba2068fbbd1b2a3211fea0a76
+      size: 1617
+  model_evaluation_response@firefox:
+    cmd: python3 run_pipeline.py test_model.py firefox 08_12_2022 merged_data response
+    deps:
+    - path: 
+        data/processed/firefox/08_12_2022/merged_data_featurized_response_BE.parquet.gzip
+      md5: 2c75dfa7cd64f9068f6b7d254b607df4
+      size: 4232410
+    - path: models/chrome/08_12_2022/response/Ada_Boost_BE.sav.gz
+      md5: 179f87b4fffd4f3ea9cf3e48b2d1133d
+      size: 8123
+    - path: models/chrome/08_12_2022/response/Bernoulli_NB_BE.sav.gz
+      md5: 16c9327dcd44b56aeac93a58179bc7d4
+      size: 5426
+    - path: models/chrome/08_12_2022/response/Decision_Tree_BE.sav.gz
+      md5: 90266283df85af39f25378006f268db7
+      size: 222972
+    - path: models/chrome/08_12_2022/response/Extra_Trees_Classifier_BE.sav.gz
+      md5: 196025d729ab87b0e3870131d6410674
+      size: 49930123
+    - path: models/chrome/08_12_2022/response/Gaussian_NB_BE.sav.gz
+      md5: 41932adb7b0d8dd2875094787e264961
+      size: 6603
+    - path: models/chrome/08_12_2022/response/Gradient_Boosting_BE.sav.gz
+      md5: c873b99c59d3b5391c52e1de458e8efe
+      size: 41600
+    - path: models/chrome/08_12_2022/response/Hist_GB_BE.sav.gz
+      md5: dc797ac109d87e3395a2fabad7364c21
+      size: 147436
+    - path: models/chrome/08_12_2022/response/LightGBM_BE.sav.gz
+      md5: 88e1c3c35af9800e34a056599d97ed48
+      size: 134319
+    - path: models/chrome/08_12_2022/response/Logistic_Regression_BE.sav.gz
+      md5: 7d18090b068e2d09b4a932f84df8ddf4
+      size: 3357
+    - path: models/chrome/08_12_2022/response/Random_Forest_BE.sav.gz
+      md5: 4796dd68669ad9ba72eec9663cefcf0b
+      size: 19772570
+    - path: models/chrome/08_12_2022/response/XGBoost_BE.sav.gz
+      md5: 1e6175a55ae7e64ccc281333f3ab0d44
+      size: 93705
+    - path: run_pipeline.py
+      md5: 54d7970d0d1a966e59af4988e29c1c28
+      size: 2088
+    - path: src/models/test_model.py
+      md5: 5240ef9a6de904572d141dbd3d5e0120
+      size: 1828
+    outs:
+    - path: models/result_metrics/firefox_08_12_2022_merged_data_response.csv
+      md5: 28f82e1f7ca281dc7ce46d59119cb32b
+      size: 1254
+    - path: models/result_metrics/firefox_08_12_2022_merged_data_response_CI.csv
+      md5: 62ae39acc88c6eede84ef91f6026ba08
+      size: 1620

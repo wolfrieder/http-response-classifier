@@ -259,9 +259,7 @@ def train_models(
 
 
 def test_models(
-    models: List[str],
-    X_test: pd.DataFrame,
-    y_test: pd.Series,
+    models: List[str], X_test: pd.DataFrame, y_test: pd.Series, http_message: str
 ) -> List[pd.DataFrame]:
     """
     Evaluate the performance of multiple classification models on the test
@@ -299,7 +297,7 @@ def test_models(
         print(f"Evaluating {model_name}...")
 
         filename = f"{model_name}_BE.sav.gz"
-        gzip_path = f"models/chrome/08_12_2022/{filename}"
+        gzip_path = f"models/chrome/08_12_2022/{http_message}/{filename}"
 
         with gzip.GzipFile(gzip_path, "rb") as f:
             best_estimator = pickle.load(f)
