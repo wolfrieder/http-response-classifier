@@ -319,7 +319,7 @@ stages:
   model_evaluation_request:
     foreach: ${browser_object_evaluation}
     do:
-      #      frozen: true
+      frozen: true
       wdir: ../../../
       cmd: >-
         python3 run_pipeline.py test_model.py

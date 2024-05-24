@@ -35,7 +35,7 @@ def test_models_run(
         bar(0.1)
 
         bar.text("Split data into features and targets")
-        X_test, y_test = test_data.iloc[:, :-2], test_data[["tracker"]]
+        X_test, y_test = test_data.iloc[:, 2:-2], test_data[["tracker"]]
         bar(0.2)
 
         bar.text("Define models")

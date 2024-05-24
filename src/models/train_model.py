@@ -52,7 +52,7 @@ def train_models_run(
         bar(0.1)
 
         bar.text("Split data into features and targets")
-        X_train, y_train = train_data.iloc[:, :-2], train_data[["tracker"]]
+        X_train, y_train = train_data.iloc[:, 2:-2], train_data[["tracker"]]
         bar(0.2)
 
         bar.text("Define models")
