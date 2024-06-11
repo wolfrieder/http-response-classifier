@@ -259,7 +259,7 @@ stages:
 #      - ${dir_paths.chrome_old_models}/response/MLP_BE.sav.gz
 
   model_training_request:
-    frozen: true
+#    frozen: true
     wdir: ../../../
     cmd: >-
       python3 run_pipeline.py train_model.py
@@ -289,7 +289,7 @@ stages:
   model_evaluation_response:
     foreach: ${browser_object_evaluation}
     do:
-#      frozen: true
+      frozen: true
       wdir: ../../../
       cmd: >-
         python3 run_pipeline.py test_model.py
@@ -302,7 +302,7 @@ stages:
         - src/models/test_model.py
         - ${dir_paths.chrome_old_models}/response/Logistic_Regression_BE.sav.gz
         - ${dir_paths.chrome_old_models}/response/Gaussian_NB_BE.sav.gz
-        - ${dir_paths.chrome_old_models}/response/Bernoulli_NB_BE.sav.gz
+#        - ${dir_paths.chrome_old_models}/response/Bernoulli_NB_BE.sav.gz
         - ${dir_paths.chrome_old_models}/response/Decision_Tree_BE.sav.gz
         - ${dir_paths.chrome_old_models}/response/Random_Forest_BE.sav.gz
         - ${dir_paths.chrome_old_models}/response/Extra_Trees_Classifier_BE.sav.gz
@@ -332,7 +332,7 @@ stages:
         - src/models/test_model.py
         - ${dir_paths.chrome_old_models}/request/Logistic_Regression_BE.sav.gz
         - ${dir_paths.chrome_old_models}/request/Gaussian_NB_BE.sav.gz
-        - ${dir_paths.chrome_old_models}/request/Bernoulli_NB_BE.sav.gz
+#        - ${dir_paths.chrome_old_models}/request/Bernoulli_NB_BE.sav.gz
         - ${dir_paths.chrome_old_models}/request/Decision_Tree_BE.sav.gz
         - ${dir_paths.chrome_old_models}/request/Random_Forest_BE.sav.gz
         - ${dir_paths.chrome_old_models}/request/Extra_Trees_Classifier_BE.sav.gz
