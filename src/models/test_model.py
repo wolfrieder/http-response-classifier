@@ -42,7 +42,6 @@ def test_models_run(
         models = [
             "Logistic_Regression",
             "Gaussian_NB",
-            # "Bernoulli_NB",
             "Decision_Tree",
             "Random_Forest",
             "Extra_Trees_Classifier",

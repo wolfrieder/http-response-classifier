@@ -12,8 +12,7 @@ from sklearn.ensemble import (
     ExtraTreesClassifier,
 )
 from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import GaussianNB, BernoulliNB
-from sklearn.neural_network import MLPClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import Normalizer, FunctionTransformer, MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
@@ -61,7 +60,6 @@ def train_models_run(
                 random_state=10, n_jobs=-1, max_iter=1000, solver="newton-cholesky"
             ),
             "Gaussian_NB": GaussianNB(),
-            "Bernoulli_NB": BernoulliNB(),
             "Decision_Tree": DecisionTreeClassifier(random_state=10),
             "Random_Forest": RandomForestClassifier(
                 n_estimators=100,
@@ -80,15 +78,6 @@ def train_models_run(
                 eval_metric="logloss",
                 n_jobs=-1,
             ),
-            # "MLP": MLPClassifier(
-            #     solver="adam",
-            #     random_state=10,
-            #     activation="relu",
-            #     alpha=1e-05,
-            #     learning_rate_init=0.001,
-            #     hidden_layer_sizes=(128, 64),
-            #     learning_rate="adaptive",
-            # ),
         }
         bar(0.3)
 

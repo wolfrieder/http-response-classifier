@@ -247,7 +247,6 @@ stages:
       - models/result_metrics/chrome_old_response_BE.csv
       - ${dir_paths.chrome_old_models}/response/Logistic_Regression_BE.sav.gz
       - ${dir_paths.chrome_old_models}/response/Gaussian_NB_BE.sav.gz
-      - ${dir_paths.chrome_old_models}/response/Bernoulli_NB_BE.sav.gz
       - ${dir_paths.chrome_old_models}/response/Decision_Tree_BE.sav.gz
       - ${dir_paths.chrome_old_models}/response/Random_Forest_BE.sav.gz
       - ${dir_paths.chrome_old_models}/response/Extra_Trees_Classifier_BE.sav.gz
@@ -256,7 +255,6 @@ stages:
       - ${dir_paths.chrome_old_models}/response/LightGBM_BE.sav.gz
       - ${dir_paths.chrome_old_models}/response/Hist_GB_BE.sav.gz
       - ${dir_paths.chrome_old_models}/response/XGBoost_BE.sav.gz
-#      - ${dir_paths.chrome_old_models}/response/MLP_BE.sav.gz
 
   model_training_request:
 #    frozen: true
@@ -275,7 +273,6 @@ stages:
       - models/result_metrics/chrome_old_request_BE.csv
       - ${dir_paths.chrome_old_models}/request/Logistic_Regression_BE.sav.gz
       - ${dir_paths.chrome_old_models}/request/Gaussian_NB_BE.sav.gz
-      - ${dir_paths.chrome_old_models}/request/Bernoulli_NB_BE.sav.gz
       - ${dir_paths.chrome_old_models}/request/Decision_Tree_BE.sav.gz
       - ${dir_paths.chrome_old_models}/request/Random_Forest_BE.sav.gz
       - ${dir_paths.chrome_old_models}/request/Extra_Trees_Classifier_BE.sav.gz
@@ -284,7 +281,6 @@ stages:
       - ${dir_paths.chrome_old_models}/request/LightGBM_BE.sav.gz
       - ${dir_paths.chrome_old_models}/request/Hist_GB_BE.sav.gz
       - ${dir_paths.chrome_old_models}/request/XGBoost_BE.sav.gz
-    #      - ${dir_paths.chrome_old_models}/request/MLP_BE.sav.gz
 
   model_evaluation_response:
     foreach: ${browser_object_evaluation}
@@ -302,7 +298,6 @@ stages:
         - src/models/test_model.py
         - ${dir_paths.chrome_old_models}/response/Logistic_Regression_BE.sav.gz
         - ${dir_paths.chrome_old_models}/response/Gaussian_NB_BE.sav.gz
-#        - ${dir_paths.chrome_old_models}/response/Bernoulli_NB_BE.sav.gz
         - ${dir_paths.chrome_old_models}/response/Decision_Tree_BE.sav.gz
         - ${dir_paths.chrome_old_models}/response/Random_Forest_BE.sav.gz
         - ${dir_paths.chrome_old_models}/response/Extra_Trees_Classifier_BE.sav.gz
@@ -332,7 +327,6 @@ stages:
         - src/models/test_model.py
         - ${dir_paths.chrome_old_models}/request/Logistic_Regression_BE.sav.gz
         - ${dir_paths.chrome_old_models}/request/Gaussian_NB_BE.sav.gz
-#        - ${dir_paths.chrome_old_models}/request/Bernoulli_NB_BE.sav.gz
         - ${dir_paths.chrome_old_models}/request/Decision_Tree_BE.sav.gz
         - ${dir_paths.chrome_old_models}/request/Random_Forest_BE.sav.gz
         - ${dir_paths.chrome_old_models}/request/Extra_Trees_Classifier_BE.sav.gz

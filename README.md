@@ -3,7 +3,6 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/wolfrieder/thesis_project_v2/graphs/commit-activity)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![DeepSource](https://deepsource.io/gh/wolfrieder/thesis_project_v2.svg/?label=active+issues&show_trend=true&token=bI2KtH2zJhdmo15pPCscudQ9)](https://deepsource.io/gh/wolfrieder/thesis_project_v2/?ref=repository-badge)
 
 ## Abstract
 
@@ -76,12 +75,12 @@ the necessary tools for efficient model development and tracking.
 
 ## Computer Setup
 
-The code was tested on an MacBook Pro with the 10-core Apple M1 Pro, 32GB
+The code was only tested on an MacBook Pro with the 10-core Apple M1 Pro, 32GB
 memory,
 and 1TB storage. It is recommended to have at least 32GB memory as tests with
 16GB memory led to memory issues while training the classifiers. Therefore, the
 current requirement are 32GB of memory until further tests and optimizations are
-performed.
+performed. 
 
 ## Known Installation Problems
 
