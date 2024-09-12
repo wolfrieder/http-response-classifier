@@ -45,12 +45,10 @@ def calculate_metrics(
     auc_score = metrics.roc_auc_score(y_true, y_pred)
     aupcr = metrics.average_precision_score(y_true, y_pred_proba)
     f1_score = metrics.f1_score(y_true, y_pred)
-    # fbeta_score = metrics.fbeta_score(y_true, y_pred, beta=0.5)
     bal_acc = metrics.balanced_accuracy_score(y_true, y_pred)
     precision = metrics.precision_score(y_true, y_pred)
     recall = metrics.recall_score(y_true, y_pred)
     mcc = metrics.matthews_corrcoef(y_true, y_pred)
-    # jaccard = metrics.jaccard_score(y_true, y_pred)
 
     return {
         "accuracy": np.round(metrics.accuracy_score(y_true, y_pred), 3),
@@ -59,11 +57,9 @@ def calculate_metrics(
         "aupcr": np.round(aupcr, 3),
         "balanced_accuracy": np.round(bal_acc, 3),
         "f1": np.round(f1_score, 3),
-        # "fbeta": np.round(fbeta_score, 3),
         "precision": np.round(precision, 3),
         "recall": np.round(recall, 3),
         "mcc": np.round(mcc, 3),
-        # "jaccard": np.round(jaccard, 3),
     }
 
 
@@ -216,9 +212,7 @@ def train_models(
         "recall": "recall",
         "neg_log_loss": "neg_log_loss",
         "mcc": make_scorer(matthews_corrcoef),
-        # "jaccard": make_scorer(jaccard_score),
         "aupcr": make_scorer(average_precision_score),
-        # "fbeta": make_scorer(fbeta_score, beta=0.5),
     }
 
     for model_name, model in models.items():

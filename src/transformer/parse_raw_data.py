@@ -136,7 +136,6 @@ def parse_dataset(
             *request_ids_column_name,
             *label_column_name,
         ]
-        print(column_names)
         bar(0.65)
 
         bar.text("Parse data in chunks")

@@ -8,13 +8,10 @@ rapidfuzz==2.14.0
 scipy==1.10.1
 pyyaml==6.0
 xgboost==1.7.5
-category_encoders==2.5.1.post0
 dvc==2.36.0
 black==22.6.0
 json-stream
-skl2onnx==1.14.0
 protobuf>=3.12.2
-onnx>=1
 setuptools==61.2.0
 alive-progress>=3.1.1
 jupyter

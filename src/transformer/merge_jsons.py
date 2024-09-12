@@ -63,7 +63,6 @@ def generate_headers(r: Dict[str, Any], httpMessage, headers) -> List[List[str]]
         try:
             transformed.append([header["name"], header["value"]])
         except KeyError:
-            # TODO: philip u know
             print(header["name"])
     return transformed
 

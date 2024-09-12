@@ -31,7 +31,7 @@ namely [T.EX - The Transparency EXtension](https://github.com/t-ex-tools/t.ex)
 was used. In addition, the code of this project follows the data schema
 of `T.EX`
 and can be used on exported HTTP request and response data.
-Four datasets were used for this paper: 
+Four datasets were used for this paper:
 
 1. [Chrome, Firefox, and Brave Data (2022)](https://zenodo.org/record/7123945#.Y8VDEXaZPtU) --
    Size: 14.3GB (Zipped)
@@ -49,19 +49,23 @@ follow the step-by-step instructions outlined below:
    Python version, other version might work as well). If you do not have
    Python 3.10.11, download and install it
    from the official [Python website](https://www.python.org/downloads/),
-   [asdf](https://asdf-vm.com), or another tool of your choice. Python version
-   3.9.12 was also tested and works.
-   However, Python version 3.10.11 is recommended due to performance
-   improvements.
+   [asdf](https://asdf-vm.com), or another tool of your choice.
 
 
-2. Install the [Conda](https://docs.conda.io/en/latest/miniconda.html) package
+2. **(Optional:)** Install
+   the [Conda](https://docs.conda.io/en/latest/miniconda.html) package
    manager, which can be utilized for
    managing dependencies and creating a virtual environment or use your IDE (
    e.g. PyCharm for venv) and PIP.
 
 
-3. Create a new virtual environment with Python 3.10.11.
+3. Create a new virtual environment with Python 3.10.11. Either through your IDE
+   or use the following command (which creates a virtual environment and
+   installs the packages from the `requirements.txt`:
+
+   ```
+   sh init.sh
+   ```
 
 
 4. Clone the GitHub repository to your local machine (HTTP/S):
@@ -120,6 +124,31 @@ dvc repro
    not optimized for x86 CPUs and the general available GPUs (especially
    NVIDIA). Nevertheless, we did not use any Apple Silicon specific libraries,
    so the code should work for other systems as well.
+
+
+4. IDE: We used PyCharm Professional Edition (2023 and 2024 version) and increased the memory to 10000 in the `Change Memory Settings`. 
+   From our tests we observed that this IDE was significantly faster than Visual Studio Code when executing the pipeline. 
+
+
+## Execution Times
+For orientation purposes, we will present the execution time for each stage as defined in our `dvc.yaml` file (pipeline). 
+
+1. merge_response: ~ 20.46 min
+2. merge_request: ~ 15.18 min
+3. parse_to_parquet_response: ~ 37.43 min
+4. parse_to_parquet_request: ~ 8.46 min
+5. train_test_split_response: ~ 7.30 min
+6. train_test_split_request: ~ 1.42 min
+7. pre_processing_train_set_response: ~ 8:26 min
+8. pre_processing_train_set_request: ~ 1:08 min
+9. pre_processing_other_sets_response: ~ 12:14 min
+10. pre_processing_other_sets_request: ~ 2:19 min
+11. feature_engineering_response: ~ 0:23 min
+12. feature_engineering_request: ~ 0:12 min
+13. model_training_response: ~ 46:10 min
+14. model_training_request: ~ 5:07 min
+15. model_evaluation_response: ~ 9:56 min
+16. model_evaluation_request: ~ 9:21 min
 
 ## Computer Setup
 
