@@ -108,6 +108,23 @@ stages:
       - data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_request.parquet.gzip
       - data/processed/${browsers.chrome}/${dir_name.date_one}/calibration_set_request.parquet.gzip
 
+  train_test_split_exp_google:
+    frozen: true
+    wdir: ../../../
+    cmd: >-
+      python3 run_pipeline.py train_test_split.py
+      ${browsers.chrome}
+      ${dir_name.date_one}
+      dataset_without_google_response
+    deps:
+      - src/transformer/train_test_split.py
+      - src/pipeline_functions/train_test_split_functions.py
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/dataset_without_google_response.parquet.gzip
+    outs:
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_exp_google.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/test_set_exp_google.parquet.gzip
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/calibration_set_exp_google.parquet.gzip
+
   pre_processing_train_set_response:
     frozen: true
     wdir: ../../../
@@ -145,6 +162,25 @@ stages:
     outs:
       - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_processed_request.parquet.gzip
       - preprocessing_config_request.json
+
+  pre_processing_train_set_exp_google:
+    frozen: true
+    wdir: ../../../
+    cmd: >-
+      python3 run_pipeline.py data_preprocessing_config.py 
+      ${browsers.chrome}
+      ${dir_name.date_one}
+      train_set
+      preprocessing_config_exp_google.json
+      False
+    deps:
+      - run_pipeline.py
+      - src/pipeline_functions/data_preprocessing_functions.py
+      - src/transformer/data_preprocessing_config.py
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_exp_google.parquet.gzip
+    outs:
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_processed_exp_google.parquet.gzip
+      - preprocessing_config_exp_google.json
 
   pre_processing_other_sets_response:
     foreach: ${browser_object_parsed}
@@ -188,6 +224,27 @@ stages:
       outs:
         - data/processed/${item.browser}/${item.date}/${item.file_name}_processed_request.parquet.gzip
 
+  pre_processing_other_sets_exp_google:
+    foreach: ${browser_object_parsed_exp_google}
+    do:
+      frozen: true
+      wdir: ../../../
+      cmd: >-
+        python3 run_pipeline.py data_preprocessing_config.py 
+        ${item.browser}
+        ${item.date}
+        ${item.file_name}
+        preprocessing_config_exp_google.json
+        ${item.other_data_set_bool}
+      deps:
+        - run_pipeline.py
+        - src/pipeline_functions/data_preprocessing_functions.py
+        - src/transformer/data_preprocessing_config.py
+        - data/processed/${item.browser}/${item.date}/${item.file_name}_exp_google.parquet.gzip
+        - preprocessing_config_exp_google.json
+      outs:
+        - data/processed/${item.browser}/${item.date}/${item.file_name}_processed_exp_google.parquet.gzip
+
   feature_engineering_response:
     foreach: ${browser_object_feature_engineering}
     do:
@@ -227,6 +284,26 @@ stages:
         - data/processed/${item.browser}/${item.date}/${item.file_name}_processed_request.parquet.gzip
       outs:
         - data/processed/${item.browser}/${item.date}/${item.file_name}_featurized_request_BE.parquet.gzip
+
+  feature_engineering_exp_google:
+    foreach: ${browser_object_feature_engineering_exp_google}
+    do:
+      frozen: true
+      wdir: ../../../
+      cmd: >-
+        python3 run_pipeline.py feature_engineering.py
+        ${item.browser}
+        ${item.date}
+        ${item.file_name}
+        binary_encoding
+        exp_google
+      deps:
+        - run_pipeline.py
+        - src/features/feature_engineering.py
+        - src/pipeline_functions/feature_engineering_functions.py
+        - data/processed/${item.browser}/${item.date}/${item.file_name}_processed_exp_google.parquet.gzip
+      outs:
+        - data/processed/${item.browser}/${item.date}/${item.file_name}_featurized_exp_google_BE.parquet.gzip
 
   model_training_response:
     frozen: true
@@ -280,6 +357,32 @@ stages:
       - ${dir_paths.chrome_old_models}/request/Hist_GB_BE.sav.gz
       - ${dir_paths.chrome_old_models}/request/XGBoost_BE.sav.gz
 
+  model_training_exp_google:
+    frozen: true
+    wdir: ../../../
+    cmd: >-
+      python3 run_pipeline.py train_model.py
+      ${browsers.chrome}
+      ${dir_name.date_one}
+      train_set_featurized_exp_google_BE
+      binary
+      chrome_old_exp_google_BE
+    deps:
+      - src/models/train_model.py
+      - data/processed/${browsers.chrome}/${dir_name.date_one}/train_set_featurized_exp_google_BE.parquet.gzip
+    outs:
+      - models/result_metrics/chrome_old_exp_google_BE.csv
+      - ${dir_paths.chrome_old_models}/exp_google/Logistic_Regression_exp_google_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/exp_google/Gaussian_NB_exp_google_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/exp_google/Decision_Tree_exp_google_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/exp_google/Random_Forest_exp_google_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/exp_google/Extra_Trees_Classifier_exp_google_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/exp_google/Ada_Boost_exp_google_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/exp_google/Gradient_Boosting_exp_google_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/exp_google/LightGBM_exp_google_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/exp_google/Hist_GB_exp_google_BE.sav.gz
+      - ${dir_paths.chrome_old_models}/exp_google/XGBoost_exp_google_BE.sav.gz
+
   model_evaluation_response:
     foreach: ${browser_object_evaluation}
     do:
@@ -312,7 +415,7 @@ stages:
   model_evaluation_request:
     foreach: ${browser_object_evaluation}
     do:
-      frozen: false
+      frozen: true
       wdir: ../../../
       cmd: >-
         python3 run_pipeline.py test_model.py
@@ -337,3 +440,32 @@ stages:
       outs:
         - models/result_metrics/${item.browser}_${item.date}_${item.file_name}_request.csv
         - models/result_metrics/${item.browser}_${item.date}_${item.file_name}_request_CI.csv
+
+  model_evaluation_exp_google:
+    foreach: ${browser_object_evaluation_exp_google}
+    do:
+      frozen: false
+      wdir: ../../../
+      cmd: >-
+        python3 run_pipeline.py test_model.py
+        ${item.browser}
+        ${item.date}
+        ${item.file_name}
+        exp_google
+      deps:
+        - run_pipeline.py
+        - src/models/test_model.py
+        - ${dir_paths.chrome_old_models}/exp_google/Logistic_Regression_exp_google_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/exp_google/Gaussian_NB_exp_google_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/exp_google/Decision_Tree_exp_google_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/exp_google/Random_Forest_exp_google_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/exp_google/Extra_Trees_Classifier_exp_google_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/exp_google/Ada_Boost_exp_google_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/exp_google/Gradient_Boosting_exp_google_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/exp_google/LightGBM_exp_google_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/exp_google/Hist_GB_exp_google_BE.sav.gz
+        - ${dir_paths.chrome_old_models}/exp_google/XGBoost_exp_google_BE.sav.gz
+        - data/processed/${item.browser}/${item.date}/${item.file_name}_featurized_exp_google_BE.parquet.gzip
+      outs:
+        - models/result_metrics/${item.browser}_${item.date}_${item.file_name}_exp_google.csv
+        - models/result_metrics/${item.browser}_${item.date}_${item.file_name}_exp_google_CI.csv

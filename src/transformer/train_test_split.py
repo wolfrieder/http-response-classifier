@@ -53,23 +53,34 @@ def run(browser: str, date: str, filename_one: str) -> None:
 
         httpMessage = "response" if "response" in filename_one else "request"
 
-        train_set.to_parquet(
-            f"data/processed/{dir_path}/train_set_{httpMessage}.parquet.gzip",
-            compression="gzip",
-        )
+        if "google" in filename_one:
+            train_set.to_parquet(
+                f"data/processed/{dir_path}/train_set_exp_google.parquet.gzip",
+                compression="gzip",
+            )
 
-        test_set.to_parquet(
-            f"data/processed/{dir_path}/test_set_{httpMessage}.parquet.gzip",
-            compression="gzip",
-        )
+            test_set.to_parquet(
+                f"data/processed/{dir_path}/test_set_exp_google.parquet.gzip",
+                compression="gzip",
+            )
 
-        # validation_set.to_parquet(
-        #     f"data/processed/{dir_path}/validation_set_{httpMessage}.parquet.gzip",
-        #     compression="gzip",
-        # )
+            calibration_set.to_parquet(
+                f"data/processed/{dir_path}/calibration_set_exp_google.parquet.gzip",
+                compression="gzip",
+            )
+        else:
+            train_set.to_parquet(
+                f"data/processed/{dir_path}/train_set_{httpMessage}.parquet.gzip",
+                compression="gzip",
+            )
 
-        calibration_set.to_parquet(
-            f"data/processed/{dir_path}/calibration_set_{httpMessage}.parquet.gzip",
-            compression="gzip",
-        )
+            test_set.to_parquet(
+                f"data/processed/{dir_path}/test_set_{httpMessage}.parquet.gzip",
+                compression="gzip",
+            )
+
+            calibration_set.to_parquet(
+                f"data/processed/{dir_path}/calibration_set_{httpMessage}.parquet.gzip",
+                compression="gzip",
+            )
         bar(1)

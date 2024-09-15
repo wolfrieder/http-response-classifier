@@ -244,6 +244,8 @@ def train_models(
         best_estimator = cv_results["estimator"][best_estimator_idx]
 
         filename = f"{model_name}_BE.sav.gz"
+        if "google" in http_message:
+            filename = f"{model_name}_exp_google_BE.sav.gz"
         gzip_path = f"models/chrome/08_12_2022/{http_message}/{filename}"
 
         with gzip.GzipFile(gzip_path, "wb") as model_gzip:
@@ -291,6 +293,8 @@ def test_models(
         print(f"Evaluating {model_name}...")
 
         filename = f"{model_name}_BE.sav.gz"
+        if "google" in http_message:
+            filename = f"{model_name}_exp_google_BE.sav.gz"
         gzip_path = f"models/chrome/08_12_2022/{http_message}/{filename}"
 
         with gzip.GzipFile(gzip_path, "rb") as f:

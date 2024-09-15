@@ -46,6 +46,9 @@ def train_models_run(
 ) -> None:
     with alive_bar(100, force_tty=True, manual=True, title="Training Models") as bar:
         httpMessage = "response" if "response" in train_data_file_path else "request"
+        if "google" in train_data_file_path:
+            httpMessage = "exp_google"
+
         bar.text("Read-in data")
         train_data = pd.read_parquet(f"{train_data_file_path}.parquet.gzip")
         bar(0.1)

@@ -22,11 +22,19 @@ def preprocessing_train_data(file_path: str, config_path: str) -> None:
         bar.text("Read-in data")
         httpMessage = "response" if "response" in config_path else "request"
         print(f"{file_path}_{httpMessage}.parquet.gzip")
-        data = pd.read_parquet(
-            f"{file_path}_{httpMessage}.parquet.gzip",
-            engine="pyarrow",
-            dtype_backend="pyarrow",
-        )
+
+        if "google" in config_path:
+            data = pd.read_parquet(
+                f"{file_path}_exp_google.parquet.gzip",
+                engine="pyarrow",
+                dtype_backend="pyarrow",
+            )
+        else:
+            data = pd.read_parquet(
+                f"{file_path}_{httpMessage}.parquet.gzip",
+                engine="pyarrow",
+                dtype_backend="pyarrow",
+            )
         train_columns = data.columns.values.tolist()
         bar(0.05)
 
@@ -152,11 +160,18 @@ def preprocessing_train_data(file_path: str, config_path: str) -> None:
                 json.dump(config, outfile)
 
         bar.text("Write data to parquet.gzip")
-        print(f"{file_path}_processed_{httpMessage}.parquet.gzip")
-        data.to_parquet(
-            f"{file_path}_processed_{httpMessage}.parquet.gzip",
-            compression="gzip",
-        )
+        if "google" in config_path:
+            print(f"{file_path}_processed_exp_google.parquet.gzip")
+            data.to_parquet(
+                f"{file_path}_processed_exp_google.parquet.gzip",
+                compression="gzip",
+            )
+        else:
+            print(f"{file_path}_processed_{httpMessage}.parquet.gzip")
+            data.to_parquet(
+                f"{file_path}_processed_{httpMessage}.parquet.gzip",
+                compression="gzip",
+            )
 
         bar(1)
 
@@ -166,11 +181,18 @@ def preprocessing_test_data(file_path, config_path, other_test_data: bool = Fals
 
         bar.text("Read-in data")
         httpMessage = "response" if "response" in config_path else "request"
-        data = pd.read_parquet(
-            f"{file_path}_{httpMessage}.parquet.gzip",
-            engine="pyarrow",
-            dtype_backend="pyarrow",
-        )
+        if "google" in config_path:
+            data = pd.read_parquet(
+                f"{file_path}_exp_google.parquet.gzip",
+                engine="pyarrow",
+                dtype_backend="pyarrow",
+            )
+        else:
+            data = pd.read_parquet(
+                f"{file_path}_{httpMessage}.parquet.gzip",
+                engine="pyarrow",
+                dtype_backend="pyarrow",
+            )
 
         with open(config_path, "r") as infile:
             config = json.load(infile)
@@ -320,8 +342,14 @@ def preprocessing_test_data(file_path, config_path, other_test_data: bool = Fals
         bar(0.9)
 
         bar.text("Write data to parquet.gzip")
-        data.to_parquet(
-            f"{file_path}_processed_{httpMessage}.parquet.gzip",
-            compression="gzip",
-        )
+        if "google" in config_path:
+            data.to_parquet(
+                f"{file_path}_processed_exp_google.parquet.gzip",
+                compression="gzip",
+            )
+        else:
+            data.to_parquet(
+                f"{file_path}_processed_{httpMessage}.parquet.gzip",
+                compression="gzip",
+            )
         bar(1)
