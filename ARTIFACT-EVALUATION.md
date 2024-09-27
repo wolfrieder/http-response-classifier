@@ -7,7 +7,7 @@ Artifacts HotCRP Id: **#17** (not your paper Id, but the artifacts id)
 
 [//]: # (Requested Badge: Either **Available**, **Functional**, or **Reproduced**)
 
-Requested Badge: **Functional**
+Requested Badge: **Available**, **Functional**
 
 ## Description
 
@@ -39,6 +39,14 @@ Our artifact does not require any security changes for its installation or
 execution. It does not contain any malware samples or something similar. 
 The datasets were collected by T.EX in an automated fashion, i.e., data from a 
 real user was not collected. 
+
+The  currently potential known security risks are the ones reported by the Dependabot 
+from our GitHub repository. These could be fixed by updating to newer versions
+of certain packages. Potential risks pertain to:
+- setuptools (vulnerable to Command Injection via package URL and
+vulnerable to Regular Expression Denial of Service (ReDoS))
+- scikit-learn (sensitive data leakage vulnerability) -> for TF-IDF, not used here
+- black (vulnerable to Regular Expression Denial of Service (ReDoS))
 
 ## Basic Requirements (Only for Functional and Reproduced badges)
 
@@ -87,6 +95,10 @@ See basic requirements.
 [//]: # (Describe how the reviewer can obtain and install all third-party software, data)
 
 [//]: # (sets, and models.)
+
+We have primarily tested and developed our artifact on macOS (Sonoma and Sequoia).
+For the review process we executed the artifact on a Compute VM running Ubuntu 22.04.
+(Python 3.10.11 and pip are needed)
 
 ### Estimated Time and Storage Consumption
 
@@ -153,9 +165,23 @@ Be as specific as possible here.
 If possible, use code segments to simply the workflow, e.g.,
 
 ```bash
-git clone git@my_awesome_artifact.com/repo
-apt install libxxx xxx
+git clone git@github.com:wolfrieder/http-response-classifier.git
 ```
+or
+```bash
+git clone https://github.com/wolfrieder/http-response-classifier.git
+```
+
+if python not installed 
+```bash
+sudo apt install python3.11.10
+```
+
+if pip not installed:
+```bash
+sudo apt install python3-pip
+```
+
 
 Describe the expected results where it makes sense to do so.
 
