@@ -13,5 +13,3 @@ source env/bin/activate
 
 echo "Installing the requirements"
 pip install -r requirements.txt
-
-deactivate
