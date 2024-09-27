@@ -3,11 +3,11 @@
 Paper title: **Beyond the Request: Harnessing HTTP Response Headers for
 Cross-Browser Web Tracker Classification in an Imbalanced Setting**
 
-Artifacts HotCRP Id: **#17** (not your paper Id, but the artifacts id)
+Artifacts HotCRP Id: **#17**
 
 [//]: # (Requested Badge: Either **Available**, **Functional**, or **Reproduced**)
 
-Requested Badge: **Available**, **Functional**
+Requested Badge: **Available**
 
 ## Description
 
@@ -15,7 +15,18 @@ Requested Badge: **Available**, **Functional**
 This artifact represents our semi-automated machine learning (ML) pipeline of
 our paper. It comprises the stages: (i) Initial Parsing, (ii) Data Preparation,
 (iii) Data Processing, (iv) Classification, and (v) Calibration -- described in
-Section 5.2 (page 7) and Figure 4 (page 8). 
+Section 5.2 (page 7) and Figure 4 (page 8). Our models are able to detect trackers 
+purely from a binarized subset of HTTP response headers. 
+
+Our artifact allows:
+- Basic data exploration of HTTP data to understand key characteristics of
+the datasets.
+- Classification of HTTP responses and requests as tracker or non-trackers.
+- Evaluation of our classifiers across several metrics. 
+- Clustering of HTTP response messages to discern similarities and differences \
+across trackers and non-trackers.
+- The reproduction of the results and analysis from our paper.  
+
 
 ### Security/Privacy Issues and Ethical Concerns (All badges)
 
@@ -54,24 +65,6 @@ vulnerable to Regular Expression Denial of Service (ReDoS))
 
 [//]: # (estimate the compute time and storage required to run the artifact.)
 
-**Copied from our README.md:**
-The code was only tested on an MacBook Pro with the 10-core Apple M1 Pro (ARM
-CPU), 32GB
-memory, and 1TB storage. It is recommended to have at least 32GB memory as tests
-with
-16GB memory led to memory issues while training the classifiers. Therefore, the
-minimal requirement are 32GB of memory until further tests and optimizations are
-performed. 
-
-Software: We used PyCharm 2024 and Python 3.10.11. MacOS Sonoma and Sequoia as 
-our operating system.  
-
-Storage: around 10GB, however, if we include the raw datasets than this number 
-increases by around 16GB 
-
-Time: around 3h for executing the pipeline -- jupyter notebooks for the figures
-takes ca. 1h - 2h (clustering takes the most time, followed by calibration)
-
 ### Hardware Requirements
 
 [//]: # (If your artifact requires specific hardware to be executed, mention that here.)
@@ -82,7 +75,14 @@ takes ca. 1h - 2h (clustering takes the most time, followed by calibration)
 
 [//]: # (Make sure to preserve the anonymity of the reviewer at any time.)
 
-See basic requirements. 
+**Copied from our README.md:**
+The code was only tested on an MacBook Pro with the 10-core Apple M1 Pro (ARM
+CPU), 32GB
+memory, and 1TB storage. It is recommended to have at least 32GB memory as tests
+with
+16GB memory led to memory issues while training the classifiers. Therefore, the
+minimal requirement are 32GB of memory until further tests and optimizations are
+performed. 
 
 ### Software Requirements
 
@@ -96,9 +96,18 @@ See basic requirements.
 
 [//]: # (sets, and models.)
 
+We used PyCharm 2024 and Python 3.10.11. 
 We have primarily tested and developed our artifact on macOS (Sonoma and Sequoia).
 For the review process we executed the artifact on a Compute VM running Ubuntu 22.04.
-(Python 3.10.11 and pip are needed)
+(Python 3.10.11, venv, and pip are needed)
+
+The LightGBM installation might throw an error when installed on an Apple
+Silicon
+Macbook with `pip`. One solution was proposed
+[here](https://stackoverflow.com/questions/74566704/cannot-install-lightgbm-3-3-3-on-apple-silicon)
+and requires the installation of two more dependencies
+via `brew install cmake libomp`.
+An installation via `pip install lightgbm` will then work correctly. 
 
 ### Estimated Time and Storage Consumption
 
@@ -115,6 +124,12 @@ For the review process we executed the artifact on a Compute VM running Ubuntu 2
 [//]: # (hours, does not expect an error if, after 1 hour, the computer is still)
 
 [//]: # (calculating things.)
+
+Storage: around 10GB, however, if we include the crawled raw datasets than this 
+number increases by around 16GB.  
+
+Time: around 3h for executing the pipeline -- jupyter notebooks for the figures
+takes ca. 1h - 2h (clustering takes the most time, followed by calibration)
 
 **Copied from our README.md:** 
 For orientation purposes, we will present the execution time for each stage 
@@ -148,13 +163,56 @@ is set up correctly.
 
 ### Accessibility (All badges)
 
-Describe how to access your artifact via persistent sources.
-Valid hosting options are institutional and third-party digital repositories.
-Do not use personal web pages.
-For repositories that evolve over time (e.g., Git Repositories ), specify a
-specific commit-id or tag to be evaluated.
-In case your repository changes during the evaluation to address the reviewer's
-feedback, please provide an updated link (or commit-id / tag) in a comment.
+[//]: # (Describe how to access your artifact via persistent sources.)
+
+[//]: # (Valid hosting options are institutional and third-party digital repositories.)
+
+[//]: # (Do not use personal web pages.)
+
+[//]: # (For repositories that evolve over time &#40;e.g., Git Repositories &#41;, specify a)
+
+[//]: # (specific commit-id or tag to be evaluated.)
+
+[//]: # (In case your repository changes during the evaluation to address the reviewer's)
+
+[//]: # (feedback, please provide an updated link &#40;or commit-id / tag&#41; in a comment. )
+
+Link to our GitHub repository: https://github.com/wolfrieder/http-response-classifier
+
+Link to the two datasets: 
+1. [Chrome, Firefox, and Brave Data (2022)](https://zenodo.org/record/7123945#.Y8VDEXaZPtU) --
+   Size: 14.3GB (Zipped) 
+2. [Chrome Data (2023)](https://zenodo.org/records/11555919) -- Size: 1.1GB (
+   Zipped) -> newly crawled dataset for longitudinal analysis. 
+
+The crawler is named T.EX [1] and is not part of our contribution. The datasets were
+uploaded to Zenodo.
+
+Link to T.EX: https://github.com/t-ex-tools/t.ex
+(last commit: c547992) -- Citation:
+
+[1] Raschke, P., Zickau, S., Kröger, J.L., Küpper, A. (2019). Towards Real-Time Web 
+Tracking Detection with T.EX - The Transparency EXtension. In: Naldi, M., 
+Italiano, G., Rannenberg, K., Medina, M., Bourka, A. (eds) Privacy Technologies 
+and Policy. APF 2019. Lecture Notes in Computer Science(), vol 11498. Springer, 
+Cham. https://doi.org/10.1007/978-3-030-21752-5_1 
+
+**Important:** We followed the same methodology to crawl the new dataset as 
+outlined by Raschke and Cory [2] -- the steps to perform a crawl and to load an 
+existing dataset are described on their GitHub repository and paper. 
+However, Zenodo represents the raw datasets from a crawl which are not in the 
+JSON format. The Zenodo datasets have to be injected into T.EX (if one wants to 
+export a dataset that was not crawled by ones machine) and then exported within
+the tool to the JSON format which is part of this repository. We performed the 
+latter step for the reviewers to save them time and to immediately start with 
+the review. (Otherwise the reviewers would have to download T.EX, install it on 
+a browser and use the browser extension to export the Zenodo datasets).  
+
+[2] P. Raschke and T. Cory, "Presenting a Client-based Cross-browser Web Privacy 
+Measurement Framework for Automated Web Tracker Detection Research," 
+2022 3rd International Conference on Electrical Engineering and Informatics 
+(ICon EEI), Pekanbaru, Indonesia, 2022, pp. 98-103, 
+doi: 10.1109/IConEEI55709.2022.9972261.
 
 ### Set up the environment (Only for Functional and Reproduced badges)
 
