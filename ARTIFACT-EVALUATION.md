@@ -320,6 +320,26 @@ List each experiment the reviewer has to execute. Describe:
 - How long it takes and how much space it consumes on disk. (approximately)
 - Which claim and results does it support, and how.
 
+#### Experiment 1: Data Exploration and Clustering
+
+[//]: # (Provide a short explanation of the experiment and expected results.)
+
+[//]: # (Describe thoroughly the steps to perform the experiment and to collect and)
+
+[//]: # (organize the results as expected from your paper.)
+
+[//]: # (Use code segments to support the reviewers, e.g.,)
+
+For the jupyter notebooks use:
+
+```bash
+jupyter notebook --port 9999
+```
+Under the notebooks folder, look at the submission_figures.ipynb and the 
+visualizations.ipynb after Section Header Count.
+
+#### Experiment 2: Processing and Training Classifiers
+
 1. We use `DVC` to create a reproducible pipeline, i.e., we defined our whole
    pipeline and each step in a YAML file (`dvc.yaml`), including any
    parameters (`params.yaml`).
@@ -336,20 +356,7 @@ dvc repro
    means that the step is not executed and false or simply commenting the line
    out would execute the step. The advantage is that you do not have to repeat
    each step in case of an error (e.g., there were problems during training at
-   the end, but because of the error, you would have to repeat the rest).
-
-#### Experiment 1: Data Exploration and Clustering
-
-Provide a short explanation of the experiment and expected results.
-Describe thoroughly the steps to perform the experiment and to collect and
-organize the results as expected from your paper.
-Use code segments to support the reviewers, e.g.,
-
-```bash
-
-```
-
-#### Experiment 2: Processing and Training Classifiers
+   the end, but because of the error, you would have to repeat the rest). 
 
 ```bash
 cd data/raw/chrome/08_12_2022
@@ -358,7 +365,8 @@ cd data/raw/chrome/08_12_2022
 ```bash
 dvc repro
 ```
-
+Figures can be found in the submission_figures.ipynb. Other relevant jupyter 
+notebooks are request.ipynb, clustering.ipynb, and calibration.ipynb.  
 
 ## Limitations (Only for Functional and Reproduced badges)
 
