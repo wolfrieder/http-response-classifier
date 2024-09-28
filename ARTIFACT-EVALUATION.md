@@ -74,8 +74,6 @@ vulnerable to Regular Expression Denial of Service (ReDoS))
 [//]: # (remote access, buying or renting, or even emulating the hardware.)
 
 [//]: # (Make sure to preserve the anonymity of the reviewer at any time.)
-
-**Copied from our README.md:**
 The code was only tested on an MacBook Pro with the 10-core Apple M1 Pro (ARM
 CPU), 32GB
 memory, and 1TB storage. It is recommended to have at least 32GB memory as tests
@@ -100,6 +98,10 @@ We used PyCharm 2024 and Python 3.10.11.
 We have primarily tested and developed our artifact on macOS (Sonoma and Sequoia).
 For the review process we executed the artifact on a Compute VM running Ubuntu 22.04.
 (Python 3.10.11, venv, and pip are needed)
+
+```bash
+sudo apt install python3.10.11 python3.10-venv
+```
 
 The LightGBM installation might throw an error when installed on an Apple
 Silicon
@@ -181,9 +183,9 @@ Link to our GitHub repository: https://github.com/wolfrieder/http-response-class
 
 Link to the two datasets: 
 1. [Chrome, Firefox, and Brave Data (2022)](https://zenodo.org/record/7123945#.Y8VDEXaZPtU) --
-   Size: 14.3GB (Zipped) 
+   Size: 14.3GB (Zipped) -> old dataset (previously crawled by 2nd author)
 2. [Chrome Data (2023)](https://zenodo.org/records/11555919) -- Size: 1.1GB (
-   Zipped) -> newly crawled dataset for longitudinal analysis. 
+   Zipped) -> newly crawled dataset for longitudinal analysis
 
 The crawler is named T.EX [1] and is not part of our contribution. The datasets were
 uploaded to Zenodo.
@@ -206,7 +208,8 @@ export a dataset that was not crawled by ones machine) and then exported within
 the tool to the JSON format which is part of this repository. We performed the 
 latter step for the reviewers to save them time and to immediately start with 
 the review. (Otherwise the reviewers would have to download T.EX, install it on 
-a browser and use the browser extension to export the Zenodo datasets).  
+a browser and use the browser extension to export the Zenodo datasets). The
+exported datasets are not in a pre-processed state. 
 
 [2] P. Raschke and T. Cory, "Presenting a Client-based Cross-browser Web Privacy 
 Measurement Framework for Automated Web Tracker Detection Research," 
@@ -245,16 +248,32 @@ Describe the expected results where it makes sense to do so.
 
 ### Testing the Environment (Only for Functional and Reproduced badges)
 
-Describe the basic functionality tests to check if the environment is set up
-correctly.
-These tests could be unit tests, training an ML model on very low training data,
-etc..
-If these tests succeed, all required software should be functioning correctly.
-Include the expected output for unambiguous outputs of tests.
-Use code segments to simplify the workflow, e.g.,
+[//]: # (Describe the basic functionality tests to check if the environment is set up)
+
+[//]: # (correctly.)
+
+[//]: # (These tests could be unit tests, training an ML model on very low training data,)
+
+[//]: # (etc..)
+
+[//]: # (If these tests succeed, all required software should be functioning correctly.)
+
+[//]: # (Include the expected output for unambiguous outputs of tests.)
+
+[//]: # (Use code segments to simplify the workflow, e.g.,)
+We have created a simple test using ChatGPT4. 
+It trains and evaluates a simple logistic regression model using a subset of
+the Iris dataset. Three test cases: 
+1. Accuracy
+- Expected output: Model's accuracy is printed and evaluated to be greater than
+or equal to 0.8.
+2. Classification report
+- Expected output: A printed classification report. 
+3. Confusion matrix plot
+- Expected output: A simple seaborn plot of the confusion matrix. 
 
 ```bash
-python envtest.py
+python3 -m unittest tests/training_test.py
 ```
 
 ## Artifact Evaluation (Only for Functional and Reproduced badges)
