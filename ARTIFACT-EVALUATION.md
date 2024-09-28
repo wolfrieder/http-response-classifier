@@ -225,7 +225,6 @@ if pip not installed:
 sudo apt install python3-pip
 ```
 
-
 Describe the expected results where it makes sense to do so.
 
 ### Testing the Environment (Only for Functional and Reproduced badges)
@@ -260,26 +259,57 @@ python3 -m unittest tests/training_test.py
 
 ## Artifact Evaluation (Only for Functional and Reproduced badges)
 
-This section includes all the steps required to evaluate your artifact's
-functionality and validate your paper's key results and claims.
-Therefore, highlight your paper's main results and claims in the first
-subsection. And describe the experiments that support your claims in the
-subsection after that.
+[//]: # (This section includes all the steps required to evaluate your artifact's)
+
+[//]: # (functionality and validate your paper's key results and claims.)
+
+[//]: # (Therefore, highlight your paper's main results and claims in the first)
+
+[//]: # (subsection. And describe the experiments that support your claims in the)
+
+[//]: # (subsection after that.)
 
 ### Main Results and Claims
 
 List all your paper's results and claims that are supported by your submitted
 artifacts.
 
-#### Main Result 1: Name
+#### Main Result 1: HTTP response headers show differences and similarities between trackers and non-trackers across browsers
+- Descriptive differences include: the distribution in a dataset, average number
+of headers (and unique headers) -> Table 1, p.5
+- Venn diagram shows that each browser dataset has unique headers but some overlap
+-> Figure 2, p.6
+- t-SNE showing clusters for trackers and non-trackers but also a significant 
+overlap -> Figure 5, p.10
+- See Section 4
+- See experiment 1
 
-Describe the results in 1 to 3 sentences.
-Refer to the related sections in your paper and reference the experiments that
-support this result/claim.
+#### Main Result 2: Trained classifiers on one Chrome dataset using a binarized subset of HTTP response headers are sufficient to accurately detect trackers 
+- We can train a set of ten classifiers that use a subset of binarized HTTP response
+headers as a feature vector
+- These features represent only the presence of a header in a response message
+- Best performing models (Random Forest, Extra Trees Classifier) achieve scores
+ranging from 0.977 (AUPRC), 0.931 (F1-Score), 0.901 (MCC). -> Table 4, p.10
+- These metrics are achieved without balancing the dataset
+- See section 6
+- See experiment 2
 
-#### Main Result 2: Name
+#### Main Result 3: Chrome data (year 2022) captures the structural header characteristics of trackers
+- We only train our classifiers on one Chrome (year 2022) dataset and use all other 
+datasets as test sets
+- showing only small performance drops for Firefox and the Chrome dataset that 
+was crawled a year later 
+- Performance with Brave data is poor due to larger differences between this 
+dataset and Chrome/Firefox (the number of trackers was especially low for Brave)
+- See Section 6, Figure 6, p.11; Appendix D, p.16
+- See experiment 2
 
-...
+#### Main Result 4: Classifiers using response headers perform better than request headers
+- We compared our classifiers with the same methodology to classifiers trained
+with request headers and the t.ex-graph classifier [3]
+- Our response-based classifiers performed better than request-based classifiers
+- See Section 6.4, Figure 8, p. 11-12; Section 7.1, Table 5, p.12; Table 9, p.18
+- See experiment 2
 
 ### Experiments
 
@@ -290,7 +320,25 @@ List each experiment the reviewer has to execute. Describe:
 - How long it takes and how much space it consumes on disk. (approximately)
 - Which claim and results does it support, and how.
 
-#### Experiment 1: Name
+1. We use `DVC` to create a reproducible pipeline, i.e., we defined our whole
+   pipeline and each step in a YAML file (`dvc.yaml`), including any
+   parameters (`params.yaml`).
+   To execute the pipeline, navigate to `data/raw/chrome/08_12_2022` and enter
+   the following command in the terminal.
+
+```bash
+dvc repro
+``` 
+
+2. We recommend executing each pipeline step individually in case there are any
+   problems (e.g. not enough resources which would terminate the execution)
+   using the `frozen: true` attribute in the `dvc.yaml` file. True in this case
+   means that the step is not executed and false or simply commenting the line
+   out would execute the step. The advantage is that you do not have to repeat
+   each step in case of an error (e.g., there were problems during training at
+   the end, but because of the error, you would have to repeat the rest).
+
+#### Experiment 1: Data Exploration and Clustering
 
 Provide a short explanation of the experiment and expected results.
 Describe thoroughly the steps to perform the experiment and to collect and
@@ -298,16 +346,19 @@ organize the results as expected from your paper.
 Use code segments to support the reviewers, e.g.,
 
 ```bash
-python experiment_1.py
+
 ```
 
-#### Experiment 2: Name
+#### Experiment 2: Processing and Training Classifiers
 
-...
+```bash
+cd data/raw/chrome/08_12_2022
+```
 
-#### Experiment 3: Name
+```bash
+dvc repro
+```
 
-...
 
 ## Limitations (Only for Functional and Reproduced badges)
 
