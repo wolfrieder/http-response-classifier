@@ -180,8 +180,8 @@ is set up correctly.
 [//]: # (feedback, please provide an updated link &#40;or commit-id / tag&#41; in a comment. )
 
 Link to our GitHub repository: https://github.com/wolfrieder/http-response-classifier
--> Use the latest release version in our GitHub repository or the clone the 
-latest commit version. 
+-> Use the latest release version in our GitHub repository or clone the 
+latest commit version 35cbefb. 
 
 Link to the two datasets: 
 1. [Chrome, Firefox, and Brave Data (2022)](https://zenodo.org/record/7123945#.Y8VDEXaZPtU) --
