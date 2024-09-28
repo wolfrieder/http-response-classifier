@@ -187,8 +187,8 @@ Link to the two datasets:
 2. [Chrome Data (2023)](https://zenodo.org/records/11555919) -- Size: 1.1GB (
    Zipped) -> newly crawled dataset for longitudinal analysis
 
-The crawler is named T.EX [1] and is not part of our contribution. The datasets were
-uploaded to Zenodo.
+The crawler is named T.EX [1] and is not part of our contribution. The datasets 
+were uploaded to Zenodo.
 
 Link to T.EX: https://github.com/t-ex-tools/t.ex
 (last commit: c547992) -- Citation:
@@ -197,25 +197,7 @@ Link to T.EX: https://github.com/t-ex-tools/t.ex
 Tracking Detection with T.EX - The Transparency EXtension. In: Naldi, M., 
 Italiano, G., Rannenberg, K., Medina, M., Bourka, A. (eds) Privacy Technologies 
 and Policy. APF 2019. Lecture Notes in Computer Science(), vol 11498. Springer, 
-Cham. https://doi.org/10.1007/978-3-030-21752-5_1 
-
-**Important:** We followed the same methodology to crawl the new dataset as 
-outlined by Raschke and Cory [2] -- the steps to perform a crawl and to load an 
-existing dataset are described on their GitHub repository and paper. 
-However, Zenodo represents the raw datasets from a crawl which are not in the 
-JSON format. The Zenodo datasets have to be injected into T.EX (if one wants to 
-export a dataset that was not crawled by ones machine) and then exported within
-the tool to the JSON format which is part of this repository. We performed the 
-latter step for the reviewers to save them time and to immediately start with 
-the review. (Otherwise the reviewers would have to download T.EX, install it on 
-a browser and use the browser extension to export the Zenodo datasets). The
-exported datasets are not in a pre-processed state. 
-
-[2] P. Raschke and T. Cory, "Presenting a Client-based Cross-browser Web Privacy 
-Measurement Framework for Automated Web Tracker Detection Research," 
-2022 3rd International Conference on Electrical Engineering and Informatics 
-(ICon EEI), Pekanbaru, Indonesia, 2022, pp. 98-103, 
-doi: 10.1109/IConEEI55709.2022.9972261.
+Cham. https://doi.org/10.1007/978-3-030-21752-5_1
 
 ### Set up the environment (Only for Functional and Reproduced badges)
 
@@ -329,19 +311,87 @@ python experiment_1.py
 
 ## Limitations (Only for Functional and Reproduced badges)
 
-Describe which tables and results are included or are not reproducible with the
-provided artifact.
-Provide an argument why this is not included/possible.
+[//]: # (Describe which tables and results are included or are not reproducible with the)
+
+[//]: # (provided artifact.)
+
+[//]: # (Provide an argument why this is not included/possible.)
+
+All tables and figures can be generated with our artifact. 
+There is one figure (3) that we had to manually colorize after exporting an svg
+from our jupyter notebook. We tried many times to apply the correct colors but
+that did not work at all (the rest of the plot is correct). 
+
+The largest limitation is the above-mentioned export of the raw datasets from 
+Zenodo. We followed the same methodology to crawl the new dataset as 
+outlined by Raschke and Cory [2] -- the steps to perform a crawl and to load an 
+existing dataset are described on their GitHub repository and paper. 
+However, Zenodo represents the raw datasets from a crawl which are not in the 
+JSON format. The Zenodo datasets have to be injected into T.EX (if one wants to 
+export a dataset that was not crawled by ones machine) and then exported within
+the tool to the JSON format which is part of this repository. We performed the 
+latter step for the reviewers to save them time and to immediately start with 
+the review. (Otherwise the reviewers would have to download T.EX, install it on 
+a browser and use the browser extension to export the Zenodo datasets). The
+exported datasets are not in a pre-processed state. See Section 3.3 in our paper. 
+
+[2] P. Raschke and T. Cory, "Presenting a Client-based Cross-browser Web Privacy 
+Measurement Framework for Automated Web Tracker Detection Research," 
+2022 3rd International Conference on Electrical Engineering and Informatics 
+(ICon EEI), Pekanbaru, Indonesia, 2022, pp. 98-103, 
+doi: 10.1109/IConEEI55709.2022.9972261.
+
+The baseline is from another paper by Raschke et al. [3]. Their implementation,
+however, does not include some of the metrics that we used. We had to clone their
+repository and manually add the additional metrics to their implementation and 
+re-run the experiments (required only a few lines of code). To make it easier,
+we have already included the results in the result_metrics folder. 
+
+GitHub link: https://github.com/t-ex-tools/t.ex-graph-2.0-classifier/tree/master
+
+[3] Raschke, P., Herbke, P., & Schwerdtner, H. (2023). t.ex-Graph: Automated Web
+Tracker Detection Using Centrality Metrics and Data Flow Characteristics. 
+International Conference on Information Systems Security and Privacy.
+
+The last limitation is the constraint of specific operating systems and the lack 
+of additional tests. We have only tested our implementation on macOS.   
 
 ## Notes on Reusability (Only for Functional and Reproduced badges)
 
-First, this section might not apply to your artifacts.
-Use it to share information on how your artifact can be used beyond your
-research paper, e.g., as a general framework.
-The overall goal of artifact evaluation is not only to reproduce and verify your
-research but also to help other researchers to re-use and improve on your
-artifacts.
-Please describe how your artifacts can be adapted to other settings, e.g., more
-input dimensions, other datasets, and other behavior, through replacing
-individual modules and functionality or running more iterations of a specific
-part.
+[//]: # (First, this section might not apply to your artifacts.)
+
+[//]: # (Use it to share information on how your artifact can be used beyond your)
+
+[//]: # (research paper, e.g., as a general framework.)
+
+[//]: # (The overall goal of artifact evaluation is not only to reproduce and verify your)
+
+[//]: # (research but also to help other researchers to re-use and improve on your)
+
+[//]: # (artifacts.)
+
+[//]: # (Please describe how your artifacts can be adapted to other settings, e.g., more)
+
+[//]: # (input dimensions, other datasets, and other behavior, through replacing)
+
+[//]: # (individual modules and functionality or running more iterations of a specific)
+
+[//]: # (part.)
+
+This artifact can be reused for future work. Researchers can crawl new datasets
+(either with T.EX for the correct format or another crawler that would then 
+require additional preprocessing) and add them to the data folder. The whole
+pipeline is parameterized, i.e., the dvc.yaml file can easily be extended by 
+additional stages, which facilitates the execution of new experiments. The 
+implementation relies on dvc, thus researchers would have to understand said 
+tool. However, the import and export of datasets within the pipeline is only
+half-way dynamically written, i.e., if new experiments are added to the pipeline
+then minor changes to the individual python scripts would be necessary. If new 
+datasets are added then hte params.yaml has to be updated as well because the 
+dvc.yaml file requires params.yaml and the defined objects in said file. Pipeline
+functions are separated from the scripts that apply said functions and if new
+pre-processing steps or operations in general are needed, they can be added and
+then called in the respective scripts. 
+
+The ML models are exported and saved to an external file for reuse after 
+finishing an experiment. 
