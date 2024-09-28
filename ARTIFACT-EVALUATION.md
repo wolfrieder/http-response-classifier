@@ -180,6 +180,8 @@ is set up correctly.
 [//]: # (feedback, please provide an updated link &#40;or commit-id / tag&#41; in a comment. )
 
 Link to our GitHub repository: https://github.com/wolfrieder/http-response-classifier
+-> Use the latest release version in our GitHub repository or the clone the 
+latest commit version. 
 
 Link to the two datasets: 
 1. [Chrome, Firefox, and Brave Data (2022)](https://zenodo.org/record/7123945#.Y8VDEXaZPtU) --
@@ -393,6 +395,7 @@ latter step for the reviewers to save them time and to immediately start with
 the review. (Otherwise the reviewers would have to download T.EX, install it on 
 a browser and use the browser extension to export the Zenodo datasets). The
 exported datasets are not in a pre-processed state. See Section 3.3 in our paper. 
+We included the exported datasets as part of our GitHub release. 
 
 [2] P. Raschke and T. Cory, "Presenting a Client-based Cross-browser Web Privacy 
 Measurement Framework for Automated Web Tracker Detection Research," 
