@@ -1,7 +1,7 @@
 import logging
 import sys
 
-import category_encoders as ce
+# import category_encoders as ce
 from alive_progress import alive_bar
 from lightgbm import LGBMClassifier
 from sklearn.ensemble import (
@@ -106,7 +106,7 @@ def train_models_run(
 
             preprocessor = ColumnTransformer(
                 transformers=[
-                    ("cat", ce.WOEEncoder(), selector(dtype_include="category")),
+                    # ("cat", ce.WOEEncoder(), selector(dtype_include="category")),
                     ("num", numeric_transformer, ["content-length"]),
                     ("age", norm_transformer, ["age"]),
                 ]
